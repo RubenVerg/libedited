@@ -28,8 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _h_edited_readline
-#define _h_edited_readline
+#ifndef _h_readline
+#define _h_readline
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -196,7 +196,7 @@ HIST_ENTRY     **history_list(void);
 int		 history_search(const char *, int);
 int		 history_search_prefix(const char *, int);
 int		 history_search_pos(const char *, int, int);
-int		 read_history(const char *);
+int		 edited_read_history(const char *);
 int		 write_history(const char *);
 int		 history_truncate_file(const char *, int);
 int		 history_expand(char *, char **);
@@ -274,4 +274,4 @@ void		 _rl_erase_entire_line(void);
 }
 #endif
 
-#endif /* _h_edited_readline */
+#endif /* _h_readline */

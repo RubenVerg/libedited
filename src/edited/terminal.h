@@ -37,13 +37,13 @@
 /*
  * el.term.h: Termcap header
  */
-#ifndef _h_edited_terminal
-#define	_h_edited_terminal
+#ifndef _h_terminal
+#define	_h_terminal
 
 typedef struct {		/* Symbolic function key bindings	*/
 	const wchar_t	*name;	/* name of the key			*/
 	int		 key;	/* Index in termcap table		*/
-	keymacro_value_t	 fun;	/* Function bound to it			*/
+	edited_km_value_t	 fun;	/* Function bound to it			*/
 	int		 type;	/* Type of function			*/
 } funckey_t;
 
@@ -66,7 +66,7 @@ typedef struct {
 	int	 *t_val;		/* termcap values	*/
 	char	 *t_cap;		/* Termcap buffer	*/
 	funckey_t	 *t_fkey;		/* Array of keys	*/
-} el_terminal_t;
+} edited_terminal_t;
 
 /*
  * fKey indexes
@@ -89,37 +89,37 @@ extern char* tgoto(const char*, int, int);
 extern char* tgetstr(char*, char**);
 #endif
 
-libedit_private void	terminal_move_to_line(EditLine *, int);
-libedit_private void	terminal_move_to_char(EditLine *, int);
-libedit_private void	terminal_clear_EOL(EditLine *, int);
-libedit_private void	terminal_overwrite(EditLine *, const wchar_t *, size_t);
-libedit_private void	terminal_insertwrite(EditLine *, wchar_t *, int);
-libedit_private void	terminal_deletechars(EditLine *, int);
-libedit_private void	terminal_clear_screen(EditLine *);
-libedit_private void	terminal_beep(EditLine *);
-libedit_private int	terminal_change_size(EditLine *, int, int);
-libedit_private int	terminal_get_size(EditLine *, int *, int *);
-libedit_private int	terminal_init(EditLine *);
-libedit_private void	terminal_bind_arrow(EditLine *);
-libedit_private void	terminal_print_arrow(EditLine *, const wchar_t *);
-libedit_private int	terminal_clear_arrow(EditLine *, const wchar_t *);
-libedit_private int	terminal_set_arrow(EditLine *, const wchar_t *,
-    keymacro_value_t *, int);
-libedit_private void	terminal_end(EditLine *);
-libedit_private void	terminal_get(EditLine *, const char **);
-libedit_private int	terminal_set(EditLine *, const char *);
-libedit_private int	terminal_settc(EditLine *, int, const wchar_t **);
-libedit_private int	terminal_gettc(EditLine *, int, char **);
-libedit_private int	terminal_telltc(EditLine *, int, const wchar_t **);
-libedit_private int	terminal_echotc(EditLine *, int, const wchar_t **);
-libedit_private void	terminal_writec(EditLine *, wint_t);
-libedit_private int	terminal__putc(EditLine *, wint_t);
-libedit_private void	terminal__flush(EditLine *);
+libedited_private void	edited_term_move_to_line(EditLine *, int);
+libedited_private void	edited_term_move_to_char(EditLine *, int);
+libedited_private void	edited_term_clear_EOL(EditLine *, int);
+libedited_private void	edited_term_overwrite(EditLine *, const wchar_t *, size_t);
+libedited_private void	edited_term_insertwrite(EditLine *, wchar_t *, int);
+libedited_private void	edited_term_deletechars(EditLine *, int);
+libedited_private void	edited_term_clear_screen(EditLine *);
+libedited_private void	edited_term_beep(EditLine *);
+libedited_private int	edited_term_change_size(EditLine *, int, int);
+libedited_private int	edited_term_get_size(EditLine *, int *, int *);
+libedited_private int	edited_term_init(EditLine *);
+libedited_private void	edited_term_bind_arrow(EditLine *);
+libedited_private void	edited_term_print_arrow(EditLine *, const wchar_t *);
+libedited_private int	edited_term_clear_arrow(EditLine *, const wchar_t *);
+libedited_private int	edited_term_set_arrow(EditLine *, const wchar_t *,
+    edited_km_value_t *, int);
+libedited_private void	edited_term_end(EditLine *);
+libedited_private void	edited_term_get(EditLine *, const char **);
+libedited_private int	edited_term_set(EditLine *, const char *);
+libedited_private int	edited_term_settc(EditLine *, int, const wchar_t **);
+libedited_private int	edited_term_gettc(EditLine *, int, char **);
+libedited_private int	edited_term_telltc(EditLine *, int, const wchar_t **);
+libedited_private int	edited_term_echotc(EditLine *, int, const wchar_t **);
+libedited_private void	edited_term_writec(EditLine *, wint_t);
+libedited_private int	edited_term__putc(EditLine *, wint_t);
+libedited_private void	edited_term__flush(EditLine *);
 
 /*
  * Easy access macros
  */
-#define	EL_FLAGS	(el)->el_terminal.t_flags
+#define	EL_FLAGS	(el)->edited_terminal.t_flags
 
 #define	EL_CAN_INSERT		(EL_FLAGS & TERM_CAN_INSERT)
 #define	EL_CAN_DELETE		(EL_FLAGS & TERM_CAN_DELETE)
@@ -131,4 +131,4 @@ libedit_private void	terminal__flush(EditLine *);
 #define	EL_HAS_AUTO_MARGINS	(EL_FLAGS & TERM_HAS_AUTO_MARGINS)
 #define	EL_HAS_MAGIC_MARGINS	(EL_FLAGS & TERM_HAS_MAGIC_MARGINS)
 
-#endif /* _h_edited_terminal */
+#endif /* _h_terminal */

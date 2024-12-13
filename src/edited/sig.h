@@ -37,8 +37,8 @@
 /*
  * el.sig.h: Signal handling functions
  */
-#ifndef _h_edited_sig
-#define	_h_edited_sig
+#ifndef _h_sig
+#define	_h_sig
 
 #include <signal.h>
 
@@ -57,14 +57,14 @@
 #define ALLSIGSNO	7
 
 typedef struct {
-	struct sigaction sig_action[ALLSIGSNO];
-	sigset_t sig_set;
-	volatile sig_atomic_t sig_no;
-} *el_signal_t;
+	struct sigaction edited_sig_action[ALLSIGSNO];
+	sigset_t edited_sig_set;
+	volatile sig_atomic_t edited_sig_no;
+} *edited_signal_t;
 
-libedit_private void	sig_end(EditLine*);
-libedit_private int	sig_init(EditLine*);
-libedit_private void	sig_set(EditLine*);
-libedit_private void	sig_clr(EditLine*);
+libedited_private void	edited_sig_end(EditLine*);
+libedited_private int	edited_sig_init(EditLine*);
+libedited_private void	edited_sig_set(EditLine*);
+libedited_private void	edited_sig_clr(EditLine*);
 
-#endif /* _h_edited_sig */
+#endif /* _h_sig */

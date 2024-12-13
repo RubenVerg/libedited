@@ -37,40 +37,40 @@
 /*
  * el.keymacro.h: Key macro header
  */
-#ifndef _h_edited_keymacro
-#define	_h_edited_keymacro
+#ifndef _h_keymacro
+#define	_h_keymacro
 
-typedef union keymacro_value_t {
-	el_action_t	 cmd;	/* If it is a command the #	*/
+typedef union edited_km_value_t {
+	edited_action_t	 cmd;	/* If it is a command the #	*/
 	wchar_t		*str;	/* If it is a string...		*/
-} keymacro_value_t;
+} edited_km_value_t;
 
-typedef struct keymacro_node_t keymacro_node_t;
+typedef struct edited_km_node_t edited_km_node_t;
 
-typedef struct el_keymacro_t {
+typedef struct edited_keymacro_t {
 	wchar_t		*buf;	/* Key print buffer		*/
-	keymacro_node_t	*map;	/* Key map			*/
-	keymacro_value_t val;	/* Local conversion buffer	*/
-} el_keymacro_t;
+	edited_km_node_t	*map;	/* Key map			*/
+	edited_km_value_t val;	/* Local conversion buffer	*/
+} edited_keymacro_t;
 
 #define	XK_CMD	0
 #define	XK_STR	1
 #define	XK_NOD	2
 
-libedit_private int keymacro_init(EditLine *);
-libedit_private void keymacro_end(EditLine *);
-libedit_private keymacro_value_t *keymacro_map_cmd(EditLine *, int);
-libedit_private keymacro_value_t *keymacro_map_str(EditLine *, wchar_t *);
-libedit_private void keymacro_reset(EditLine *);
-libedit_private int keymacro_get(EditLine *, wchar_t *, keymacro_value_t *);
-libedit_private void keymacro_add(EditLine *, const wchar_t *,
-    keymacro_value_t *, int);
-libedit_private void keymacro_clear(EditLine *, el_action_t *, const wchar_t *);
-libedit_private int keymacro_delete(EditLine *, const wchar_t *);
-libedit_private void keymacro_print(EditLine *, const wchar_t *);
-libedit_private void keymacro_kprint(EditLine *, const wchar_t *,
-    keymacro_value_t *, int);
-libedit_private size_t keymacro__decode_str(const wchar_t *, char *, size_t,
+libedited_private int edited_km_init(EditLine *);
+libedited_private void edited_km_end(EditLine *);
+libedited_private edited_km_value_t *edited_km_map_cmd(EditLine *, int);
+libedited_private edited_km_value_t *edited_km_map_str(EditLine *, wchar_t *);
+libedited_private void edited_km_reset(EditLine *);
+libedited_private int edited_km_get(EditLine *, wchar_t *, edited_km_value_t *);
+libedited_private void edited_km_add(EditLine *, const wchar_t *,
+    edited_km_value_t *, int);
+libedited_private void edited_km_clear(EditLine *, edited_action_t *, const wchar_t *);
+libedited_private int edited_km_delete(EditLine *, const wchar_t *);
+libedited_private void edited_km_print(EditLine *, const wchar_t *);
+libedited_private void edited_km_kprint(EditLine *, const wchar_t *,
+    edited_km_value_t *, int);
+libedited_private size_t edited_km__decode_str(const wchar_t *, char *, size_t,
     const char *);
 
-#endif /* _h_edited_keymacro */
+#endif /* _h_keymacro */

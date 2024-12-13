@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"emacs.h": "c",
+		"vi.h": "c",
+		"fcns.h": "c"
+	}
+}

@@ -28,25 +28,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _h_edited_filecomplete
-#define _h_edited_filecomplete
+#ifndef _h_filecomplete
+#define _h_filecomplete
 
-int fn_complete(EditLine *,
+int edited_fn_complete(EditLine *,
     char *(*)(const char *, int),
     char **(*)(const char *, int, int),
     const wchar_t *, const wchar_t *, const char *(*)(const char *), size_t,
     int *, int *, int *, int *);
-int fn_complete2(EditLine *,
+int edited_fn_complete2(EditLine *,
     char *(*)(const char *, int),
     char **(*)(const char *, int, int),
     const wchar_t *, const wchar_t *, const char *(*)(const char *), size_t,
     int *, int *, int *, int *, unsigned int);
 #define FN_QUOTE_MATCH 1U		/* Quote the returned match */
 
-void fn_display_match_list(EditLine *, char **, size_t, size_t,
+void edited_fn_display_match_list(EditLine *, char **, size_t, size_t,
 	const char *(*)(const char *));
-char *fn_tilde_expand(const char *);
-char *fn_filename_completion_function(const char *, int);
+char *edited_fn_tilde_expand(const char *);
+char *edited_fn_filename_completion_function(const char *, int);
 
 /* XXX: readline */
 char **completion_matches(const char *, char *(*)(const char *, int));

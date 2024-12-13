@@ -37,8 +37,8 @@
 /*
  * sys.h: Put all the stupid compiler and system dependencies here...
  */
-#ifndef _h_edited_sys
-#define	_h_edited_sys
+#ifndef _h_sys
+#define	_h_sys
 
 #if defined(HAVE_SYS_TYPES_H) && defined(__sun)
 #include <sys/types.h>
@@ -63,7 +63,7 @@
 #endif
 
 /* If your compiler does not support this, define it to be empty. */
-#define libedit_private __attribute__((__visibility__("hidden")))
+#define libedited_private __attribute__((__visibility__("hidden")))
 
 #ifndef __arraycount
 # define __arraycount(a) (sizeof(a) / sizeof(*(a)))
@@ -132,4 +132,4 @@ extern char* tgoto(const char*, int, int);
 extern char* tgetstr(char*, char**);
 #endif
 
-#endif /* _h_edited_sys */
+#endif /* _h_sys */

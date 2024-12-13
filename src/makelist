@@ -68,14 +68,14 @@ case $FLAG in
 	    printf("#ifndef %s\n#define %s\n", "'$hdr'", "'$hdr'");
 	}
 	/\(\):/ {
-	    pr = substr($2, 1, 2);
+	    pr = substr($2, length("edited") + 2, 2);
 	    if (pr == "vi" || pr == "em" || pr == "ed") {
 		name = substr($2, 1, length($2) - 3);
 #
 # XXX:	need a space between name and prototype so that -fc and -fh
 #	parsing is much easier
 #
-		printf("libedit_private el_action_t\t%s (EditLine *, wint_t);\n",
+		printf("libedited_private edited_action_t\t%s (EditLine *, wint_t);\n",
 		    name);
 	    }
 	}
@@ -90,16 +90,16 @@ case $FLAG in
     cat $FILES | $AWK '
 	BEGIN {
 	    printf("/* Automatically generated file, do not edit */\n");
-	    printf("static const struct el_bindings_t el_func_help[] = {\n");
+	    printf("static const struct edited_bindings_t edited_func_help[] = {\n");
 	    low = "abcdefghijklmnopqrstuvwxyz_";
 	    high = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 	    for (i = 1; i <= length(low); i++)
 		tr[substr(low, i, 1)] = substr(high, i, 1);
 	}
 	/\(\):/ {
-	    pr = substr($2, 1, 2);
+	    pr = substr($2, length("edited") + 1, 2);
 	    if (pr == "vi" || pr == "em" || pr == "ed") {
-		name = substr($2, 1, length($2) - 3);
+		name = substr($2, length("edited") + 1, length($2) - 3);
 		uname = "";
 		fname = "";
 		for (i = 1; i <= length(name); i++) {
@@ -110,7 +110,7 @@ case $FLAG in
 		    fname = fname s;
 		}
 
-		printf("    { %-30.30s %-30.30s\n","L\"" fname "\",", uname ",");
+		printf("    { %-50.50s %-50.50s\n","L\"" fname "\",", uname ",");
 		ok = 1;
 	    }
 	}
@@ -131,7 +131,7 @@ case $FLAG in
 #	generate fcns.h from various .h files
 #
 -fh)
-    cat $FILES | $AWK '/el_action_t/ { print $3 }' | \
+    cat $FILES | $AWK '/edited_action_t/ { print $3 }' | \
     sort | tr '[:lower:]' '[:upper:]' | $AWK '
 	BEGIN {
 	    printf("/* Automatically generated file, do not edit */\n");
@@ -148,10 +148,10 @@ case $FLAG in
 #	generate func.h from various .h files
 #
 -fc)
-    cat $FILES | $AWK '/el_action_t/ { print $3 }' | sort | $AWK '
+    cat $FILES | $AWK '/edited_action_t/ { print $3 }' | sort | $AWK '
 	BEGIN {
 	    printf("/* Automatically generated file, do not edit */\n");
-	    printf("static const el_func_t el_func[] = {");
+			printf("static const edited_func_t edited_func[] = {");
 	    maxlen = 80;
 	    needn = 1;
 	    len = 0;
@@ -167,7 +167,7 @@ case $FLAG in
 		len = 4 + clen;
 	    }
 	    s = $1 ",";
-	    printf("%-26.26s ", s);
+	    printf("%-40.40s ", s);
 	}
 	END {
 	    printf("\n};\n");

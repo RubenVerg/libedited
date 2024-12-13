@@ -37,28 +37,28 @@
 /*
  * el.search.h: Line and history searching utilities
  */
-#ifndef _h_edited_search
-#define	_h_edited_search
+#ifndef _h_search
+#define	_h_search
 
-typedef struct el_search_t {
+typedef struct edited_search_t {
 	wchar_t	*patbuf;		/* The pattern buffer		*/
 	size_t	 patlen;		/* Length of the pattern buffer	*/
 	int	 patdir;		/* Direction of the last search	*/
 	int	 chadir;		/* Character search direction	*/
 	wchar_t	 chacha;		/* Character we are looking for	*/
 	char	 chatflg;		/* 0 if f, 1 if t */
-} el_search_t;
+} edited_search_t;
 
 
-libedit_private int		el_match(const wchar_t *, const wchar_t *);
-libedit_private int		search_init(EditLine *);
-libedit_private void		search_end(EditLine *);
-libedit_private int		c_hmatch(EditLine *, const wchar_t *);
-libedit_private void		c_setpat(EditLine *);
-libedit_private el_action_t	ce_inc_search(EditLine *, int);
-libedit_private el_action_t	cv_search(EditLine *, int);
-libedit_private el_action_t	ce_search_line(EditLine *, int);
-libedit_private el_action_t	cv_repeat_srch(EditLine *, wint_t);
-libedit_private el_action_t	cv_csearch(EditLine *, int, wint_t, int, int);
+libedited_private int		edited_match(const wchar_t *, const wchar_t *);
+libedited_private int		search_init(EditLine *);
+libedited_private void		search_end(EditLine *);
+libedited_private int		edited_c_hmatch(EditLine *, const wchar_t *);
+libedited_private void		edited_c_setpat(EditLine *);
+libedited_private edited_action_t	edited_ce_inc_search(EditLine *, int);
+libedited_private edited_action_t	edited_cv_search(EditLine *, int);
+libedited_private edited_action_t	edited_ce_search_line(EditLine *, int);
+libedited_private edited_action_t	edited_cv_repeat_srch(EditLine *, wint_t);
+libedited_private edited_action_t	edited_cv_csearch(EditLine *, int, wint_t, int, int);
 
-#endif /* _h_edited_search */
+#endif /* _h_search */

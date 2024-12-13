@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _h_edited_chartype
-#define _h_edited_chartype
+#ifndef _h_chartype
+#define _h_chartype
 
 /* Ideally we should also test the value of the define to see if it
  * supports non-BMP code points without requiring UTF-16, but nothing
@@ -58,28 +58,28 @@
 /*
  * Conversion buffer
  */
-typedef struct ct_buffer_t {
+typedef struct edited_ct_buffer_t {
         char    *cbuff;
         size_t  csize;
         wchar_t *wbuff;
         size_t  wsize;
-} ct_buffer_t;
+} edited_ct_buffer_t;
 
 /* Encode a wide-character string and return the UTF-8 encoded result. */
-char *ct_encode_string(const wchar_t *, ct_buffer_t *);
+char *edited_ct_encode_string(const wchar_t *, edited_ct_buffer_t *);
 
 /* Decode a (multi)?byte string and return the wide-character string result. */
-wchar_t *ct_decode_string(const char *, ct_buffer_t *);
+wchar_t *edited_ct_decode_string(const char *, edited_ct_buffer_t *);
 
 /* Decode a (multi)?byte argv string array.
  * The pointer returned must be free()d when done. */
-libedit_private wchar_t **ct_decode_argv(int, const char *[],  ct_buffer_t *);
+libedited_private wchar_t **edited_ct_decode_argv(int, const char *[],  edited_ct_buffer_t *);
 
 /* Encode a character into the destination buffer, provided there is sufficient
  * buffer space available. Returns the number of bytes used up (zero if the
  * character cannot be encoded, -1 if there was not enough space available). */
-libedit_private ssize_t ct_encode_char(char *, size_t, wchar_t);
-libedit_private size_t ct_enc_width(wchar_t);
+libedited_private ssize_t edited_ct_encode_char(char *, size_t, wchar_t);
+libedited_private size_t edited_ct_enc_width(wchar_t);
 
 /* The maximum buffer size to hold the most unwieldy visual representation,
  * in this case \U+nnnnn. */
@@ -92,19 +92,19 @@ libedit_private size_t ct_enc_width(wchar_t);
 
 /* Visual width of character c, taking into account ^? , \0177 and \U+nnnnn
  * style visual expansions. */
-libedit_private int ct_visual_width(wchar_t);
+libedited_private int edited_ct_visual_width(wchar_t);
 
 /* Turn the given character into the appropriate visual format, matching
- * the width given by ct_visual_width(). Returns the number of characters used
+ * the width given by edited_ct_visual_width(). Returns the number of characters used
  * up, or -1 if insufficient space. Buffer length is in count of wchar_t's. */
-libedit_private ssize_t ct_visual_char(wchar_t *, size_t, wchar_t);
+libedited_private ssize_t edited_ct_visual_char(wchar_t *, size_t, wchar_t);
 
-/* Convert the given string into visual format, using the ct_visual_char()
+/* Convert the given string into visual format, using the edited_ct_visual_char()
  * function. Uses a static buffer, so not threadsafe. */
-libedit_private const wchar_t *ct_visual_string(const wchar_t *, ct_buffer_t *);
+libedited_private const wchar_t *edited_ct_visual_string(const wchar_t *, edited_ct_buffer_t *);
 
 
-/* printable character, use ct_visual_width() to find out display width */
+/* printable character, use edited_ct_visual_width() to find out display width */
 #define CHTYPE_PRINT        ( 0)
 /* control character found inside the ASCII portion of the charset */
 #define CHTYPE_ASCIICTL     (-1)
@@ -115,6 +115,6 @@ libedit_private const wchar_t *ct_visual_string(const wchar_t *, ct_buffer_t *);
 /* non-printable character */
 #define CHTYPE_NONPRINT     (-4)
 /* classification of character c, as one of the above defines */
-libedit_private int ct_chr_class(wchar_t c);
+libedited_private int edited_ct_chr_class(wchar_t c);
 
 #endif /* _chartype_f */

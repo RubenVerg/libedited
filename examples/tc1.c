@@ -95,7 +95,7 @@ complete(EditLine *el, int ch __attribute__((__unused__)))
 	DIR *dd = opendir(".");
 	struct dirent *dp;
 	const char* ptr;
-	const LineInfo *lf = el_line(el);
+	const LineInfo *lf = edited_line(el);
 	size_t len;
 	int res = CC_ERROR;
 
@@ -111,7 +111,7 @@ complete(EditLine *el, int ch __attribute__((__unused__)))
 		if (len > strlen(dp->d_name))
 			continue;
 		if (strncmp(dp->d_name, ptr, len) == 0) {
-			if (el_insertstr(el, &dp->d_name[len]) == -1)
+			if (edited_insertstr(el, &dp->d_name[len]) == -1)
 				res = CC_ERROR;
 			else
 				res = CC_REFRESH;
@@ -150,41 +150,41 @@ main(int argc __attribute__((__unused__)), char *argv[])
 	tok  = tok_init(NULL);		/* Initialize the tokenizer	*/
 
 					/* Initialize editline		*/
-	el = el_init(*argv, stdin, stdout, stderr);
+	el = edited_init(*argv, stdin, stdout, stderr);
 
-	el_set(el, EL_EDITOR, "vi");	/* Default editor is vi		*/
-	el_set(el, EL_SIGNAL, 1);	/* Handle signals gracefully	*/
-	el_set(el, EL_PROMPT_ESC, prompt, '\1');/* Set the prompt function */
+	edited_set(el, EL_EDITOR, "vi");	/* Default editor is vi		*/
+	edited_set(el, EL_SIGNAL, 1);	/* Handle signals gracefully	*/
+	edited_set(el, EL_PROMPT_ESC, prompt, '\1');/* Set the prompt function */
 
 			/* Tell editline to use this history interface	*/
-	el_set(el, EL_HIST, history, hist);
+	edited_set(el, EL_HIST, history, hist);
 
 					/* Add a user-defined function	*/
-	el_set(el, EL_ADDFN, "ed-complete", "Complete argument", complete);
+	edited_set(el, EL_ADDFN, "ed-complete", "Complete argument", complete);
 
 					/* Bind tab to it		*/
-	el_set(el, EL_BIND, "^I", "ed-complete", NULL);
+	edited_set(el, EL_BIND, "^I", "ed-complete", NULL);
 
 	/*
 	 * Bind j, k in vi command mode to previous and next line, instead
 	 * of previous and next history.
 	 */
-	el_set(el, EL_BIND, "-a", "k", "ed-prev-line", NULL);
-	el_set(el, EL_BIND, "-a", "j", "ed-next-line", NULL);
+	edited_set(el, EL_BIND, "-a", "k", "ed-prev-line", NULL);
+	edited_set(el, EL_BIND, "-a", "j", "ed-next-line", NULL);
 
 	/*
 	 * Source the user's defaults file.
 	 */
-	el_source(el, NULL);
+	edited_source(el, NULL);
 
-	while ((buf = el_gets(el, &num)) != NULL && num != 0)  {
+	while ((buf = edited_gets(el, &num)) != NULL && num != 0)  {
 		int ac, cc, co;
 #ifdef DEBUG
 		int i;
 #endif
 		const char **av;
 		const LineInfo *li;
-		li = el_line(el);
+		li = edited_line(el);
 #ifdef DEBUG
 		(void) fprintf(stderr, "==> got %d %s", num, buf);
 		(void) fprintf(stderr, "  > li `%.*s_%.*s'\n",
@@ -196,7 +196,7 @@ main(int argc __attribute__((__unused__)), char *argv[])
 		if (gotsig) {
 			(void) fprintf(stderr, "Got signal %d.\n", (int)gotsig);
 			gotsig = 0;
-			el_reset(el);
+			edited_reset(el);
 		}
 
 		if (!continuation && num == 1)
@@ -277,7 +277,7 @@ main(int argc __attribute__((__unused__)), char *argv[])
 				    "Bad history arguments\n");
 				break;
 			}
-		} else if (el_parse(el, ac, av) == -1) {
+		} else if (edited_parse(el, ac, av) == -1) {
 			switch (fork()) {
 			case 0:
 				execvp(av[0], (char *const *)__UNCONST(av));
@@ -301,7 +301,7 @@ main(int argc __attribute__((__unused__)), char *argv[])
 		tok_reset(tok);
 	}
 
-	el_end(el);
+	edited_end(el);
 	tok_end(tok);
 	history_end(hist);
 

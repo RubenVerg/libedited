@@ -37,8 +37,8 @@
 /*
  * el.h: Internal structures.
  */
-#ifndef _h_edited_el
-#define	_h_edited_el
+#ifndef _h_el
+#define	_h_el
 /*
  * Local defaults
  */
@@ -60,40 +60,40 @@
 #define	FIXIO		0x100
 #define	FROM_ELLINE	0x200
 
-typedef unsigned char el_action_t;	/* Index to command array	*/
+typedef unsigned char edited_action_t;	/* Index to command array	*/
 
 typedef struct coord_t {		/* Position on the screen	*/
 	int	h;
 	int	v;
 } coord_t;
 
-typedef struct el_line_t {
+typedef struct edited_line_t {
 	wchar_t		*buffer;	/* Input line			*/
 	wchar_t	        *cursor;	/* Cursor position		*/
 	wchar_t	        *lastchar;	/* Last character		*/
 	const wchar_t	*limit;		/* Max position			*/
-} el_line_t;
+} edited_line_t;
 
 /*
  * Editor state
  */
-typedef struct el_state_t {
+typedef struct edited_state_t {
 	int		inputmode;	/* What mode are we in?		*/
 	int		doingarg;	/* Are we getting an argument?	*/
 	int		argument;	/* Numeric argument		*/
 	int		metanext;	/* Is the next char a meta char */
-	el_action_t	lastcmd;	/* Previous command		*/
-	el_action_t	thiscmd;	/* this command			*/
+	edited_action_t	lastcmd;	/* Previous command		*/
+	edited_action_t	thiscmd;	/* this command			*/
 	wchar_t		thisch;		/* char that generated it	*/
-} el_state_t;
+} edited_state_t;
 
 /*
  * Until we come up with something better...
  */
-#define	el_malloc(a)	malloc(a)
-#define	el_calloc(a,b)	calloc(a, b)
-#define	el_realloc(a,b)	realloc(a, b)
-#define	el_free(a)	free(a)
+#define	edited_malloc(a)	malloc(a)
+#define	edited_calloc(a,b)	calloc(a, b)
+#define	edited_realloc(a,b)	realloc(a, b)
+#define	edited_free(a)	free(a)
 
 #include "tty.h"
 #include "prompt.h"
@@ -107,49 +107,49 @@ typedef struct el_state_t {
 #include "map.h"
 #include "sig.h"
 
-struct el_read_t;
+struct edited_read_t;
 
 struct editline {
-	wchar_t		 *el_prog;	/* the program name		*/
-	FILE		 *el_infile;	/* Stdio stuff			*/
-	FILE		 *el_outfile;	/* Stdio stuff			*/
-	FILE		 *el_errfile;	/* Stdio stuff			*/
-	int		  el_infd;	/* Input file descriptor	*/
-	int		  el_outfd;	/* Output file descriptor	*/
-	int		  el_errfd;	/* Error file descriptor	*/
-	int		  el_flags;	/* Various flags.		*/
-	coord_t		  el_cursor;	/* Cursor location		*/
-	wint_t		**el_display;	/* Real screen image = what is there */
-	wint_t		**el_vdisplay;	/* Virtual screen image = what we see */
-	void		 *el_data;	/* Client data			*/
-	el_line_t	  el_line;	/* The current line information	*/
-	el_state_t	  el_state;	/* Current editor state		*/
-	el_terminal_t	  el_terminal;	/* Terminal dependent stuff	*/
-	el_tty_t	  el_tty;	/* Tty dependent stuff		*/
-	el_refresh_t	  el_refresh;	/* Refresh stuff		*/
-	el_prompt_t	  el_prompt;	/* Prompt stuff			*/
-	el_prompt_t	  el_rprompt;	/* Prompt stuff			*/
-	el_literal_t	  el_literal;	/* prompt literal bits		*/
-	el_chared_t	  el_chared;	/* Characted editor stuff	*/
-	el_map_t	  el_map;	/* Key mapping stuff		*/
-	el_keymacro_t	  el_keymacro;	/* Key binding stuff		*/
-	el_history_t	  el_history;	/* History stuff		*/
-	el_search_t	  el_search;	/* Search stuff			*/
-	el_signal_t	  el_signal;	/* Signal handling stuff	*/
-	struct el_read_t *el_read;	/* Character reading stuff	*/
-	ct_buffer_t       el_visual;    /* Buffer for displayable str	*/
-	ct_buffer_t       el_scratch;   /* Scratch conversion buffer    */
-	ct_buffer_t       el_lgcyconv;  /* Buffer for legacy wrappers   */
-	LineInfo          el_lgcylinfo; /* Legacy LineInfo buffer       */
+	wchar_t		 *edited_prog;	/* the program name		*/
+	FILE		 *edited_infile;	/* Stdio stuff			*/
+	FILE		 *edited_outfile;	/* Stdio stuff			*/
+	FILE		 *edited_errfile;	/* Stdio stuff			*/
+	int		  edited_infd;	/* Input file descriptor	*/
+	int		  edited_outfd;	/* Output file descriptor	*/
+	int		  edited_errfd;	/* Error file descriptor	*/
+	int		  edited_flags;	/* Various flags.		*/
+	coord_t		  edited_cursor;	/* Cursor location		*/
+	wint_t		**edited_display;	/* Real screen image = what is there */
+	wint_t		**edited_vdisplay;	/* Virtual screen image = what we see */
+	void		 *edited_data;	/* Client data			*/
+	edited_line_t	  edited_line;	/* The current line information	*/
+	edited_state_t	  edited_state;	/* Current editor state		*/
+	edited_terminal_t	  edited_terminal;	/* Terminal dependent stuff	*/
+	edited_tty_t	  edited_tty;	/* Tty dependent stuff		*/
+	edited_refresh_t	  edited_refresh;	/* Refresh stuff		*/
+	edited_prompt_t	  edited_prompt;	/* Prompt stuff			*/
+	edited_prompt_t	  edited_rprompt;	/* Prompt stuff			*/
+	edited_literal_t	  edited_literal;	/* prompt literal bits		*/
+	edited_chared_t	  edited_chared;	/* Characted editor stuff	*/
+	edited_map_t	  edited_map;	/* Key mapping stuff		*/
+	edited_keymacro_t	  edited_keymacro;	/* Key binding stuff		*/
+	edited_history_t	  edited_history;	/* History stuff		*/
+	edited_search_t	  edited_search;	/* Search stuff			*/
+	edited_signal_t	  edited_signal;	/* Signal handling stuff	*/
+	struct edited_read_t *edited_read;	/* Character reading stuff	*/
+	edited_ct_buffer_t       edited_visual;    /* Buffer for displayable str	*/
+	edited_ct_buffer_t       edited_scratch;   /* Scratch conversion buffer    */
+	edited_ct_buffer_t       edited_lgcyconv;  /* Buffer for legacy wrappers   */
+	LineInfo          edited_lgcylinfo; /* Legacy LineInfo buffer       */
 };
 
-libedit_private int	el_editmode(EditLine *, int, const wchar_t **);
-libedit_private EditLine *el_init_internal(const char *, FILE *, FILE *,
+libedited_private int	edited_editmode(EditLine *, int, const wchar_t **);
+libedited_private EditLine *edited_init_internal(const char *, FILE *, FILE *,
     FILE *, int, int, int, int);
 
 #ifdef DEBUG
 #define	EL_ABORT(a)	do { \
-				fprintf(el->el_errfile, "%s, %d: ", \
+				fprintf(el->edited_errfile, "%s, %d: ", \
 					 __FILE__, __LINE__); \
 				fprintf a; \
 				abort(); \
@@ -157,4 +157,4 @@ libedit_private EditLine *el_init_internal(const char *, FILE *, FILE *,
 #else
 #define EL_ABORT(a)	abort()
 #endif
-#endif /* _h_edited_el */
+#endif /* _h_el */

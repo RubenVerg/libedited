@@ -83,48 +83,48 @@ typedef struct lineinfo {
 /*
  * Initialization, cleanup, and resetting
  */
-EditLine	*el_init(const char *, FILE *, FILE *, FILE *);
-EditLine	*el_init_fd(const char *, FILE *, FILE *, FILE *,
+EditLine	*edited_init(const char *, FILE *, FILE *, FILE *);
+EditLine	*edited_init_fd(const char *, FILE *, FILE *, FILE *,
     int, int, int);
-void		 el_end(EditLine *);
-void		 el_reset(EditLine *);
+void		 edited_end(EditLine *);
+void		 edited_reset(EditLine *);
 
 /*
  * Get a line, a character or push a string back in the input queue
  */
-const char	*el_gets(EditLine *, int *);
-int		 el_getc(EditLine *, char *);
-void		 el_push(EditLine *, const char *);
+const char	*edited_gets(EditLine *, int *);
+int		 edited_getc(EditLine *, char *);
+void		 edited_push(EditLine *, const char *);
 
 /*
  * Beep!
  */
-void		 el_beep(EditLine *);
+void		 edited_beep(EditLine *);
 
 /*
  * High level function internals control
  * Parses argc, argv array and executes builtin editline commands
  */
-int		 el_parse(EditLine *, int, const char **);
+int		 edited_parse(EditLine *, int, const char **);
 
 /*
  * Low level editline access functions
  */
-int		 el_set(EditLine *, int, ...);
-int		 el_get(EditLine *, int, ...);
-unsigned char	_el_fn_complete(EditLine *, int);
-unsigned char	_el_fn_sh_complete(EditLine *, int);
+int		 edited_set(EditLine *, int, ...);
+int		 edited_get(EditLine *, int, ...);
+unsigned char	_fn_complete(EditLine *, int);
+unsigned char	_fn_sh_complete(EditLine *, int);
 
 /*
- * el_set/el_get parameters
+ * edited_set/edited_get parameters
  *
- * When using el_wset/el_wget (as opposed to el_set/el_get):
+ * When using edited_wset/edited_wget (as opposed to edited_set/edited_get):
  *   Char is wchar_t, otherwise it is char.
- *   prompt_func is el_wpfunc_t, otherwise it is el_pfunc_t .
+ *   edited_prompt_func is edited_wpfunc_t, otherwise it is edited_pfunc_t .
 
  * Prompt function prototypes are:
- *   typedef char    *(*el_pfunct_t)  (EditLine *);
- *   typedef wchar_t *(*el_wpfunct_t) (EditLine *);
+ *   typedef char    *(*edited_pfunct_t)  (EditLine *);
+ *   typedef wchar_t *(*edited_wpfunct_t) (EditLine *);
  *
  * For operations that support set or set/get, the argument types listed are for
  * the "set" operation. For "get", each listed type must be a pointer.
@@ -132,7 +132,7 @@ unsigned char	_el_fn_sh_complete(EditLine *, int);
  *
  * Operations that only support "get" have the correct argument types listed.
  */
-#define	EL_PROMPT	0	/* , prompt_func);		      set/get */
+#define	EL_PROMPT	0	/* , edited_prompt_func);		      set/get */
 #define	EL_TERMINAL	1	/* , const char *);		      set/get */
 #define	EL_EDITOR	2	/* , const Char *);		      set/get */
 #define	EL_SIGNAL	3	/* , int);			      set/get */
@@ -142,11 +142,11 @@ unsigned char	_el_fn_sh_complete(EditLine *, int);
 #define	EL_ECHOTC	7	/* , const Char *, ..., NULL);        set     */
 #define	EL_SETTY	8	/* , const Char *, ..., NULL);        set     */
 #define	EL_ADDFN	9	/* , const Char *, const Char,        set     */
-				/*   el_func_t);			      */
+				/*   edited_func_t);			      */
 #define	EL_HIST		10	/* , hist_fun_t, const void *);	      set     */
 #define	EL_EDITMODE	11	/* , int);			      set/get */
-#define	EL_RPROMPT	12	/* , prompt_func);		      set/get */
-#define	EL_GETCFN	13	/* , el_rfunc_t);		      set/get */
+#define	EL_RPROMPT	12	/* , edited_prompt_func);		      set/get */
+#define	EL_GETCFN	13	/* , edited_rfunc_t);		      set/get */
 #define	EL_CLIENTDATA	14	/* , void *);			      set/get */
 #define	EL_UNBUFFERED	15	/* , int);			      set/get */
 #define	EL_PREP_TERM	16	/* , int);			      set     */
@@ -154,10 +154,10 @@ unsigned char	_el_fn_sh_complete(EditLine *, int);
 #define	EL_GETFP	18	/* , int, FILE **);		          get */
 #define	EL_SETFP	19	/* , int, FILE *);		      set     */
 #define	EL_REFRESH	20	/* , void);			      set     */
-#define	EL_PROMPT_ESC	21	/* , prompt_func, Char);	      set/get */
-#define	EL_RPROMPT_ESC	22	/* , prompt_func, Char);	      set/get */
-#define	EL_RESIZE	23	/* , el_zfunc_t, void *);	      set     */
-#define	EL_ALIAS_TEXT	24	/* , el_afunc_t, void *);	      set     */
+#define	EL_PROMPT_ESC	21	/* , edited_prompt_func, Char);	      set/get */
+#define	EL_RPROMPT_ESC	22	/* , edited_prompt_func, Char);	      set/get */
+#define	EL_RESIZE	23	/* , edited_zfunc_t, void *);	      set     */
+#define	EL_ALIAS_TEXT	24	/* , edited_afunc_t, void *);	      set     */
 #define	EL_SAFEREAD	25	/* , int);			      set/get */
 
 #define	EL_BUILTIN_GETCFN	(NULL)
@@ -165,23 +165,23 @@ unsigned char	_el_fn_sh_complete(EditLine *, int);
 /*
  * Source named file or $PWD/.editrc or $HOME/.editrc
  */
-int		el_source(EditLine *, const char *);
+int		edited_source(EditLine *, const char *);
 
 /*
  * Must be called when the terminal changes size; If EL_SIGNAL
  * is set this is done automatically otherwise it is the responsibility
  * of the application
  */
-void		 el_resize(EditLine *);
+void		 edited_resize(EditLine *);
 
 /*
  * User-defined function interface.
  */
-const LineInfo	*el_line(EditLine *);
-int		 el_insertstr(EditLine *, const char *);
-void		 el_deletestr(EditLine *, int);
-int		 el_replacestr(EditLine *, const char *);
-int		 el_deletestr1(EditLine *, int, int);
+const LineInfo	*edited_line(EditLine *);
+int		 edited_insertstr(EditLine *, const char *);
+void		 edited_deletestr(EditLine *, int);
+int		 edited_replacestr(EditLine *, const char *);
+int		 edited_deletestr1(EditLine *, int, int);
 
 /*
  * ==== History ====
@@ -269,22 +269,22 @@ typedef struct lineinfow {
 	const wchar_t	*lastchar;
 } LineInfoW;
 
-typedef int	(*el_rfunc_t)(EditLine *, wchar_t *);
+typedef int	(*edited_rfunc_t)(EditLine *, wchar_t *);
 
-const wchar_t	*el_wgets(EditLine *, int *);
-int		 el_wgetc(EditLine *, wchar_t *);
-void		 el_wpush(EditLine *, const wchar_t *);
+const wchar_t	*edited_wgets(EditLine *, int *);
+int		 edited_wgetc(EditLine *, wchar_t *);
+void		 edited_wpush(EditLine *, const wchar_t *);
 
-int		 el_wparse(EditLine *, int, const wchar_t **);
+int		 edited_wparse(EditLine *, int, const wchar_t **);
 
-int		 el_wset(EditLine *, int, ...);
-int		 el_wget(EditLine *, int, ...);
+int		 edited_wset(EditLine *, int, ...);
+int		 edited_wget(EditLine *, int, ...);
 
-int		 el_cursor(EditLine *, int);
-const LineInfoW	*el_wline(EditLine *);
-int		 el_winsertstr(EditLine *, const wchar_t *);
-#define          el_wdeletestr  el_deletestr
-int		 el_wreplacestr(EditLine *, const wchar_t *);
+int		 edited_cursor(EditLine *, int);
+const LineInfoW	*edited_wline(EditLine *);
+int		 edited_winsertstr(EditLine *, const wchar_t *);
+#define          edited_wdeletestr  edited_deletestr
+int		 edited_wreplacestr(EditLine *, const wchar_t *);
 
 /*
  * ==== History ====

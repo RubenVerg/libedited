@@ -37,12 +37,12 @@
 /*
  * el.hist.c: History functions
  */
-#ifndef _h_edited_hist
-#define	_h_edited_hist
+#ifndef _h_hist
+#define	_h_hist
 
 typedef int (*hist_fun_t)(void *, HistEventW *, int, ...);
 
-typedef struct el_history_t {
+typedef struct edited_history_t {
 	wchar_t		*buf;		/* The history buffer		*/
 	size_t		 sz;		/* Size of history buffer	*/
 	wchar_t		*last;		/* The last character		*/
@@ -50,13 +50,13 @@ typedef struct el_history_t {
 	void		*ref;		/* Argument for history fcns	*/
 	hist_fun_t	 fun;		/* Event access			*/
 	HistEventW	 ev;		/* Event cookie			*/
-} el_history_t;
+} edited_history_t;
 
 #define	HIST_FUN_INTERNAL(el, fn, arg)	\
-    ((((*(el)->el_history.fun) ((el)->el_history.ref, &(el)->el_history.ev, \
-	fn, arg)) == -1) ? NULL : (el)->el_history.ev.str)
+    ((((*(el)->edited_history.fun) ((el)->edited_history.ref, &(el)->edited_history.ev, \
+	fn, arg)) == -1) ? NULL : (el)->edited_history.ev.str)
 #define HIST_FUN(el, fn, arg) \
-    (((el)->el_flags & NARROW_HISTORY) ? hist_convert(el, fn, arg) : \
+    (((el)->edited_flags & NARROW_HISTORY) ? hist_convert(el, fn, arg) : \
 	HIST_FUN_INTERNAL(el, fn, arg))
 
 #define	HIST_NEXT(el)			HIST_FUN(el, H_NEXT, NULL)
@@ -69,12 +69,12 @@ typedef struct el_history_t {
 #define	HIST_SAVE_FP(el, fp)		HIST_FUN(el, H_SAVE_FP, fp)
 #define	HIST_NSAVE_FP(el, n, fp)	HIST_FUN(el, H_NSAVE_FP, n, fp)
 
-libedit_private int		hist_init(EditLine *);
-libedit_private void		hist_end(EditLine *);
-libedit_private el_action_t	hist_get(EditLine *);
-libedit_private int		hist_set(EditLine *, hist_fun_t, void *);
-libedit_private int		hist_command(EditLine *, int, const wchar_t **);
-libedit_private int		hist_enlargebuf(EditLine *, size_t, size_t);
-libedit_private wchar_t	*hist_convert(EditLine *, int, void *);
+libedited_private int		hist_init(EditLine *);
+libedited_private void		hist_end(EditLine *);
+libedited_private edited_action_t	hist_get(EditLine *);
+libedited_private int		hist_set(EditLine *, hist_fun_t, void *);
+libedited_private int		hist_command(EditLine *, int, const wchar_t **);
+libedited_private int		hist_enlargebuf(EditLine *, size_t, size_t);
+libedited_private wchar_t	*hist_convert(EditLine *, int, void *);
 
-#endif /* _h_edited_hist */
+#endif /* _h_hist */

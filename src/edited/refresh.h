@@ -37,23 +37,23 @@
 /*
  * el.refresh.h: Screen refresh functions
  */
-#ifndef _h_edited_refresh
-#define	_h_edited_refresh
+#ifndef _h_refresh
+#define	_h_refresh
 
 typedef struct {
 	coord_t	r_cursor;	/* Refresh cursor position	*/
 	int	r_oldcv;	/* Vertical locations		*/
 	int	r_newcv;
-} el_refresh_t;
+} edited_refresh_t;
 
-libedit_private void	re_putc(EditLine *, wint_t, int);
-libedit_private void	re_putliteral(EditLine *, const wchar_t *,
+libedited_private void	edited_re_putc(EditLine *, wint_t, int);
+libedited_private void	edited_re_putliteral(EditLine *, const wchar_t *,
     const wchar_t *);
-libedit_private void	re_clear_lines(EditLine *);
-libedit_private void	re_clear_display(EditLine *);
-libedit_private void	re_refresh(EditLine *);
-libedit_private void	re_refresh_cursor(EditLine *);
-libedit_private void	re_fastaddc(EditLine *);
-libedit_private void	re_goto_bottom(EditLine *);
+libedited_private void	edited_re_clear_lines(EditLine *);
+libedited_private void	edited_re_clear_display(EditLine *);
+libedited_private void	edited_re_refresh(EditLine *);
+libedited_private void	edited_re_refresh_cursor(EditLine *);
+libedited_private void	edited_re_fastaddc(EditLine *);
+libedited_private void	edited_re_goto_bottom(EditLine *);
 
-#endif /* _h_edited_refresh */
+#endif /* _h_refresh */

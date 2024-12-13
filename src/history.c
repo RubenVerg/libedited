@@ -73,8 +73,8 @@ static const char hist_cookie[] = "_HiStOrY_V2_\n";
 #define	Strncmp(d, s, n)	strncmp(d, s, n)
 #define	Strncpy(d, s, n)	strncpy(d, s, n)
 #define	Strncat(d, s, n)	strncat(d, s, n)
-#define	ct_decode_string(s, b)	(s)
-#define	ct_encode_string(s, b)	(s)
+#define	edited_ct_decode_string(s, b)	(s)
+#define	edited_ct_encode_string(s, b)	(s)
 
 #else
 #include "edited/chartype.h"
@@ -783,7 +783,7 @@ history_load(TYPE(History) *h, const char *fname)
 	TYPE(HistEvent) ev;
 	Char *decode_result;
 #ifndef NARROWCHAR
-	static ct_buffer_t conv;
+	static edited_ct_buffer_t conv;
 #endif
 
 	if ((fp = fopen(fname, "r")) == NULL)
@@ -814,7 +814,7 @@ history_load(TYPE(History) *h, const char *fname)
 			ptr = nptr;
 		}
 		(void) strunvis(ptr, line);
-		decode_result = ct_decode_string(ptr, &conv);
+		decode_result = edited_ct_decode_string(ptr, &conv);
 		if (decode_result == NULL)
 			continue;
 		if (HENTER(h, &ev, decode_result) == -1) {
@@ -843,7 +843,7 @@ history_save_fp(TYPE(History) *h, size_t nelem, FILE *fp)
 	char *ptr;
 	const char *str;
 #ifndef NARROWCHAR
-	static ct_buffer_t conv;
+	static edited_ct_buffer_t conv;
 #endif
 
 	if (ftell(fp) == 0 && fputs(hist_cookie, fp) == EOF)
@@ -862,7 +862,7 @@ history_save_fp(TYPE(History) *h, size_t nelem, FILE *fp)
 		retval = HLAST(h, &ev);
 
 	for (i = 0; retval != -1; retval = HPREV(h, &ev), i++) {
-		str = ct_encode_string(ev.str, &conv);
+		str = edited_ct_encode_string(ev.str, &conv);
 		len = strlen(str) * 4 + 1;
 		if (len > max_size) {
 			char *nptr;

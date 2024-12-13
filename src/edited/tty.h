@@ -37,8 +37,8 @@
 /*
  * el.tty.h: Local terminal header
  */
-#ifndef _h_edited_tty
-#define	_h_edited_tty
+#ifndef _h_tty
+#define	_h_tty
 
 #include <termios.h>
 #include <unistd.h>
@@ -435,7 +435,7 @@
  * Terminal dependent data structures
  */
 #define	EX_IO	0	/* while we are executing	*/
-#define	ED_IO	1	/* while we are editing		*/
+#define	EDITED_ED_IO	1	/* while we are editing		*/
 #define	TS_IO	2	/* new mode from terminal	*/
 #define	QU_IO	2	/* used only for quoted chars	*/
 #define	NN_IO	3	/* The number of entries	*/
@@ -456,15 +456,15 @@ typedef struct {
 
 typedef unsigned char ttychar_t[NN_IO][C_NCC];
 
-libedit_private int	tty_init(EditLine *);
-libedit_private void	tty_end(EditLine *, int);
-libedit_private int	tty_stty(EditLine *, int, const wchar_t **);
-libedit_private int	tty_rawmode(EditLine *);
-libedit_private int	tty_cookedmode(EditLine *);
-libedit_private int	tty_quotemode(EditLine *);
-libedit_private int	tty_noquotemode(EditLine *);
-libedit_private void	tty_bind_char(EditLine *, int);
-libedit_private int	tty_get_signal_character(EditLine *, int);
+libedited_private int	edited_tty_init(EditLine *);
+libedited_private void	edited_tty_end(EditLine *, int);
+libedited_private int	edited_tty_stty(EditLine *, int, const wchar_t **);
+libedited_private int	edited_tty_rawmode(EditLine *);
+libedited_private int	edited_tty_cookedmode(EditLine *);
+libedited_private int	edited_tty_quotemode(EditLine *);
+libedited_private int	edited_tty_noquotemode(EditLine *);
+libedited_private void	edited_tty_bind_char(EditLine *, int);
+libedited_private int	edited_tty_get_signal_character(EditLine *, int);
 
 typedef struct {
     ttyperm_t t_t;
@@ -476,7 +476,7 @@ typedef struct {
     unsigned char t_mode;
     unsigned char t_vdisable;
     unsigned char t_initialized;
-} el_tty_t;
+} edited_tty_t;
 
 
-#endif /* _h_edited_tty */
+#endif /* _h_tty */

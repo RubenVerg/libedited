@@ -32,22 +32,22 @@
 /*
  * el.literal.h: Literal character
  */
-#ifndef _h_edited_literal
-#define	_h_edited_literal
+#ifndef _h_literal
+#define	_h_literal
 
 #define EL_LITERAL	((wint_t)0x80000000)
 
-typedef struct el_literal_t {
+typedef struct edited_literal_t {
 	char		**l_buf;	/* array of buffers */
 	size_t		l_idx;		/* max in use */
 	size_t		l_len;		/* max allocated */
-} el_literal_t;
+} edited_literal_t;
 
-libedit_private void literal_init(EditLine *);
-libedit_private void literal_end(EditLine *);
-libedit_private void literal_clear(EditLine *);
-libedit_private wint_t literal_add(EditLine *, const wchar_t *,
+libedited_private void edited_lit_init(EditLine *);
+libedited_private void edited_lit_end(EditLine *);
+libedited_private void edited_lit_clear(EditLine *);
+libedited_private wint_t edited_lit_add(EditLine *, const wchar_t *,
     const wchar_t *, int *);
-libedit_private const char *literal_get(EditLine *, wint_t);
+libedited_private const char *edited_lit_get(EditLine *, wint_t);
 
-#endif /* _h_edited_literal */
+#endif /* _h_literal */

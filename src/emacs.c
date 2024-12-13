@@ -47,277 +47,277 @@ __RCSID("$NetBSD: emacs.c,v 1.38 2024/06/29 17:28:07 christos Exp $");
 #include <ctype.h>
 
 #include "edited/el.h"
-#include "emacs.h"
-#include "fcns.h"
+#include "edited/emacs.h"
+#include "edited/fcns.h"
 
-/* em_delete_or_list():
+/* edited_em_delete_or_list():
  *	Delete character under cursor or list completions if at end of line
  *	[^D]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_delete_or_list(EditLine *el, wint_t c)
+edited_em_delete_or_list(EditLine *el, wint_t c)
 {
 
-	if (el->el_line.cursor == el->el_line.lastchar) {
+	if (el->edited_line.cursor == el->edited_line.lastchar) {
 					/* if I'm at the end */
-		if (el->el_line.cursor == el->el_line.buffer) {
+		if (el->edited_line.cursor == el->edited_line.buffer) {
 					/* and the beginning */
-			terminal_writec(el, c);	/* then do an EOF */
+			edited_term_writec(el, c);	/* then do an EOF */
 			return CC_EOF;
 		} else {
 			/*
 			 * Here we could list completions, but it is an
 			 * error right now
 			 */
-			terminal_beep(el);
+			edited_term_beep(el);
 			return CC_ERROR;
 		}
 	} else {
-		if (el->el_state.doingarg)
-			c_delafter(el, el->el_state.argument);
+		if (el->edited_state.doingarg)
+			edited_c_delafter(el, el->edited_state.argument);
 		else
-			c_delafter1(el);
-		if (el->el_line.cursor > el->el_line.lastchar)
-			el->el_line.cursor = el->el_line.lastchar;
+			edited_c_delafter1(el);
+		if (el->edited_line.cursor > el->edited_line.lastchar)
+			el->edited_line.cursor = el->edited_line.lastchar;
 				/* bounds check */
 		return CC_REFRESH;
 	}
 }
 
 
-/* em_delete_next_word():
+/* edited_em_delete_next_word():
  *	Cut from cursor to end of current word
  *	[M-d]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_delete_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_delete_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *p, *kp;
 
-	if (el->el_line.cursor == el->el_line.lastchar)
+	if (el->edited_line.cursor == el->edited_line.lastchar)
 		return CC_ERROR;
 
-	cp = c__next_word(el->el_line.cursor, el->el_line.lastchar,
-	    el->el_state.argument, ce__isword);
+	cp = edited_c__next_word(el->edited_line.cursor, el->edited_line.lastchar,
+	    el->edited_state.argument, edited_ce__isword);
 
-	for (p = el->el_line.cursor, kp = el->el_chared.c_kill.buf; p < cp; p++)
+	for (p = el->edited_line.cursor, kp = el->edited_chared.edited_c_kill.buf; p < cp; p++)
 				/* save the text */
 		*kp++ = *p;
-	el->el_chared.c_kill.last = kp;
+	el->edited_chared.edited_c_kill.last = kp;
 
-	c_delafter(el, (int)(cp - el->el_line.cursor));	/* delete after dot */
-	if (el->el_line.cursor > el->el_line.lastchar)
-		el->el_line.cursor = el->el_line.lastchar;
+	edited_c_delafter(el, (int)(cp - el->edited_line.cursor));	/* delete after dot */
+	if (el->edited_line.cursor > el->edited_line.lastchar)
+		el->edited_line.cursor = el->edited_line.lastchar;
 				/* bounds check */
 	return CC_REFRESH;
 }
 
 
-/* em_yank():
+/* edited_em_yank():
  *	Paste cut buffer at cursor position
  *	[^Y]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_yank(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_yank(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
-	if (el->el_chared.c_kill.last == el->el_chared.c_kill.buf)
+	if (el->edited_chared.edited_c_kill.last == el->edited_chared.edited_c_kill.buf)
 		return CC_NORM;
 
-	if (el->el_line.lastchar +
-	    (el->el_chared.c_kill.last - el->el_chared.c_kill.buf) >=
-	    el->el_line.limit)
+	if (el->edited_line.lastchar +
+	    (el->edited_chared.edited_c_kill.last - el->edited_chared.edited_c_kill.buf) >=
+	    el->edited_line.limit)
 		return CC_ERROR;
 
-	el->el_chared.c_kill.mark = el->el_line.cursor;
+	el->edited_chared.edited_c_kill.mark = el->edited_line.cursor;
 
 	/* open the space, */
-	c_insert(el,
-	    (int)(el->el_chared.c_kill.last - el->el_chared.c_kill.buf));
-	cp = el->el_line.cursor;
+	edited_c_insert(el,
+	    (int)(el->edited_chared.edited_c_kill.last - el->edited_chared.edited_c_kill.buf));
+	cp = el->edited_line.cursor;
 	/* copy the chars */
-	for (kp = el->el_chared.c_kill.buf; kp < el->el_chared.c_kill.last; kp++)
+	for (kp = el->edited_chared.edited_c_kill.buf; kp < el->edited_chared.edited_c_kill.last; kp++)
 		*cp++ = *kp;
 
 	/* if an arg, cursor at beginning else cursor at end */
-	if (el->el_state.argument == 1)
-		el->el_line.cursor = cp;
+	if (el->edited_state.argument == 1)
+		el->edited_line.cursor = cp;
 
 	return CC_REFRESH;
 }
 
 
-/* em_kill_line():
+/* edited_em_kill_line():
  *	Cut the entire line and save in cut buffer
  *	[^U]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_kill_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_kill_line(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
-	cp = el->el_line.buffer;
-	kp = el->el_chared.c_kill.buf;
-	while (cp < el->el_line.lastchar)
+	cp = el->edited_line.buffer;
+	kp = el->edited_chared.edited_c_kill.buf;
+	while (cp < el->edited_line.lastchar)
 		*kp++ = *cp++;	/* copy it */
-	el->el_chared.c_kill.last = kp;
+	el->edited_chared.edited_c_kill.last = kp;
 				/* zap! -- delete all of it */
-	el->el_line.lastchar = el->el_line.buffer;
-	el->el_line.cursor = el->el_line.buffer;
+	el->edited_line.lastchar = el->edited_line.buffer;
+	el->edited_line.cursor = el->edited_line.buffer;
 	return CC_REFRESH;
 }
 
 
-/* em_kill_region():
+/* edited_em_kill_region():
  *	Cut area between mark and cursor and save in cut buffer
  *	[^W]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_kill_region(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_kill_region(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
-	if (!el->el_chared.c_kill.mark)
+	if (!el->edited_chared.edited_c_kill.mark)
 		return CC_ERROR;
 
-	if (el->el_chared.c_kill.mark > el->el_line.cursor) {
-		cp = el->el_line.cursor;
-		kp = el->el_chared.c_kill.buf;
-		while (cp < el->el_chared.c_kill.mark)
+	if (el->edited_chared.edited_c_kill.mark > el->edited_line.cursor) {
+		cp = el->edited_line.cursor;
+		kp = el->edited_chared.edited_c_kill.buf;
+		while (cp < el->edited_chared.edited_c_kill.mark)
 			*kp++ = *cp++;	/* copy it */
-		el->el_chared.c_kill.last = kp;
-		c_delafter(el, (int)(cp - el->el_line.cursor));
+		el->edited_chared.edited_c_kill.last = kp;
+		edited_c_delafter(el, (int)(cp - el->edited_line.cursor));
 	} else {		/* mark is before cursor */
-		cp = el->el_chared.c_kill.mark;
-		kp = el->el_chared.c_kill.buf;
-		while (cp < el->el_line.cursor)
+		cp = el->edited_chared.edited_c_kill.mark;
+		kp = el->edited_chared.edited_c_kill.buf;
+		while (cp < el->edited_line.cursor)
 			*kp++ = *cp++;	/* copy it */
-		el->el_chared.c_kill.last = kp;
-		c_delbefore(el, (int)(cp - el->el_chared.c_kill.mark));
-		el->el_line.cursor = el->el_chared.c_kill.mark;
+		el->edited_chared.edited_c_kill.last = kp;
+		edited_c_delbefore(el, (int)(cp - el->edited_chared.edited_c_kill.mark));
+		el->edited_line.cursor = el->edited_chared.edited_c_kill.mark;
 	}
 	return CC_REFRESH;
 }
 
 
-/* em_copy_region():
+/* edited_em_copy_region():
  *	Copy area between mark and cursor to cut buffer
  *	[M-W]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_copy_region(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_copy_region(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
-	if (!el->el_chared.c_kill.mark)
+	if (!el->edited_chared.edited_c_kill.mark)
 		return CC_ERROR;
 
-	if (el->el_chared.c_kill.mark > el->el_line.cursor) {
-		cp = el->el_line.cursor;
-		kp = el->el_chared.c_kill.buf;
-		while (cp < el->el_chared.c_kill.mark)
+	if (el->edited_chared.edited_c_kill.mark > el->edited_line.cursor) {
+		cp = el->edited_line.cursor;
+		kp = el->edited_chared.edited_c_kill.buf;
+		while (cp < el->edited_chared.edited_c_kill.mark)
 			*kp++ = *cp++;	/* copy it */
-		el->el_chared.c_kill.last = kp;
+		el->edited_chared.edited_c_kill.last = kp;
 	} else {
-		cp = el->el_chared.c_kill.mark;
-		kp = el->el_chared.c_kill.buf;
-		while (cp < el->el_line.cursor)
+		cp = el->edited_chared.edited_c_kill.mark;
+		kp = el->edited_chared.edited_c_kill.buf;
+		while (cp < el->edited_line.cursor)
 			*kp++ = *cp++;	/* copy it */
-		el->el_chared.c_kill.last = kp;
+		el->edited_chared.edited_c_kill.last = kp;
 	}
 	return CC_NORM;
 }
 
 
-/* em_gosmacs_transpose():
+/* edited_em_gosmacs_transpose():
  *	Exchange the two characters before the cursor
  *	Gosling emacs transpose chars [^T]
  */
-libedit_private el_action_t
-em_gosmacs_transpose(EditLine *el, wint_t c)
+libedited_private edited_action_t
+edited_em_gosmacs_transpose(EditLine *el, wint_t c)
 {
 
-	if (el->el_line.cursor > &el->el_line.buffer[1]) {
+	if (el->edited_line.cursor > &el->edited_line.buffer[1]) {
 		/* must have at least two chars entered */
-		c = el->el_line.cursor[-2];
-		el->el_line.cursor[-2] = el->el_line.cursor[-1];
-		el->el_line.cursor[-1] = c;
+		c = el->edited_line.cursor[-2];
+		el->edited_line.cursor[-2] = el->edited_line.cursor[-1];
+		el->edited_line.cursor[-1] = c;
 		return CC_REFRESH;
 	} else
 		return CC_ERROR;
 }
 
 
-/* em_next_word():
+/* edited_em_next_word():
  *	Move next to end of current word
  *	[M-f]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
 {
-	if (el->el_line.cursor == el->el_line.lastchar)
+	if (el->edited_line.cursor == el->edited_line.lastchar)
 		return CC_ERROR;
 
-	el->el_line.cursor = c__next_word(el->el_line.cursor,
-	    el->el_line.lastchar,
-	    el->el_state.argument,
-	    ce__isword);
+	el->edited_line.cursor = edited_c__next_word(el->edited_line.cursor,
+	    el->edited_line.lastchar,
+	    el->edited_state.argument,
+	    edited_ce__isword);
 
-	if (el->el_map.type == MAP_VI)
-		if (el->el_chared.c_vcmd.action != NOP) {
-			cv_delfini(el);
+	if (el->edited_map.type == MAP_VI)
+		if (el->edited_chared.edited_c_vcmd.action != NOP) {
+			edited_cv_delfini(el);
 			return CC_REFRESH;
 		}
 	return CC_CURSOR;
 }
 
 
-/* em_upper_case():
+/* edited_em_upper_case():
  *	Uppercase the characters from cursor to end of current word
  *	[M-u]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_upper_case(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_upper_case(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *ep;
 
-	ep = c__next_word(el->el_line.cursor, el->el_line.lastchar,
-	    el->el_state.argument, ce__isword);
+	ep = edited_c__next_word(el->edited_line.cursor, el->edited_line.lastchar,
+	    el->edited_state.argument, edited_ce__isword);
 
-	for (cp = el->el_line.cursor; cp < ep; cp++)
+	for (cp = el->edited_line.cursor; cp < ep; cp++)
 		if (iswlower(*cp))
 			*cp = towupper(*cp);
 
-	el->el_line.cursor = ep;
-	if (el->el_line.cursor > el->el_line.lastchar)
-		el->el_line.cursor = el->el_line.lastchar;
+	el->edited_line.cursor = ep;
+	if (el->edited_line.cursor > el->edited_line.lastchar)
+		el->edited_line.cursor = el->edited_line.lastchar;
 	return CC_REFRESH;
 }
 
 
-/* em_capitol_case():
+/* edited_em_capitol_case():
  *	Capitalize the characters from cursor to end of current word
  *	[M-c]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_capitol_case(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_capitol_case(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *ep;
 
-	ep = c__next_word(el->el_line.cursor, el->el_line.lastchar,
-	    el->el_state.argument, ce__isword);
+	ep = edited_c__next_word(el->edited_line.cursor, el->edited_line.lastchar,
+	    el->edited_state.argument, edited_ce__isword);
 
-	for (cp = el->el_line.cursor; cp < ep; cp++) {
+	for (cp = el->edited_line.cursor; cp < ep; cp++) {
 		if (iswalpha(*cp)) {
 			if (iswlower(*cp))
 				*cp = towupper(*cp);
@@ -329,184 +329,184 @@ em_capitol_case(EditLine *el, wint_t c __attribute__((__unused__)))
 		if (iswupper(*cp))
 			*cp = towlower(*cp);
 
-	el->el_line.cursor = ep;
-	if (el->el_line.cursor > el->el_line.lastchar)
-		el->el_line.cursor = el->el_line.lastchar;
+	el->edited_line.cursor = ep;
+	if (el->edited_line.cursor > el->edited_line.lastchar)
+		el->edited_line.cursor = el->edited_line.lastchar;
 	return CC_REFRESH;
 }
 
 
-/* em_lower_case():
+/* edited_em_lower_case():
  *	Lowercase the characters from cursor to end of current word
  *	[M-l]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_lower_case(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_lower_case(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *ep;
 
-	ep = c__next_word(el->el_line.cursor, el->el_line.lastchar,
-	    el->el_state.argument, ce__isword);
+	ep = edited_c__next_word(el->edited_line.cursor, el->edited_line.lastchar,
+	    el->edited_state.argument, edited_ce__isword);
 
-	for (cp = el->el_line.cursor; cp < ep; cp++)
+	for (cp = el->edited_line.cursor; cp < ep; cp++)
 		if (iswupper(*cp))
 			*cp = towlower(*cp);
 
-	el->el_line.cursor = ep;
-	if (el->el_line.cursor > el->el_line.lastchar)
-		el->el_line.cursor = el->el_line.lastchar;
+	el->edited_line.cursor = ep;
+	if (el->edited_line.cursor > el->edited_line.lastchar)
+		el->edited_line.cursor = el->edited_line.lastchar;
 	return CC_REFRESH;
 }
 
 
-/* em_set_mark():
+/* edited_em_set_mark():
  *	Set the mark at cursor
  *	[^@]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_set_mark(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_set_mark(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	el->el_chared.c_kill.mark = el->el_line.cursor;
+	el->edited_chared.edited_c_kill.mark = el->edited_line.cursor;
 	return CC_NORM;
 }
 
 
-/* em_exchange_mark():
+/* edited_em_exchange_mark():
  *	Exchange the cursor and mark
  *	[^X^X]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_exchange_mark(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_exchange_mark(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp;
 
-	cp = el->el_line.cursor;
-	el->el_line.cursor = el->el_chared.c_kill.mark;
-	el->el_chared.c_kill.mark = cp;
+	cp = el->edited_line.cursor;
+	el->edited_line.cursor = el->edited_chared.edited_c_kill.mark;
+	el->edited_chared.edited_c_kill.mark = cp;
 	return CC_CURSOR;
 }
 
 
-/* em_universal_argument():
+/* edited_em_universal_argument():
  *	Universal argument (argument times 4)
  *	[^U]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_universal_argument(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_universal_argument(EditLine *el, wint_t c __attribute__((__unused__)))
 {				/* multiply current argument by 4 */
 
-	if (el->el_state.argument > 1000000)
+	if (el->edited_state.argument > 1000000)
 		return CC_ERROR;
-	el->el_state.doingarg = 1;
-	el->el_state.argument *= 4;
+	el->edited_state.doingarg = 1;
+	el->edited_state.argument *= 4;
 	return CC_ARGHACK;
 }
 
 
-/* em_meta_next():
+/* edited_em_meta_next():
  *	Add 8th bit to next character typed
  *	[<ESC>]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_meta_next(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_meta_next(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	el->el_state.metanext = 1;
+	el->edited_state.metanext = 1;
 	return CC_ARGHACK;
 }
 
 
-/* em_toggle_overwrite():
+/* edited_em_toggle_overwrite():
  *	Switch from insert to overwrite mode or vice versa
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_toggle_overwrite(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_toggle_overwrite(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	el->el_state.inputmode = (el->el_state.inputmode == MODE_INSERT) ?
+	el->edited_state.inputmode = (el->edited_state.inputmode == MODE_INSERT) ?
 	    MODE_REPLACE : MODE_INSERT;
 	return CC_NORM;
 }
 
 
-/* em_copy_prev_word():
+/* edited_em_copy_prev_word():
  *	Copy current word to cursor
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_copy_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_copy_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *oldc, *dp;
 
-	if (el->el_line.cursor == el->el_line.buffer)
+	if (el->edited_line.cursor == el->edited_line.buffer)
 		return CC_ERROR;
 
 	/* does a bounds check */
-	cp = c__prev_word(el->el_line.cursor, el->el_line.buffer,
-	    el->el_state.argument, ce__isword);
+	cp = edited_c__prev_word(el->edited_line.cursor, el->edited_line.buffer,
+	    el->edited_state.argument, edited_ce__isword);
 
-	c_insert(el, (int)(el->el_line.cursor - cp));
-	oldc = el->el_line.cursor;
-	for (dp = oldc; cp < oldc && dp < el->el_line.lastchar; cp++)
+	edited_c_insert(el, (int)(el->edited_line.cursor - cp));
+	oldc = el->edited_line.cursor;
+	for (dp = oldc; cp < oldc && dp < el->edited_line.lastchar; cp++)
 		*dp++ = *cp;
 
-	el->el_line.cursor = dp;/* put cursor at end */
+	el->edited_line.cursor = dp;/* put cursor at end */
 
 	return CC_REFRESH;
 }
 
 
-/* em_inc_search_next():
+/* edited_em_inc_search_next():
  *	Emacs incremental next search
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_inc_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_inc_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	el->el_search.patlen = 0;
-	return ce_inc_search(el, ED_SEARCH_NEXT_HISTORY);
+	el->edited_search.patlen = 0;
+	return edited_ce_inc_search(el, EDITED_ED_SEARCH_NEXT_HISTORY);
 }
 
 
-/* em_inc_search_prev():
+/* edited_em_inc_search_prev():
  *	Emacs incremental reverse search
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_inc_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_inc_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	el->el_search.patlen = 0;
-	return ce_inc_search(el, ED_SEARCH_PREV_HISTORY);
+	el->edited_search.patlen = 0;
+	return edited_ce_inc_search(el, EDITED_ED_SEARCH_PREV_HISTORY);
 }
 
 
-/* em_delete_prev_char():
+/* edited_em_delete_prev_char():
  *	Delete the character to the left of the cursor
  *	[^?]
  */
-libedit_private el_action_t
+libedited_private edited_action_t
 /*ARGSUSED*/
-em_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_em_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
 {
 
-	if (el->el_line.cursor <= el->el_line.buffer)
+	if (el->edited_line.cursor <= el->edited_line.buffer)
 		return CC_ERROR;
 
-	if (el->el_state.doingarg)
-		c_delbefore(el, el->el_state.argument);
+	if (el->edited_state.doingarg)
+		edited_c_delbefore(el, el->edited_state.argument);
 	else
-		c_delbefore1(el);
-	el->el_line.cursor -= el->el_state.argument;
-	if (el->el_line.cursor < el->el_line.buffer)
-		el->el_line.cursor = el->el_line.buffer;
+		edited_c_delbefore1(el);
+	el->edited_line.cursor -= el->edited_state.argument;
+	if (el->edited_line.cursor < el->edited_line.buffer)
+		el->edited_line.cursor = el->edited_line.buffer;
 	return CC_REFRESH;
 }

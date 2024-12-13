@@ -1,31 +1,31 @@
 
-BUILT_SOURCES = vi.h emacs.h common.h fcns.h help.h func.h
+BUILT_SOURCES = edited/vi.h edited/emacs.h edited/common.h edited/fcns.h edited/help.h edited/func.h
 
-AHDR= vi.h emacs.h common.h 
+AHDR= edited/vi.h edited/emacs.h edited/common.h 
 ASRC= $(srcdir)/vi.c $(srcdir)/emacs.c $(srcdir)/common.c
 
-vi.h: Makefile $(srcdir)/vi.c
+edited/vi.h: Makefile $(srcdir)/vi.c
 	AWK=$(AWK) sh $(srcdir)/makelist -h $(srcdir)/vi.c > $@
 
-emacs.h: Makefile $(srcdir)/emacs.c
+edited/emacs.h: Makefile $(srcdir)/emacs.c
 	AWK=$(AWK) sh $(srcdir)/makelist -h $(srcdir)/emacs.c > $@
 
-common.h: Makefile $(srcdir)/common.c
+edited/common.h: Makefile $(srcdir)/common.c
 	AWK=$(AWK) sh $(srcdir)/makelist -h $(srcdir)/common.c > $@
 
-fcns.h: Makefile $(AHDR)
+edited/fcns.h: Makefile $(AHDR)
 	AWK=$(AWK) sh $(srcdir)/makelist -fh $(AHDR) > $@
 
-help.h: Makefile $(ASRC)
+edited/help.h: Makefile $(ASRC)
 	AWK=$(AWK) sh $(srcdir)/makelist -bh $(ASRC) > $@
 
-func.h: Makefile $(AHDR)
+edited/func.h: Makefile $(AHDR)
 	AWK=$(AWK) sh $(srcdir)/makelist -fc $(AHDR) > $@
 
 CLEANFILES = $(BUILT_SOURCES)
 
 lib_LTLIBRARIES    = libedited.la
-libedited_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.c chartype.c parse.c \
+libla_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.c chartype.c parse.c \
 							prompt.c read.c refresh.c search.c sig.c terminal.c tty.c vi.c \
 							reallocarr.c wcsdup.c \
 							tokenizer.c tokenizern.c \
@@ -37,25 +37,25 @@ libedited_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c ma
 							edited/readline.h edited/literal.h
 
 if !HAVE_STRLCPY
-libedited_la_SOURCES += strlcpy.c
+libla_SOURCES += strlcpy.c
 endif
 if !HAVE_STRLCAT
-libedited_la_SOURCES += strlcat.c
+libla_SOURCES += strlcat.c
 endif
 if !HAVE_GETLINE
-libedited_la_SOURCES += getline.c
+libla_SOURCES += getline.c
 endif
 if !HAVE_VIS
-libedited_la_SOURCES += vis.c
+libla_SOURCES += vis.c
 endif
 if !HAVE_UNVIS
-libedited_la_SOURCES += unvis.c
+libla_SOURCES += unvis.c
 endif
 
 EXTRA_DIST = makelist shlib_version
 nobase_include_HEADERS = edited/edited.h edited/readline.h
 
-nodist_libedited_la_SOURCES = $(BUILT_SOURCES)
+nodist_libla_SOURCES = $(BUILT_SOURCES)
 
-libedited_la_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
+libla_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
 

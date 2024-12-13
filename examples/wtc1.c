@@ -60,7 +60,7 @@ complete(EditLine *el, int __attribute__((unused)) ch)
 	struct dirent *dp;
 	const wchar_t *ptr;
 	char *buf, *bptr;
-	const LineInfoW *lf = el_wline(el);
+	const LineInfoW *lf = edited_wline(el);
 	int len, i;
 	size_t mblen;
 	unsigned char res = 0;
@@ -94,7 +94,7 @@ complete(EditLine *el, int __attribute__((unused)) ch)
 		if (strncmp(dp->d_name, buf, mblen) == 0) {
 			mbstowcs(dir, &dp->d_name[mblen],
 			    sizeof(dir) / sizeof(*dir));
-			if (el_winsertstr(el, dir) == -1)
+			if (edited_winsertstr(el, dir) == -1)
 				res = CC_ERROR;
 			else
 				res = CC_REFRESH;
@@ -134,36 +134,36 @@ main(int  __attribute__((unused)) argc, char *argv[])
 
 	tok = tok_winit(NULL);			/* Init the tokenizer	     */
 
-	el = el_init(argv[0], stdin, stdout, stderr);
+	el = edited_init(argv[0], stdin, stdout, stderr);
 
-	el_wset(el, EL_EDITOR, L"vi");		/* Default editor is vi	     */
-	el_wset(el, EL_SIGNAL, 1);		/* Handle signals gracefully */
-	el_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
+	edited_wset(el, EL_EDITOR, L"vi");		/* Default editor is vi	     */
+	edited_wset(el, EL_SIGNAL, 1);		/* Handle signals gracefully */
+	edited_wset(el, EL_PROMPT_ESC, prompt, '\1'); /* Set the prompt function */
 
-	el_wset(el, EL_HIST, history_w, hist);	/* FIXME - history_w? */
+	edited_wset(el, EL_HIST, history_w, hist);	/* FIXME - history_w? */
 
 					/* Add a user-defined function	*/
-	el_wset(el, EL_ADDFN, L"ed-complete", L"Complete argument", complete);
+	edited_wset(el, EL_ADDFN, L"ed-complete", L"Complete argument", complete);
 
 					/* Bind <tab> to it */
-	el_wset(el, EL_BIND, L"^I", L"ed-complete", NULL);
+	edited_wset(el, EL_BIND, L"^I", L"ed-complete", NULL);
 
 	/*
 	* Bind j, k in vi command mode to previous and next line, instead
 	* of previous and next history.
 	*/
-	el_wset(el, EL_BIND, L"-a", L"k", L"ed-prev-line", NULL);
-	el_wset(el, EL_BIND, L"-a", L"j", L"ed-next-line", NULL);
+	edited_wset(el, EL_BIND, L"-a", L"k", L"ed-prev-line", NULL);
+	edited_wset(el, EL_BIND, L"-a", L"j", L"ed-next-line", NULL);
 
 	/* Source the user's defaults file. */
-	el_source(el, NULL);
+	edited_source(el, NULL);
 
-	while((line = el_wgets(el, &numc)) != NULL && numc != 0) {
+	while((line = edited_wgets(el, &numc)) != NULL && numc != 0) {
 		int ac, cc, co, rc;
 		const wchar_t **av;
 
 		const LineInfoW *li;
-		li = el_wline(el);
+		li = edited_wline(el);
 
 #ifdef DEBUG
 		(void)fwprintf(stderr, L"==> got %d %ls", numc, line);
@@ -176,7 +176,7 @@ main(int  __attribute__((unused)) argc, char *argv[])
 		if (gotsig) {
 			(void)fprintf(stderr, "Got signal %d.\n", (int)gotsig);
 			gotsig = 0;
-			el_reset(el);
+			edited_reset(el);
 		}
 
 		if(!continuation && numc == 1)
@@ -243,7 +243,7 @@ main(int  __attribute__((unused)) argc, char *argv[])
 				    "Bad history arguments\n");
 				break;
 			}
-		} else if (el_wparse(el, ac, av) == -1) {
+		} else if (edited_wparse(el, ac, av) == -1) {
 			switch (fork()) {
 			case 0: {
 				Tokenizer *ntok = tok_init(NULL);
@@ -270,7 +270,7 @@ main(int  __attribute__((unused)) argc, char *argv[])
 		tok_wreset(tok);
 	}
 
-	el_end(el);
+	edited_end(el);
 	tok_wend(tok);
 	history_w(hist, &ev, H_SAVE, hfile);
 	history_wend(hist);

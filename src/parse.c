@@ -64,22 +64,22 @@ static const struct {
 	const wchar_t *name;
 	int (*func)(EditLine *, int, const wchar_t **);
 } cmds[] = {
-	{ L"bind",		map_bind	},
-	{ L"echotc",		terminal_echotc	},
-	{ L"edit",		el_editmode	},
+	{ L"bind",		edited_map_bind	},
+	{ L"echotc",		edited_term_echotc	},
+	{ L"edit",		edited_editmode	},
 	{ L"history",		hist_command	},
-	{ L"telltc",		terminal_telltc	},
-	{ L"settc",		terminal_settc	},
-	{ L"setty",		tty_stty	},
+	{ L"telltc",		edited_term_telltc	},
+	{ L"settc",		edited_term_settc	},
+	{ L"setty",		edited_tty_stty	},
 	{ NULL,			NULL		}
 };
 
 
-/* parse_line():
+/* edited_parse_line():
  *	Parse a line and dispatch it
  */
-libedit_private int
-parse_line(EditLine *el, const wchar_t *line)
+libedited_private int
+edited_parse_line(EditLine *el, const wchar_t *line)
 {
 	const wchar_t **argv;
 	int argc;
@@ -87,17 +87,17 @@ parse_line(EditLine *el, const wchar_t *line)
 
 	tok = tok_winit(NULL);
 	tok_wstr(tok, line, &argc, &argv);
-	argc = el_wparse(el, argc, argv);
+	argc = edited_wparse(el, argc, argv);
 	tok_wend(tok);
 	return argc;
 }
 
 
-/* el_parse():
+/* edited_parse():
  *	Command dispatcher
  */
 int
-el_wparse(EditLine *el, int argc, const wchar_t *argv[])
+edited_wparse(EditLine *el, int argc, const wchar_t *argv[])
 {
 	const wchar_t *ptr;
 	int i;
@@ -112,14 +112,14 @@ el_wparse(EditLine *el, int argc, const wchar_t *argv[])
 		if (ptr == argv[0])
 			return 0;
 		l = (size_t)(ptr - argv[0]);
-		tprog = el_calloc(l + 1, sizeof(*tprog));
+		tprog = edited_calloc(l + 1, sizeof(*tprog));
 		if (tprog == NULL)
 			return 0;
 		(void) wcsncpy(tprog, argv[0], l);
 		tprog[l] = '\0';
 		ptr++;
-		l = (size_t)el_match(el->el_prog, tprog);
-		el_free(tprog);
+		l = (size_t)edited_match(el->edited_prog, tprog);
+		edited_free(tprog);
 		if (!l)
 			return 0;
 	} else
@@ -134,12 +134,12 @@ el_wparse(EditLine *el, int argc, const wchar_t *argv[])
 }
 
 
-/* parse__escape():
+/* edited_parse__escape():
  *	Parse a string of the form ^<char> \<odigit> \<char> \U+xxxx and return
  *	the appropriate character or -1 if the escape is not valid
  */
-libedit_private int
-parse__escape(const wchar_t **ptr)
+libedited_private int
+edited_parse__escape(const wchar_t **ptr)
 {
 	const wchar_t *p;
 	wint_t c;
@@ -235,11 +235,11 @@ parse__escape(const wchar_t **ptr)
 	return c;
 }
 
-/* parse__string():
+/* edited_parse__string():
  *	Parse the escapes from in and put the raw string out
  */
-libedit_private wchar_t *
-parse__string(wchar_t *out, const wchar_t *in)
+libedited_private wchar_t *
+edited_parse__string(wchar_t *out, const wchar_t *in)
 {
 	wchar_t *rv = out;
 	int n;
@@ -252,7 +252,7 @@ parse__string(wchar_t *out, const wchar_t *in)
 
 		case '\\':
 		case '^':
-			if ((n = parse__escape(&in)) == -1)
+			if ((n = edited_parse__escape(&in)) == -1)
 				return NULL;
 			*out++ = (wchar_t)n;
 			break;
@@ -272,17 +272,17 @@ parse__string(wchar_t *out, const wchar_t *in)
 }
 
 
-/* parse_cmd():
+/* edited_parse_cmd():
  *	Return the command number for the command string given
  *	or -1 if one is not found
  */
-libedit_private int
-parse_cmd(EditLine *el, const wchar_t *cmd)
+libedited_private int
+edited_parse_cmd(EditLine *el, const wchar_t *cmd)
 {
-	el_bindings_t *b = el->el_map.help;
+	edited_bindings_t *b = el->edited_map.help;
 	size_t i;
 
-	for (i = 0; i < el->el_map.nfunc; i++)
+	for (i = 0; i < el->edited_map.nfunc; i++)
 		if (wcscmp(b[i].name, cmd) == 0)
 			return b[i].func;
 	return -1;

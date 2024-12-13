@@ -44,11 +44,11 @@ __RCSID("$NetBSD: chartype.c,v 1.37 2023/08/10 20:38:00 mrg Exp $");
 
 #define CT_BUFSIZ ((size_t)1024)
 
-static int ct_conv_cbuff_resize(ct_buffer_t *, size_t);
-static int ct_conv_wbuff_resize(ct_buffer_t *, size_t);
+static int edited_ct_conv_cbuff_resize(edited_ct_buffer_t *, size_t);
+static int edited_ct_conv_wbuff_resize(edited_ct_buffer_t *, size_t);
 
 static int
-ct_conv_cbuff_resize(ct_buffer_t *conv, size_t csize)
+edited_ct_conv_cbuff_resize(edited_ct_buffer_t *conv, size_t csize)
 {
 	void *p;
 
@@ -57,10 +57,10 @@ ct_conv_cbuff_resize(ct_buffer_t *conv, size_t csize)
 
 	conv->csize = csize;
 
-	p = el_realloc(conv->cbuff, conv->csize * sizeof(*conv->cbuff));
+	p = edited_realloc(conv->cbuff, conv->csize * sizeof(*conv->cbuff));
 	if (p == NULL) {
 		conv->csize = 0;
-		el_free(conv->cbuff);
+		edited_free(conv->cbuff);
 		conv->cbuff = NULL;
 		return -1;
 	}
@@ -69,7 +69,7 @@ ct_conv_cbuff_resize(ct_buffer_t *conv, size_t csize)
 }
 
 static int
-ct_conv_wbuff_resize(ct_buffer_t *conv, size_t wsize)
+edited_ct_conv_wbuff_resize(edited_ct_buffer_t *conv, size_t wsize)
 {
 	void *p;
 
@@ -78,10 +78,10 @@ ct_conv_wbuff_resize(ct_buffer_t *conv, size_t wsize)
 
 	conv->wsize = wsize;
 
-	p = el_realloc(conv->wbuff, conv->wsize * sizeof(*conv->wbuff));
+	p = edited_realloc(conv->wbuff, conv->wsize * sizeof(*conv->wbuff));
 	if (p == NULL) {
 		conv->wsize = 0;
-		el_free(conv->wbuff);
+		edited_free(conv->wbuff);
 		conv->wbuff = NULL;
 		return -1;
 	}
@@ -91,7 +91,7 @@ ct_conv_wbuff_resize(ct_buffer_t *conv, size_t wsize)
 
 
 char *
-ct_encode_string(const wchar_t *s, ct_buffer_t *conv)
+edited_ct_encode_string(const wchar_t *s, edited_ct_buffer_t *conv)
 {
 	char *dst;
 	ssize_t used;
@@ -103,14 +103,14 @@ ct_encode_string(const wchar_t *s, ct_buffer_t *conv)
 	for (;;) {
 		used = (ssize_t)(dst - conv->cbuff);
 		if ((conv->csize - (size_t)used) < 5) {
-			if (ct_conv_cbuff_resize(conv,
+			if (edited_ct_conv_cbuff_resize(conv,
 			    conv->csize + CT_BUFSIZ) == -1)
 				return NULL;
 			dst = conv->cbuff + used;
 		}
 		if (!*s)
 			break;
-		used = ct_encode_char(dst, (size_t)5, *s);
+		used = edited_ct_encode_char(dst, (size_t)5, *s);
 		if (used == -1) /* failed to encode, need more buffer space */
 			abort();
 		++s;
@@ -121,7 +121,7 @@ ct_encode_string(const wchar_t *s, ct_buffer_t *conv)
 }
 
 wchar_t *
-ct_decode_string(const char *s, ct_buffer_t *conv)
+edited_ct_decode_string(const char *s, edited_ct_buffer_t *conv)
 {
 	size_t len;
 
@@ -133,7 +133,7 @@ ct_decode_string(const char *s, ct_buffer_t *conv)
 		return NULL;
 
 	if (conv->wsize < ++len)
-		if (ct_conv_wbuff_resize(conv, len + CT_BUFSIZ) == -1)
+		if (edited_ct_conv_wbuff_resize(conv, len + CT_BUFSIZ) == -1)
 			return NULL;
 
 	mbstowcs(conv->wbuff, s, conv->wsize);
@@ -141,8 +141,8 @@ ct_decode_string(const char *s, ct_buffer_t *conv)
 }
 
 
-libedit_private wchar_t **
-ct_decode_argv(int argc, const char *argv[], ct_buffer_t *conv)
+libedited_private wchar_t **
+edited_ct_decode_argv(int argc, const char *argv[], edited_ct_buffer_t *conv)
 {
 	size_t bufspace;
 	int i;
@@ -155,10 +155,10 @@ ct_decode_argv(int argc, const char *argv[], ct_buffer_t *conv)
 	for (i = 0, bufspace = 0; i < argc; ++i)
 		bufspace += argv[i] ? strlen(argv[i]) + 1 : 0;
 	if (conv->wsize < ++bufspace)
-		if (ct_conv_wbuff_resize(conv, bufspace + CT_BUFSIZ) == -1)
+		if (edited_ct_conv_wbuff_resize(conv, bufspace + CT_BUFSIZ) == -1)
 			return NULL;
 
-	wargv = el_calloc((size_t)(argc + 1), sizeof(*wargv));
+	wargv = edited_calloc((size_t)(argc + 1), sizeof(*wargv));
 	if (wargv == NULL)
 		return NULL;
 
@@ -171,7 +171,7 @@ ct_decode_argv(int argc, const char *argv[], ct_buffer_t *conv)
 			bytes = (ssize_t)mbstowcs(p, argv[i], bufspace);
 		}
 		if (bytes == -1) {
-			el_free(wargv);
+			edited_free(wargv);
 			return NULL;
 		} else
 			bytes++;  /* include '\0' in the count */
@@ -184,8 +184,8 @@ ct_decode_argv(int argc, const char *argv[], ct_buffer_t *conv)
 }
 
 
-libedit_private size_t
-ct_enc_width(wchar_t c)
+libedited_private size_t
+edited_ct_enc_width(wchar_t c)
 {
 	mbstate_t mbs;
 	char buf[MB_LEN_MAX];
@@ -197,11 +197,11 @@ ct_enc_width(wchar_t c)
 	return size;
 }
 
-libedit_private ssize_t
-ct_encode_char(char *dst, size_t len, wchar_t c)
+libedited_private ssize_t
+edited_ct_encode_char(char *dst, size_t len, wchar_t c)
 {
 	ssize_t l = 0;
-	if (len < ct_enc_width(c))
+	if (len < edited_ct_enc_width(c))
 		return -1;
 	l = wctomb(dst, c);
 
@@ -212,8 +212,8 @@ ct_encode_char(char *dst, size_t len, wchar_t c)
 	return l;
 }
 
-libedit_private const wchar_t *
-ct_visual_string(const wchar_t *s, ct_buffer_t *conv)
+libedited_private const wchar_t *
+edited_ct_visual_string(const wchar_t *s, edited_ct_buffer_t *conv)
 {
 	wchar_t *dst;
 	ssize_t used;
@@ -221,13 +221,13 @@ ct_visual_string(const wchar_t *s, ct_buffer_t *conv)
 	if (!s)
 		return NULL;
 
-	if (ct_conv_wbuff_resize(conv, CT_BUFSIZ) == -1)
+	if (edited_ct_conv_wbuff_resize(conv, CT_BUFSIZ) == -1)
 		return NULL;
 
 	used = 0;
 	dst = conv->wbuff;
 	while (*s) {
-		used = ct_visual_char(dst,
+		used = edited_ct_visual_char(dst,
 		    conv->wsize - (size_t)(dst - conv->wbuff), *s);
 		if (used != -1) {
 			++s;
@@ -237,14 +237,14 @@ ct_visual_string(const wchar_t *s, ct_buffer_t *conv)
 
 		/* failed to encode, need more buffer space */
 		uintptr_t sused = (uintptr_t)dst - (uintptr_t)conv->wbuff;
-		if (ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
+		if (edited_ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
 			return NULL;
 		dst = conv->wbuff + sused;
 	}
 
 	if (dst >= (conv->wbuff + conv->wsize)) { /* sigh */
 		uintptr_t sused = (uintptr_t)dst - (uintptr_t)conv->wbuff;
-		if (ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
+		if (edited_ct_conv_wbuff_resize(conv, conv->wsize + CT_BUFSIZ) == -1)
 			return NULL;
 		dst = conv->wbuff + sused;
 	}
@@ -255,10 +255,10 @@ ct_visual_string(const wchar_t *s, ct_buffer_t *conv)
 
 
 
-libedit_private int
-ct_visual_width(wchar_t c)
+libedited_private int
+edited_ct_visual_width(wchar_t c)
 {
-	int t = ct_chr_class(c);
+	int t = edited_ct_chr_class(c);
 	switch (t) {
 	case CHTYPE_ASCIICTL:
 		return 2; /* ^@ ^? etc. */
@@ -279,10 +279,10 @@ ct_visual_width(wchar_t c)
 }
 
 
-libedit_private ssize_t
-ct_visual_char(wchar_t *dst, size_t len, wchar_t c)
+libedited_private ssize_t
+edited_ct_visual_char(wchar_t *dst, size_t len, wchar_t c)
 {
-	int t = ct_chr_class(c);
+	int t = edited_ct_chr_class(c);
 	switch (t) {
 	case CHTYPE_TAB:
 	case CHTYPE_NL:
@@ -303,7 +303,7 @@ ct_visual_char(wchar_t *dst, size_t len, wchar_t c)
 	case CHTYPE_NONPRINT:
 		/* we only use single-width glyphs for display,
 		 * so this is right */
-		if ((ssize_t)len < ct_visual_width(c))
+		if ((ssize_t)len < edited_ct_visual_width(c))
 			return -1;   /* insufficient space */
 		*dst++ = '\\';
 		*dst++ = 'U';
@@ -326,8 +326,8 @@ ct_visual_char(wchar_t *dst, size_t len, wchar_t c)
 
 
 
-libedit_private int
-ct_chr_class(wchar_t c)
+libedited_private int
+edited_ct_chr_class(wchar_t c)
 {
 	if (c == '\t')
 		return CHTYPE_TAB;

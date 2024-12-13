@@ -37,11 +37,11 @@
 /*
  * el.chared.h: Character editor interface
  */
-#ifndef _h_edited_chared
-#define	_h_edited_chared
+#ifndef _h_chared
+#define	_h_chared
 
 /*
- * This is an issue of basic "vi" look-and-feel. Defining VI_MOVE works
+ * This is an issue of basic "vi" look-and-feel. Defining MOVE works
  * like real vi: i.e. the transition from command<->insert modes moves
  * the cursor.
  *
@@ -50,62 +50,62 @@
  * Probably the best fix is to make all the editing commands aware of
  * this fact.
  */
-#define	VI_MOVE
+#define	MOVE
 
 /*
  * Undo information for vi - no undo in emacs (yet)
  */
-typedef struct c_undo_t {
+typedef struct edited_c_undo_t {
 	ssize_t	 len;			/* length of saved line */
 	int	 cursor;		/* position of saved cursor */
 	wchar_t	*buf;			/* full saved text */
-} c_undo_t;
+} edited_c_undo_t;
 
 /* redo for vi */
-typedef struct c_redo_t {
+typedef struct edited_c_redo_t {
 	wchar_t	*buf;			/* redo insert key sequence */
 	wchar_t	*pos;
 	wchar_t	*lim;
-	el_action_t	cmd;		/* command to redo */
+	edited_action_t	cmd;		/* command to redo */
 	wchar_t	ch;			/* char that invoked it */
 	int	count;
-	int	action;			/* from cv_action() */
-} c_redo_t;
+	int	action;			/* from edited_cv_action() */
+} edited_c_redo_t;
 
 /*
  * Current action information for vi
  */
-typedef struct c_vcmd_t {
+typedef struct edited_c_vcmd_t {
 	int	 action;
 	wchar_t	*pos;
-} c_vcmd_t;
+} edited_c_vcmd_t;
 
 /*
  * Kill buffer for emacs
  */
-typedef struct c_kill_t {
+typedef struct edited_c_kill_t {
 	wchar_t	*buf;
 	wchar_t	*last;
 	wchar_t	*mark;
-} c_kill_t;
+} edited_c_kill_t;
 
-typedef void (*el_zfunc_t)(EditLine *, void *);
-typedef const char *(*el_afunc_t)(void *, const char *);
+typedef void (*edited_zfunc_t)(EditLine *, void *);
+typedef const char *(*edited_afunc_t)(void *, const char *);
 
 /*
  * Note that we use both data structures because the user can bind
  * commands from both editors!
  */
-typedef struct el_chared_t {
-	c_undo_t	c_undo;
-	c_kill_t	c_kill;
-	c_redo_t	c_redo;
-	c_vcmd_t	c_vcmd;
-	el_zfunc_t	c_resizefun;
-	el_afunc_t	c_aliasfun;
-	void *		c_resizearg;
-	void *		c_aliasarg;
-} el_chared_t;
+typedef struct edited_chared_t {
+	edited_c_undo_t	edited_c_undo;
+	edited_c_kill_t	edited_c_kill;
+	edited_c_redo_t	edited_c_redo;
+	edited_c_vcmd_t	edited_c_vcmd;
+	edited_zfunc_t	edited_c_resizefun;
+	edited_afunc_t	edited_c_aliasfun;
+	void *		edited_c_resizearg;
+	void *		edited_c_aliasarg;
+} edited_chared_t;
 
 
 #define	STRQQ		"\"\""
@@ -125,31 +125,31 @@ typedef struct el_chared_t {
 #define	MODE_REPLACE_1	2
 
 
-libedit_private int	 cv__isword(wint_t);
-libedit_private int	 cv__isWord(wint_t);
-libedit_private void	 cv_delfini(EditLine *);
-libedit_private wchar_t *cv__endword(wchar_t *, wchar_t *, int, int (*)(wint_t));
-libedit_private int	 ce__isword(wint_t);
-libedit_private void	 cv_undo(EditLine *);
-libedit_private void	 cv_yank(EditLine *, const wchar_t *, int);
-libedit_private wchar_t *cv_next_word(EditLine*, wchar_t *, wchar_t *, int,
+libedited_private int	 edited_cv__isword(wint_t);
+libedited_private int	 edited_cv__isWord(wint_t);
+libedited_private void	 edited_cv_delfini(EditLine *);
+libedited_private wchar_t *edited_cv__endword(wchar_t *, wchar_t *, int, int (*)(wint_t));
+libedited_private int	 edited_ce__isword(wint_t);
+libedited_private void	 edited_cv_undo(EditLine *);
+libedited_private void	 edited_cv_yank(EditLine *, const wchar_t *, int);
+libedited_private wchar_t *edited_cv_next_word(EditLine*, wchar_t *, wchar_t *, int,
 			int (*)(wint_t));
-libedit_private wchar_t *cv_prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
-libedit_private wchar_t *c__next_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
-libedit_private wchar_t *c__prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
-libedit_private void	 c_insert(EditLine *, int);
-libedit_private void	 c_delbefore(EditLine *, int);
-libedit_private void	 c_delbefore1(EditLine *);
-libedit_private void	 c_delafter(EditLine *, int);
-libedit_private void	 c_delafter1(EditLine *);
-libedit_private int	 c_gets(EditLine *, wchar_t *, const wchar_t *);
-libedit_private int	 c_hpos(EditLine *);
+libedited_private wchar_t *edited_cv_prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
+libedited_private wchar_t *edited_c__next_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
+libedited_private wchar_t *edited_c__prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
+libedited_private void	 edited_c_insert(EditLine *, int);
+libedited_private void	 edited_c_delbefore(EditLine *, int);
+libedited_private void	 edited_c_delbefore1(EditLine *);
+libedited_private void	 edited_c_delafter(EditLine *, int);
+libedited_private void	 edited_c_delafter1(EditLine *);
+libedited_private int	 edited_c_gets(EditLine *, wchar_t *, const wchar_t *);
+libedited_private int	 edited_c_hpos(EditLine *);
 
-libedit_private int	 ch_init(EditLine *);
-libedit_private void	 ch_reset(EditLine *);
-libedit_private int	 ch_resizefun(EditLine *, el_zfunc_t, void *);
-libedit_private int	 ch_aliasfun(EditLine *, el_afunc_t, void *);
-libedit_private int	 ch_enlargebufs(EditLine *, size_t);
-libedit_private void	 ch_end(EditLine *);
+libedited_private int	 ch_init(EditLine *);
+libedited_private void	 ch_reset(EditLine *);
+libedited_private int	 ch_resizefun(EditLine *, edited_zfunc_t, void *);
+libedited_private int	 ch_aliasfun(EditLine *, edited_afunc_t, void *);
+libedited_private int	 ch_enlargebufs(EditLine *, size_t);
+libedited_private void	 ch_end(EditLine *);
 
-#endif /* _h_edited_chared */
+#endif /* _h_chared */

@@ -32,14 +32,16 @@
 /*
  * el.read.h: Character reading functions
  */
-#ifndef	_h_edited_read
-#define	_h_edited_read
+#ifndef	_h_read
+#define	_h_read
 
-libedit_private int		read_init(EditLine *);
-libedit_private void		read_end(EditLine *);
-libedit_private void		read_prepare(EditLine *);
-libedit_private void		read_finish(EditLine *);
-libedit_private int		el_read_setfn(struct el_read_t *, el_rfunc_t);
-libedit_private el_rfunc_t	el_read_getfn(struct el_read_t *);
+typedef int (*edited_rfunc_t)(EditLine *, wchar_t *);
 
-#endif /* _h_edited_read */
+libedited_private int		edited_read_init(EditLine *);
+libedited_private void		edited_read_end(EditLine *);
+libedited_private void		edited_read_prepare(EditLine *);
+libedited_private void		edited_read_finish(EditLine *);
+libedited_private int		edited_read_setfn(struct edited_read_t *, edited_rfunc_t);
+libedited_private edited_rfunc_t	edited_read_getfn(struct edited_read_t *);
+
+#endif /* _h_read */
