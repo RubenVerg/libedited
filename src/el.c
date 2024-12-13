@@ -141,6 +141,8 @@ edited_init_internal(const char *prog, FILE *fin, FILE *fout, FILE *ferr,
 		edited_end(el);
 		return NULL;
 	}
+	el->edited_use_style = 0;
+	el->edited_style_func = NULL;
 	return el;
 }
 
@@ -410,6 +412,14 @@ edited_wset(Edited *el, int op, ...)
 		edited_term__flush(el);
 		break;
 
+	case EL_USE_STYLE:
+		el->edited_use_style = va_arg(ap, int) != 0;
+		break;
+
+	case EL_STYLE_FUNC:
+		el->edited_style_func = va_arg(ap, edited_stylefunc_t);
+		break;
+
 	default:
 		rv = -1;
 		break;
@@ -522,6 +532,16 @@ edited_wget(Edited *el, int op, ...)
 			rv = -1;
 			break;
 		}
+		break;
+	}
+	case EL_USE_STYLE: {
+		int* ren = va_arg(ap, int *);
+		*ren = el->edited_use_style;
+		break;
+	}
+	case EL_STYLE_FUNC: {
+		edited_stylefunc_t *fp = va_arg(ap, edited_stylefunc_t *);
+		*fp = el->edited_style_func;
 		break;
 	}
 	default:

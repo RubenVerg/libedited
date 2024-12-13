@@ -137,41 +137,41 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libla_LIBADD =
-am__libla_SOURCES_DIST = chared.c common.c el.c eln.c emacs.c \
+libedited_la_LIBADD =
+am__libedited_la_SOURCES_DIST = chared.c common.c el.c eln.c emacs.c \
 	hist.c keymacro.c map.c chartype.c parse.c prompt.c read.c \
 	refresh.c search.c sig.c terminal.c tty.c vi.c reallocarr.c \
 	wcsdup.c tokenizer.c tokenizern.c history.c historyn.c \
-	filecomplete.c readline.c chared.h literal.c edited/edited.h \
-	edited/el.h edited/hist.h edited/keymacro.h edited/map.h \
-	edited/chartype.h edited/parse.h edited/prompt.h edited/read.h \
-	edited/refresh.h edited.search.h edited/sig.h edited/sys.h \
-	edited/terminal.h edited/tty.h edited/vis.h \
+	filecomplete.c readline.c chared.h literal.c style.c \
+	edited/edited.h edited/el.h edited/hist.h edited/keymacro.h \
+	edited/map.h edited/chartype.h edited/parse.h edited/prompt.h \
+	edited/read.h edited/refresh.h edited.search.h edited/sig.h \
+	edited/sys.h edited/terminal.h edited/tty.h edited/vis.h \
 	edited/filecomplete.h edited/readline.h edited/literal.h \
-	strlcpy.c strlcat.c getline.c vis.c unvis.c
+	edited/style.h strlcpy.c strlcat.c getline.c vis.c unvis.c
 @HAVE_STRLCPY_FALSE@am__objects_1 = strlcpy.lo
 @HAVE_STRLCAT_FALSE@am__objects_2 = strlcat.lo
 @HAVE_GETLINE_FALSE@am__objects_3 = getline.lo
 @HAVE_VIS_FALSE@am__objects_4 = vis.lo
 @HAVE_UNVIS_FALSE@am__objects_5 = unvis.lo
-am_libla_OBJECTS = chared.lo common.lo el.lo eln.lo emacs.lo \
+am_libedited_la_OBJECTS = chared.lo common.lo el.lo eln.lo emacs.lo \
 	hist.lo keymacro.lo map.lo chartype.lo parse.lo prompt.lo \
 	read.lo refresh.lo search.lo sig.lo terminal.lo tty.lo vi.lo \
 	reallocarr.lo wcsdup.lo tokenizer.lo tokenizern.lo history.lo \
-	historyn.lo filecomplete.lo readline.lo literal.lo \
+	historyn.lo filecomplete.lo readline.lo literal.lo style.lo \
 	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4) $(am__objects_5)
 am__objects_6 =
-nodist_libla_OBJECTS = $(am__objects_6)
-libla_OBJECTS = $(am_libla_OBJECTS) \
-	$(nodist_libla_OBJECTS)
+nodist_libedited_la_OBJECTS = $(am__objects_6)
+libedited_la_OBJECTS = $(am_libedited_la_OBJECTS) \
+	$(nodist_libedited_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libla_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+libedited_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libla_LDFLAGS) $(LDFLAGS) -o $@
+	$(libedited_la_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -198,10 +198,11 @@ am__depfiles_remade = ./$(DEPDIR)/chared.Plo ./$(DEPDIR)/chartype.Plo \
 	./$(DEPDIR)/readline.Plo ./$(DEPDIR)/reallocarr.Plo \
 	./$(DEPDIR)/refresh.Plo ./$(DEPDIR)/search.Plo \
 	./$(DEPDIR)/sig.Plo ./$(DEPDIR)/strlcat.Plo \
-	./$(DEPDIR)/strlcpy.Plo ./$(DEPDIR)/terminal.Plo \
-	./$(DEPDIR)/tokenizer.Plo ./$(DEPDIR)/tokenizern.Plo \
-	./$(DEPDIR)/tty.Plo ./$(DEPDIR)/unvis.Plo ./$(DEPDIR)/vi.Plo \
-	./$(DEPDIR)/vis.Plo ./$(DEPDIR)/wcsdup.Plo
+	./$(DEPDIR)/strlcpy.Plo ./$(DEPDIR)/style.Plo \
+	./$(DEPDIR)/terminal.Plo ./$(DEPDIR)/tokenizer.Plo \
+	./$(DEPDIR)/tokenizern.Plo ./$(DEPDIR)/tty.Plo \
+	./$(DEPDIR)/unvis.Plo ./$(DEPDIR)/vi.Plo ./$(DEPDIR)/vis.Plo \
+	./$(DEPDIR)/wcsdup.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -221,8 +222,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libla_SOURCES) $(nodist_libla_SOURCES)
-DIST_SOURCES = $(am__libla_SOURCES_DIST)
+SOURCES = $(libedited_la_SOURCES) $(nodist_libedited_la_SOURCES)
+DIST_SOURCES = $(am__libedited_la_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -377,22 +378,22 @@ AHDR = edited/vi.h edited/emacs.h edited/common.h
 ASRC = $(srcdir)/vi.c $(srcdir)/emacs.c $(srcdir)/common.c
 CLEANFILES = $(BUILT_SOURCES)
 lib_LTLIBRARIES = libedited.la
-libla_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c \
+libedited_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c \
 	keymacro.c map.c chartype.c parse.c prompt.c read.c refresh.c \
 	search.c sig.c terminal.c tty.c vi.c reallocarr.c wcsdup.c \
 	tokenizer.c tokenizern.c history.c historyn.c filecomplete.c \
-	readline.c chared.h literal.c edited/edited.h edited/el.h \
-	edited/hist.h edited/keymacro.h edited/map.h edited/chartype.h \
-	edited/parse.h edited/prompt.h edited/read.h edited/refresh.h \
-	edited.search.h edited/sig.h edited/sys.h edited/terminal.h \
-	edited/tty.h edited/vis.h edited/filecomplete.h \
-	edited/readline.h edited/literal.h $(am__append_1) \
-	$(am__append_2) $(am__append_3) $(am__append_4) \
-	$(am__append_5)
+	readline.c chared.h literal.c style.c edited/edited.h \
+	edited/el.h edited/hist.h edited/keymacro.h edited/map.h \
+	edited/chartype.h edited/parse.h edited/prompt.h edited/read.h \
+	edited/refresh.h edited.search.h edited/sig.h edited/sys.h \
+	edited/terminal.h edited/tty.h edited/vis.h \
+	edited/filecomplete.h edited/readline.h edited/literal.h \
+	edited/style.h $(am__append_1) $(am__append_2) $(am__append_3) \
+	$(am__append_4) $(am__append_5)
 EXTRA_DIST = makelist shlib_version
 nobase_include_HEADERS = edited/edited.h edited/readline.h
-nodist_libla_SOURCES = $(BUILT_SOURCES)
-libla_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
+nodist_libedited_la_SOURCES = $(BUILT_SOURCES)
+libedited_la_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -463,8 +464,8 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libedited.la: $(libla_OBJECTS) $(libla_DEPENDENCIES) $(EXTRA_libla_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libla_LINK) -rpath $(libdir) $(libla_OBJECTS) $(libla_LIBADD) $(LIBS)
+libedited.la: $(libedited_la_OBJECTS) $(libedited_la_DEPENDENCIES) $(EXTRA_libedited_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libedited_la_LINK) -rpath $(libdir) $(libedited_la_OBJECTS) $(libedited_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -496,6 +497,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sig.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strlcat.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strlcpy.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/style.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/terminal.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tokenizer.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tokenizern.Plo@am__quote@ # am--include-marker
@@ -718,6 +720,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/sig.Plo
 	-rm -f ./$(DEPDIR)/strlcat.Plo
 	-rm -f ./$(DEPDIR)/strlcpy.Plo
+	-rm -f ./$(DEPDIR)/style.Plo
 	-rm -f ./$(DEPDIR)/terminal.Plo
 	-rm -f ./$(DEPDIR)/tokenizer.Plo
 	-rm -f ./$(DEPDIR)/tokenizern.Plo
@@ -795,6 +798,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/sig.Plo
 	-rm -f ./$(DEPDIR)/strlcat.Plo
 	-rm -f ./$(DEPDIR)/strlcpy.Plo
+	-rm -f ./$(DEPDIR)/style.Plo
 	-rm -f ./$(DEPDIR)/terminal.Plo
 	-rm -f ./$(DEPDIR)/tokenizer.Plo
 	-rm -f ./$(DEPDIR)/tokenizern.Plo

@@ -260,6 +260,10 @@ edited_set(Edited *el, int op, ...)
 		ret = 0;
 		break;
 
+	case EL_USE_STYLE:
+		el->edited_use_style = va_arg(ap, int) != 0;
+		break;
+
 	default:
 		ret = -1;
 		break;
@@ -344,6 +348,12 @@ edited_get(Edited *el, int op, ...)
 		int what = va_arg(ap, int);
 		FILE **fpp = va_arg(ap, FILE **);
 		ret = edited_wget(el, op, what, fpp);
+		break;
+	}
+
+	case EL_USE_STYLE: {
+		int* ren = va_arg(ap, int *);
+		*ren = el->edited_use_style;
 		break;
 	}
 

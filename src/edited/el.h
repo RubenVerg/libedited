@@ -48,6 +48,7 @@
 
 #include "edited/edited.h"
 #include "edited/chartype.h"
+#include "edited/style.h"
 
 #define	EL_BUFSIZ	((size_t)1024)	/* Maximum line size		*/
 
@@ -141,6 +142,9 @@ struct edited {
 	edited_ct_buffer_t       edited_scratch;   /* Scratch conversion buffer    */
 	edited_ct_buffer_t       edited_lgcyconv;  /* Buffer for legacy wrappers   */
 	LineInfo          edited_lgcylinfo; /* Legacy LineInfo buffer       */
+	int edited_use_style; /* Use styled and colored input */
+	edited_stylefunc_t edited_style_func; /* Function to style the line of input */
+	edited_style_t **edited_vstyle; /* Style of each character in vdisplay */
 };
 
 libedited_private int	edited_editmode(Edited *, int, const wchar_t **);

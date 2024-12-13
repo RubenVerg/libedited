@@ -668,6 +668,24 @@ edited_term_overwrite(Edited *el, const wchar_t *cp, size_t n)
 	}
 }
 
+/* edited_term_overwrite_styled():
+ */
+
+libedited_private void
+edited_term_overwrite_styled(Edited *el, const wchar_t *cp, size_t n, edited_style_t *style)
+{
+	int i, j, len;
+	wchar_t *tmp = malloc(sizeof(wchar_t) * 16);
+	for (i = 0; i < n; i++) {
+		len = edited_style_to_escape(el, style[i], tmp);
+		for (j = 0; j < len; j++)
+			edited_term__putc(el, tmp[j]);
+		edited_term_overwrite(el, cp + i, 1);
+	}
+	len = edited_style_to_escape(el, EDITED_STYLE_RESET, tmp);
+	for (j = 0; j < len; j++)
+		edited_term__putc(el, tmp[j]);
+}
 
 /* edited_term_deletechars():
  *	Delete num characters
@@ -767,6 +785,26 @@ edited_term_insertwrite(Edited *el, wchar_t *cp, int num)
 					/* pad the inserted char */
 
 	} while (--num);
+}
+
+
+/* edited_term_insertwrite_styled():
+ */
+
+libedited_private void
+edited_term_insertwrite_styled(Edited *el, wchar_t *cp, int num, edited_style_t *style)
+{
+	int i, j, len;
+	wchar_t *tmp = malloc(sizeof(wchar_t) * 16);
+	for (i = 0; i < num; i++) {
+		len = edited_style_to_escape(el, style[i], tmp);
+		for (j = 0; j < len; j++)
+			edited_term__putc(el, tmp[j]);
+		edited_term_insertwrite(el, cp + i, 1);
+	}
+	len = edited_style_to_escape(el, EDITED_STYLE_RESET, tmp);
+	for (j = 0; j < len; j++)
+		edited_term__putc(el, tmp[j]);
 }
 
 

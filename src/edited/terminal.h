@@ -115,6 +115,8 @@ libedited_private int	edited_term_echotc(Edited *, int, const wchar_t **);
 libedited_private void	edited_term_writec(Edited *, wint_t);
 libedited_private int	edited_term__putc(Edited *, wint_t);
 libedited_private void	edited_term__flush(Edited *);
+libedited_private void edited_term_overwrite_styled(Edited *, const wchar_t *, size_t, edited_style_t *);
+libedited_private void edited_term_insertwrite_styled(Edited *, wchar_t *, int, edited_style_t *);
 
 /*
  * Easy access macros

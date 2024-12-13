@@ -159,6 +159,8 @@ unsigned char	_fn_sh_complete(Edited *, int);
 #define	EL_RESIZE	23	/* , edited_zfunc_t, void *);	      set     */
 #define	EL_ALIAS_TEXT	24	/* , edited_afunc_t, void *);	      set     */
 #define	EL_SAFEREAD	25	/* , int);			      set/get */
+#define EL_USE_STYLE 26 /* , int);			      set/get */
+#define EL_STYLE_FUNC 27 /* , edited_stylefunc_t);		      set/get */
 
 #define	EL_BUILTIN_GETCFN	(NULL)
 
