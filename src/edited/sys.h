@@ -37,8 +37,8 @@
 /*
  * sys.h: Put all the stupid compiler and system dependencies here...
  */
-#ifndef _h_sys
-#define	_h_sys
+#ifndef _h_edited_sys
+#define	_h_edited_sys
 
 #if defined(HAVE_SYS_TYPES_H) && defined(__sun)
 #include <sys/types.h>
@@ -132,4 +132,4 @@ extern char* tgoto(const char*, int, int);
 extern char* tgetstr(char*, char**);
 #endif
 
-#endif /* _h_sys */
+#endif /* _h_edited_sys */

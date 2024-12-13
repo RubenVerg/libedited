@@ -66,7 +66,7 @@ __RCSID("$NetBSD: keymacro.c,v 1.24 2019/07/23 10:18:52 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "fcns.h"
 
 /*

@@ -1,4 +1,4 @@
-/*	$NetBSD: search.h,v 1.14 2016/05/09 21:46:56 christos Exp $	*/
+/*	$NetBSD: refresh.h,v 1.11 2017/06/27 23:23:48 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -31,34 +31,29 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)search.h	8.1 (Berkeley) 6/4/93
+ *	@(#)refresh.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.search.h: Line and history searching utilities
+ * el.refresh.h: Screen refresh functions
  */
-#ifndef _h_el_search
-#define	_h_el_search
+#ifndef _h_edited_refresh
+#define	_h_edited_refresh
 
-typedef struct el_search_t {
-	wchar_t	*patbuf;		/* The pattern buffer		*/
-	size_t	 patlen;		/* Length of the pattern buffer	*/
-	int	 patdir;		/* Direction of the last search	*/
-	int	 chadir;		/* Character search direction	*/
-	wchar_t	 chacha;		/* Character we are looking for	*/
-	char	 chatflg;		/* 0 if f, 1 if t */
-} el_search_t;
+typedef struct {
+	coord_t	r_cursor;	/* Refresh cursor position	*/
+	int	r_oldcv;	/* Vertical locations		*/
+	int	r_newcv;
+} el_refresh_t;
 
+libedit_private void	re_putc(EditLine *, wint_t, int);
+libedit_private void	re_putliteral(EditLine *, const wchar_t *,
+    const wchar_t *);
+libedit_private void	re_clear_lines(EditLine *);
+libedit_private void	re_clear_display(EditLine *);
+libedit_private void	re_refresh(EditLine *);
+libedit_private void	re_refresh_cursor(EditLine *);
+libedit_private void	re_fastaddc(EditLine *);
+libedit_private void	re_goto_bottom(EditLine *);
 
-libedit_private int		el_match(const wchar_t *, const wchar_t *);
-libedit_private int		search_init(EditLine *);
-libedit_private void		search_end(EditLine *);
-libedit_private int		c_hmatch(EditLine *, const wchar_t *);
-libedit_private void		c_setpat(EditLine *);
-libedit_private el_action_t	ce_inc_search(EditLine *, int);
-libedit_private el_action_t	cv_search(EditLine *, int);
-libedit_private el_action_t	ce_search_line(EditLine *, int);
-libedit_private el_action_t	cv_repeat_srch(EditLine *, wint_t);
-libedit_private el_action_t	cv_csearch(EditLine *, int, wint_t, int, int);
-
-#endif /* _h_el_search */
+#endif /* _h_edited_refresh */

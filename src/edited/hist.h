@@ -37,8 +37,8 @@
 /*
  * el.hist.c: History functions
  */
-#ifndef _h_el_hist
-#define	_h_el_hist
+#ifndef _h_edited_hist
+#define	_h_edited_hist
 
 typedef int (*hist_fun_t)(void *, HistEventW *, int, ...);
 
@@ -77,4 +77,4 @@ libedit_private int		hist_command(EditLine *, int, const wchar_t **);
 libedit_private int		hist_enlargebuf(EditLine *, size_t, size_t);
 libedit_private wchar_t	*hist_convert(EditLine *, int, void *);
 
-#endif /* _h_el_hist */
+#endif /* _h_edited_hist */

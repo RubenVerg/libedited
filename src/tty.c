@@ -51,9 +51,9 @@ __RCSID("$NetBSD: tty.c,v 1.70 2021/07/14 07:47:23 christos Exp $");
 #include <strings.h>	/* for ffs */
 #include <unistd.h>	/* for isatty */
 
-#include "el.h"
+#include "edited/el.h"
 #include "fcns.h"
-#include "parse.h"
+#include "edited/parse.h"
 
 typedef struct ttymodes_t {
 	const char *m_name;

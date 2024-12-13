@@ -1,4 +1,4 @@
-#include "histedit.h"
+#include "edited/edited.h"
 
 #include <stdio.h>
 #include <wchar.h>

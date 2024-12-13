@@ -35,7 +35,7 @@ __RCSID("$NetBSD: eln.c,v 1.38 2024/05/17 02:59:08 christos Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "el.h"
+#include "edited/el.h"
 
 int
 el_getc(EditLine *el, char *cp)

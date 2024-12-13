@@ -57,8 +57,8 @@ __RCSID("$NetBSD: parse.c,v 1.42 2019/07/23 10:18:52 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "el.h"
-#include "parse.h"
+#include "edited/el.h"
+#include "edited/parse.h"
 
 static const struct {
 	const wchar_t *name;

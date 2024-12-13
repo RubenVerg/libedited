@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <histedit.h>
+#include "edited/edited.h"
 
 
 static int continuation;

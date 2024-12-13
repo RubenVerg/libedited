@@ -47,7 +47,7 @@ __RCSID("$NetBSD: unvis.c,v 1.45 2022/04/19 20:32:15 rillig Exp $");
 #endif
 #include <stdio.h>
 #include <errno.h>
-#include <vis.h>
+#include "edited/vis.h"
 
 #ifdef __weak_alias
 __weak_alias(strnunvisx,_strnunvisx)

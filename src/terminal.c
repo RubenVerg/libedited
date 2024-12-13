@@ -81,7 +81,7 @@ extern char* tgetstr(char*, char**);
 #include <pthread.h>
 #endif
 
-#include "el.h"
+#include "edited/el.h"
 #include "fcns.h"
 
 /*

@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _h_chartype_f
-#define _h_chartype_f
+#ifndef _h_edited_chartype
+#define _h_edited_chartype
 
 /* Ideally we should also test the value of the define to see if it
  * supports non-BMP code points without requiring UTF-16, but nothing

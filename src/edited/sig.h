@@ -1,11 +1,11 @@
-/*	$NetBSD: literal.h,v 1.2 2017/06/30 20:26:52 kre Exp $	*/
+/*	$NetBSD: sig.h,v 1.11 2016/05/09 21:46:56 christos Exp $	*/
 
 /*-
- * Copyright (c) 2017 The NetBSD Foundation, Inc.
- * All rights reserved.
+ * Copyright (c) 1992, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
- * This code is derived from software contributed to The NetBSD Foundation
- * by Christos Zoulas.
+ * This code is derived from software contributed to Berkeley by
+ * Christos Zoulas of Cornell University.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -15,6 +15,9 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -27,27 +30,41 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ *
+ *	@(#)sig.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.literal.h: Literal character
+ * el.sig.h: Signal handling functions
  */
-#ifndef _h_el_literal
-#define	_h_el_literal
+#ifndef _h_edited_sig
+#define	_h_edited_sig
 
-#define EL_LITERAL	((wint_t)0x80000000)
+#include <signal.h>
 
-typedef struct el_literal_t {
-	char		**l_buf;	/* array of buffers */
-	size_t		l_idx;		/* max in use */
-	size_t		l_len;		/* max allocated */
-} el_literal_t;
+/*
+ * Define here all the signals we are going to handle
+ * The _DO macro is used to iterate in the source code
+ */
+#define	ALLSIGS		\
+	_DO(SIGINT)	\
+	_DO(SIGTSTP)	\
+	_DO(SIGQUIT)	\
+	_DO(SIGHUP)	\
+	_DO(SIGTERM)	\
+	_DO(SIGCONT)	\
+	_DO(SIGWINCH)
+#define ALLSIGSNO	7
 
-libedit_private void literal_init(EditLine *);
-libedit_private void literal_end(EditLine *);
-libedit_private void literal_clear(EditLine *);
-libedit_private wint_t literal_add(EditLine *, const wchar_t *,
-    const wchar_t *, int *);
-libedit_private const char *literal_get(EditLine *, wint_t);
+typedef struct {
+	struct sigaction sig_action[ALLSIGSNO];
+	sigset_t sig_set;
+	volatile sig_atomic_t sig_no;
+} *el_signal_t;
 
-#endif /* _h_el_literal */
+libedit_private void	sig_end(EditLine*);
+libedit_private int	sig_init(EditLine*);
+libedit_private void	sig_set(EditLine*);
+libedit_private void	sig_clr(EditLine*);
+
+#endif /* _h_edited_sig */

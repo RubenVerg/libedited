@@ -1,4 +1,4 @@
-/*	$NetBSD: refresh.h,v 1.11 2017/06/27 23:23:48 christos Exp $	*/
+/*	$NetBSD: prompt.h,v 1.15 2016/05/09 21:46:56 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -31,29 +31,28 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)refresh.h	8.1 (Berkeley) 6/4/93
+ *	@(#)prompt.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.refresh.h: Screen refresh functions
+ * el.prompt.h: Prompt printing stuff
  */
-#ifndef _h_el_refresh
-#define	_h_el_refresh
+#ifndef _h_edited_prompt
+#define	_h_edited_prompt
 
-typedef struct {
-	coord_t	r_cursor;	/* Refresh cursor position	*/
-	int	r_oldcv;	/* Vertical locations		*/
-	int	r_newcv;
-} el_refresh_t;
+typedef wchar_t    *(*el_pfunc_t)(EditLine *);
 
-libedit_private void	re_putc(EditLine *, wint_t, int);
-libedit_private void	re_putliteral(EditLine *, const wchar_t *,
-    const wchar_t *);
-libedit_private void	re_clear_lines(EditLine *);
-libedit_private void	re_clear_display(EditLine *);
-libedit_private void	re_refresh(EditLine *);
-libedit_private void	re_refresh_cursor(EditLine *);
-libedit_private void	re_fastaddc(EditLine *);
-libedit_private void	re_goto_bottom(EditLine *);
+typedef struct el_prompt_t {
+	el_pfunc_t	p_func;		/* Function to return the prompt */
+	coord_t		p_pos;		/* position in the line after prompt */
+	wchar_t		p_ignore;	/* character to start/end literal */
+	int		p_wide;
+} el_prompt_t;
 
-#endif /* _h_el_refresh */
+libedit_private void	prompt_print(EditLine *, int);
+libedit_private int	prompt_set(EditLine *, el_pfunc_t, wchar_t, int, int);
+libedit_private int	prompt_get(EditLine *, el_pfunc_t *, wchar_t *, int);
+libedit_private int	prompt_init(EditLine *);
+libedit_private void	prompt_end(EditLine *);
+
+#endif /* _h_edited_prompt */

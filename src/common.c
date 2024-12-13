@@ -47,10 +47,10 @@ __RCSID("$NetBSD: common.c,v 1.50 2024/06/30 16:29:42 christos Exp $");
 #include <ctype.h>
 #include <string.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 #include "fcns.h"
-#include "parse.h"
+#include "edited/parse.h"
 #include "vi.h"
 
 /* ed_end_of_file():

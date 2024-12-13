@@ -52,11 +52,11 @@ __RCSID("$NetBSD: history.c,v 1.64 2024/07/11 05:41:24 kre Exp $");
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vis.h>
+#include "edited/vis.h"
 
 static const char hist_cookie[] = "_HiStOrY_V2_\n";
 
-#include "histedit.h"
+#include "edited/edited.h"
 
 
 #ifdef NARROWCHAR
@@ -77,7 +77,7 @@ static const char hist_cookie[] = "_HiStOrY_V2_\n";
 #define	ct_encode_string(s, b)	(s)
 
 #else
-#include "chartype.h"
+#include "edited/chartype.h"
 
 #define	Char			wchar_t
 #define	FUN(prefix, rest)	prefix ## _w ## rest

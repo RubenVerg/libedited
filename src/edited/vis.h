@@ -31,8 +31,8 @@
  *	@(#)vis.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _VIS_H_
-#define	_VIS_H_
+#ifndef _h_edited_vis
+#define	_h_edited_vis
 
 /*
  * to select alternate encoding format
@@ -114,4 +114,4 @@ int	unvis(char *, int, int *, int);
 #endif
 __END_DECLS
 
-#endif /* !_VIS_H_ */
+#endif /* !_h_edited_vis */

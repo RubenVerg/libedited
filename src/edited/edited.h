@@ -35,10 +35,10 @@
  */
 
 /*
- * histedit.h: Line editor and history interface.
+ * edited.h: Line editor and history interface.
  */
-#ifndef _HISTEDIT_H_
-#define	_HISTEDIT_H_
+#ifndef _h_edited
+#define	_h_edited
 
 #define	LIBEDIT_MAJOR 3
 #define	LIBEDIT_MINOR 0
@@ -319,4 +319,4 @@ int		 tok_wstr(TokenizerW *, const wchar_t *,
 }
 #endif
 
-#endif /* _HISTEDIT_H_ */
+#endif /* _h_edited */

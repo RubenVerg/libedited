@@ -147,7 +147,7 @@ EL_GETPW_R_DRAFT
 
 
 AH_BOTTOM([
-#include "sys.h"
+#include "edited/sys.h"
 #define SCCSID
 #undef LIBC_SCCS
 #define lint

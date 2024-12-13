@@ -37,8 +37,8 @@
 /*
  * el.tty.h: Local terminal header
  */
-#ifndef _h_el_tty
-#define	_h_el_tty
+#ifndef _h_edited_tty
+#define	_h_edited_tty
 
 #include <termios.h>
 #include <unistd.h>
@@ -479,4 +479,4 @@ typedef struct {
 } el_tty_t;
 
 
-#endif /* _h_el_tty */
+#endif /* _h_edited_tty */

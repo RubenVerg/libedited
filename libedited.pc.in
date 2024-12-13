@@ -9,5 +9,5 @@ Version: @VERSION@
 Requires:
 Libs: -L${libdir} -ledited
 Libs.private: @LIBS@
-Cflags: -I${includedir} -I${includedir}/editline
+Cflags: -I${includedir}/edited
 

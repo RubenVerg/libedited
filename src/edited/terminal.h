@@ -37,8 +37,8 @@
 /*
  * el.term.h: Termcap header
  */
-#ifndef _h_el_terminal
-#define	_h_el_terminal
+#ifndef _h_edited_terminal
+#define	_h_edited_terminal
 
 typedef struct {		/* Symbolic function key bindings	*/
 	const wchar_t	*name;	/* name of the key			*/
@@ -131,4 +131,4 @@ libedit_private void	terminal__flush(EditLine *);
 #define	EL_HAS_AUTO_MARGINS	(EL_FLAGS & TERM_HAS_AUTO_MARGINS)
 #define	EL_HAS_MAGIC_MARGINS	(EL_FLAGS & TERM_HAS_MAGIC_MARGINS)
 
-#endif /* _h_el_terminal */
+#endif /* _h_edited_terminal */

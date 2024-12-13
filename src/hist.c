@@ -46,9 +46,9 @@ __RCSID("$NetBSD: hist.c,v 1.34 2019/07/23 10:19:35 christos Exp $");
  */
 #include <stdlib.h>
 #include <string.h>
-#include <vis.h>
+#include "edited/vis.h"
 
-#include "el.h"
+#include "edited/el.h"
 
 /* hist_init():
  *	Initialization function.

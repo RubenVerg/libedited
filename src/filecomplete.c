@@ -47,8 +47,8 @@ __RCSID("$NetBSD: filecomplete.c,v 1.73 2023/04/25 17:51:32 christos Exp $");
 #include <string.h>
 #include <unistd.h>
 
-#include "el.h"
-#include "filecomplete.h"
+#include "edited/el.h"
+#include "edited/filecomplete.h"
 
 static const wchar_t break_chars[] = L" \t\n\"\\'`@$><=;|&{(";
 

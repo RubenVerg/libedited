@@ -40,7 +40,7 @@ __RCSID("$NetBSD: chartype.c,v 1.37 2023/08/10 20:38:00 mrg Exp $");
 #include <string.h>
 #include <stdint.h>
 
-#include "el.h"
+#include "edited/el.h"
 
 #define CT_BUFSIZ ((size_t)1024)
 

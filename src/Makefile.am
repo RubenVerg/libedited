@@ -30,10 +30,11 @@ libedited_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c ma
 							reallocarr.c wcsdup.c \
 							tokenizer.c tokenizern.c \
 							history.c historyn.c \
-							filecomplete.c readline.c chared.h literal.c el.h hist.h \
-							histedit.h keymacro.h map.h chartype.h parse.h prompt.h read.h refresh.h \
-							search.h sig.h sys.h terminal.h tty.h vis.h filecomplete.h \
-							editline/readline.h literal.h
+							filecomplete.c readline.c chared.h literal.c \
+							edited/edited.h edited/el.h edited/hist.h edited/keymacro.h edited/map.h edited/chartype.h \
+							edited/parse.h edited/prompt.h edited/read.h edited/refresh.h edited.search.h edited/sig.h \
+							edited/sys.h edited/terminal.h edited/tty.h edited/vis.h edited/filecomplete.h \
+							edited/readline.h edited/literal.h
 
 if !HAVE_STRLCPY
 libedited_la_SOURCES += strlcpy.c
@@ -52,7 +53,7 @@ libedited_la_SOURCES += unvis.c
 endif
 
 EXTRA_DIST = makelist shlib_version
-nobase_include_HEADERS = histedit.h editline/readline.h
+nobase_include_HEADERS = edited/edited.h edited/readline.h
 
 nodist_libedited_la_SOURCES = $(BUILT_SOURCES)
 

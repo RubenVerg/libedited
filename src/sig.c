@@ -49,7 +49,7 @@ __RCSID("$NetBSD: sig.c,v 1.27 2023/02/03 19:47:38 christos Exp $");
 #include <errno.h>
 #include <stdlib.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 
 static EditLine *sel = NULL;

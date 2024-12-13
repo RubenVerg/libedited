@@ -49,7 +49,7 @@ __RCSID("$NetBSD: refresh.c,v 1.59 2024/06/30 17:11:27 christos Exp $");
 #include <string.h>
 #include <unistd.h>
 
-#include "el.h"
+#include "edited/el.h"
 
 static void	re_nextline(EditLine *);
 static void	re_addc(EditLine *, wint_t);

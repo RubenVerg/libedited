@@ -28,8 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _READLINE_H_
-#define _READLINE_H_
+#ifndef _h_edited_readline
+#define _h_edited_readline
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -274,4 +274,4 @@ void		 _rl_erase_entire_line(void);
 }
 #endif
 
-#endif /* _READLINE_H_ */
+#endif /* _h_edited_readline */

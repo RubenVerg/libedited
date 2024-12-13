@@ -1,4 +1,4 @@
-/*	$NetBSD: parse.h,v 1.9 2016/05/09 21:46:56 christos Exp $	*/
+/*	$NetBSD: map.h,v 1.13 2016/05/09 21:46:56 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -31,18 +31,49 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)parse.h	8.1 (Berkeley) 6/4/93
+ *	@(#)map.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.parse.h: Parser functions
+ * el.map.h:	Editor maps
  */
-#ifndef _h_el_parse
-#define	_h_el_parse
+#ifndef _h_edited_map
+#define	_h_edited_map
 
-libedit_private int	 parse_line(EditLine *, const wchar_t *);
-libedit_private int	 parse__escape(const wchar_t **);
-libedit_private wchar_t *parse__string(wchar_t *, const wchar_t *);
-libedit_private int	 parse_cmd(EditLine *, const wchar_t *);
+typedef el_action_t (*el_func_t)(EditLine *, wint_t);
 
-#endif /* _h_el_parse */
+typedef struct el_bindings_t {	/* for the "bind" shell command */
+	const wchar_t	*name;		/* function name for bind command */
+	int		 func;		/* function numeric value */
+	const wchar_t	*description;	/* description of function */
+} el_bindings_t;
+
+typedef struct el_map_t {
+	el_action_t	*alt;		/* The current alternate key map */
+	el_action_t	*key;		/* The current normal key map	*/
+	el_action_t	*current;	/* The keymap we are using	*/
+	const el_action_t *emacs;	/* The default emacs key map	*/
+	const el_action_t *vic;		/* The vi command mode key map	*/
+	const el_action_t *vii;		/* The vi insert mode key map	*/
+	int		 type;		/* Emacs or vi			*/
+	el_bindings_t	*help;		/* The help for the editor functions */
+	el_func_t	*func;		/* List of available functions	*/
+	size_t		 nfunc;		/* The number of functions/help items */
+} el_map_t;
+
+#define	MAP_EMACS	0
+#define	MAP_VI		1
+
+#define N_KEYS      256
+
+libedit_private int	map_bind(EditLine *, int, const wchar_t **);
+libedit_private int	map_init(EditLine *);
+libedit_private void	map_end(EditLine *);
+libedit_private void	map_init_vi(EditLine *);
+libedit_private void	map_init_emacs(EditLine *);
+libedit_private int	map_set_editor(EditLine *, wchar_t *);
+libedit_private int	map_get_editor(EditLine *, const wchar_t **);
+libedit_private int	map_addfunc(EditLine *, const wchar_t *, const wchar_t *,
+    el_func_t);
+
+#endif /* _h_edited_map */

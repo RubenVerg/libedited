@@ -64,7 +64,7 @@ __RCSID("$NetBSD: tc1.c,v 1.7 2016/02/17 19:47:49 christos Exp $");
 #include <string.h>
 #include <unistd.h>
 
-#include "histedit.h"
+#include "edited/edited.h"
 
 static int continuation = 0;
 volatile sig_atomic_t gotsig = 0;

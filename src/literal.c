@@ -43,7 +43,7 @@ __RCSID("$NetBSD: literal.c,v 1.5 2019/07/23 13:10:11 christos Exp $");
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "el.h"
+#include "edited/el.h"
 
 libedit_private void
 literal_init(EditLine *el)

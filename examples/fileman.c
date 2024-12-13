@@ -23,7 +23,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 */
-#include <editline/readline.h>
+#include <edited/readline.h>
 
 void * xmalloc (size_t size);
 void too_dangerous (char *caller);

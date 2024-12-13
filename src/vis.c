@@ -71,7 +71,7 @@ __FBSDID("$FreeBSD$");
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <vis.h>
+#include "edited/vis.h"
 #include <wchar.h>
 #include <wctype.h>
 

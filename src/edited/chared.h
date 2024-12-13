@@ -37,8 +37,8 @@
 /*
  * el.chared.h: Character editor interface
  */
-#ifndef _h_el_chared
-#define	_h_el_chared
+#ifndef _h_edited_chared
+#define	_h_edited_chared
 
 /*
  * This is an issue of basic "vi" look-and-feel. Defining VI_MOVE works
@@ -152,4 +152,4 @@ libedit_private int	 ch_aliasfun(EditLine *, el_afunc_t, void *);
 libedit_private int	 ch_enlargebufs(EditLine *, size_t);
 libedit_private void	 ch_end(EditLine *);
 
-#endif /* _h_el_chared */
+#endif /* _h_edited_chared */

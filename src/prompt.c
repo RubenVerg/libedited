@@ -45,7 +45,7 @@ __RCSID("$NetBSD: prompt.c,v 1.27 2017/06/27 23:25:13 christos Exp $");
  * prompt.c: Prompt printing functions
  */
 #include <stdio.h>
-#include "el.h"
+#include "edited/el.h"
 
 static wchar_t	*prompt_default(EditLine *);
 static wchar_t	*prompt_default_r(EditLine *);

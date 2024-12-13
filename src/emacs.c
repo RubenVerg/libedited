@@ -46,7 +46,7 @@ __RCSID("$NetBSD: emacs.c,v 1.38 2024/06/29 17:28:07 christos Exp $");
  */
 #include <ctype.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "emacs.h"
 #include "fcns.h"
 

@@ -53,7 +53,7 @@ __RCSID("$NetBSD: search.c,v 1.52 2024/06/30 16:26:30 christos Exp $");
 #include <regexp.h>
 #endif
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 #include "fcns.h"
 

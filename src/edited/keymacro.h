@@ -1,4 +1,4 @@
-/*	$NetBSD: prompt.h,v 1.15 2016/05/09 21:46:56 christos Exp $	*/
+/*	$NetBSD: keymacro.h,v 1.6 2016/05/09 21:46:56 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -31,28 +31,46 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)prompt.h	8.1 (Berkeley) 6/4/93
+ *	@(#)key.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.prompt.h: Prompt printing stuff
+ * el.keymacro.h: Key macro header
  */
-#ifndef _h_el_prompt
-#define	_h_el_prompt
+#ifndef _h_edited_keymacro
+#define	_h_edited_keymacro
 
-typedef wchar_t    *(*el_pfunc_t)(EditLine *);
+typedef union keymacro_value_t {
+	el_action_t	 cmd;	/* If it is a command the #	*/
+	wchar_t		*str;	/* If it is a string...		*/
+} keymacro_value_t;
 
-typedef struct el_prompt_t {
-	el_pfunc_t	p_func;		/* Function to return the prompt */
-	coord_t		p_pos;		/* position in the line after prompt */
-	wchar_t		p_ignore;	/* character to start/end literal */
-	int		p_wide;
-} el_prompt_t;
+typedef struct keymacro_node_t keymacro_node_t;
 
-libedit_private void	prompt_print(EditLine *, int);
-libedit_private int	prompt_set(EditLine *, el_pfunc_t, wchar_t, int, int);
-libedit_private int	prompt_get(EditLine *, el_pfunc_t *, wchar_t *, int);
-libedit_private int	prompt_init(EditLine *);
-libedit_private void	prompt_end(EditLine *);
+typedef struct el_keymacro_t {
+	wchar_t		*buf;	/* Key print buffer		*/
+	keymacro_node_t	*map;	/* Key map			*/
+	keymacro_value_t val;	/* Local conversion buffer	*/
+} el_keymacro_t;
 
-#endif /* _h_el_prompt */
+#define	XK_CMD	0
+#define	XK_STR	1
+#define	XK_NOD	2
+
+libedit_private int keymacro_init(EditLine *);
+libedit_private void keymacro_end(EditLine *);
+libedit_private keymacro_value_t *keymacro_map_cmd(EditLine *, int);
+libedit_private keymacro_value_t *keymacro_map_str(EditLine *, wchar_t *);
+libedit_private void keymacro_reset(EditLine *);
+libedit_private int keymacro_get(EditLine *, wchar_t *, keymacro_value_t *);
+libedit_private void keymacro_add(EditLine *, const wchar_t *,
+    keymacro_value_t *, int);
+libedit_private void keymacro_clear(EditLine *, el_action_t *, const wchar_t *);
+libedit_private int keymacro_delete(EditLine *, const wchar_t *);
+libedit_private void keymacro_print(EditLine *, const wchar_t *);
+libedit_private void keymacro_kprint(EditLine *, const wchar_t *,
+    keymacro_value_t *, int);
+libedit_private size_t keymacro__decode_str(const wchar_t *, char *, size_t,
+    const char *);
+
+#endif /* _h_edited_keymacro */

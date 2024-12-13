@@ -48,7 +48,7 @@ __RCSID("$NetBSD: chared.c,v 1.64 2024/06/29 14:13:14 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 #include "fcns.h"
 

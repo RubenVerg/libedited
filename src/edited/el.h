@@ -37,8 +37,8 @@
 /*
  * el.h: Internal structures.
  */
-#ifndef _h_el
-#define	_h_el
+#ifndef _h_edited_el
+#define	_h_edited_el
 /*
  * Local defaults
  */
@@ -46,8 +46,8 @@
 #define	VIDEFAULT
 #define	ANCHOR
 
-#include "histedit.h"
-#include "chartype.h"
+#include "edited/edited.h"
+#include "edited/chartype.h"
 
 #define	EL_BUFSIZ	((size_t)1024)	/* Maximum line size		*/
 
@@ -157,4 +157,4 @@ libedit_private EditLine *el_init_internal(const char *, FILE *, FILE *,
 #else
 #define EL_ABORT(a)	abort()
 #endif
-#endif /* _h_el */
+#endif /* _h_edited_el */

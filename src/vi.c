@@ -51,7 +51,7 @@ __RCSID("$NetBSD: vi.c,v 1.64 2021/08/28 17:17:47 christos Exp $");
 #include <string.h>
 #include <unistd.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 #include "emacs.h"
 #include "fcns.h"

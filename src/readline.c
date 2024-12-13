@@ -49,14 +49,14 @@ __RCSID("$NetBSD: readline.c,v 1.182 2024/03/26 18:02:04 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <vis.h>
+#include "edited/vis.h"
 
 #define completion_matches xxx_completion_matches
-#include "editline/readline.h"
+#include "edited/readline.h"
 #undef completion_matches
-#include "el.h"
+#include "edited/el.h"
 #include "fcns.h"
-#include "filecomplete.h"
+#include "edited/filecomplete.h"
 
 #if !defined(SIZE_T_MAX)
 # define SIZE_T_MAX (size_t)(-1)

@@ -1,4 +1,4 @@
-/*	$NetBSD: keymacro.h,v 1.6 2016/05/09 21:46:56 christos Exp $	*/
+/*	$NetBSD: search.h,v 1.14 2016/05/09 21:46:56 christos Exp $	*/
 
 /*-
  * Copyright (c) 1992, 1993
@@ -31,46 +31,34 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)key.h	8.1 (Berkeley) 6/4/93
+ *	@(#)search.h	8.1 (Berkeley) 6/4/93
  */
 
 /*
- * el.keymacro.h: Key macro header
+ * el.search.h: Line and history searching utilities
  */
-#ifndef _h_el_keymacro
-#define	_h_el_keymacro
+#ifndef _h_edited_search
+#define	_h_edited_search
 
-typedef union keymacro_value_t {
-	el_action_t	 cmd;	/* If it is a command the #	*/
-	wchar_t		*str;	/* If it is a string...		*/
-} keymacro_value_t;
+typedef struct el_search_t {
+	wchar_t	*patbuf;		/* The pattern buffer		*/
+	size_t	 patlen;		/* Length of the pattern buffer	*/
+	int	 patdir;		/* Direction of the last search	*/
+	int	 chadir;		/* Character search direction	*/
+	wchar_t	 chacha;		/* Character we are looking for	*/
+	char	 chatflg;		/* 0 if f, 1 if t */
+} el_search_t;
 
-typedef struct keymacro_node_t keymacro_node_t;
 
-typedef struct el_keymacro_t {
-	wchar_t		*buf;	/* Key print buffer		*/
-	keymacro_node_t	*map;	/* Key map			*/
-	keymacro_value_t val;	/* Local conversion buffer	*/
-} el_keymacro_t;
+libedit_private int		el_match(const wchar_t *, const wchar_t *);
+libedit_private int		search_init(EditLine *);
+libedit_private void		search_end(EditLine *);
+libedit_private int		c_hmatch(EditLine *, const wchar_t *);
+libedit_private void		c_setpat(EditLine *);
+libedit_private el_action_t	ce_inc_search(EditLine *, int);
+libedit_private el_action_t	cv_search(EditLine *, int);
+libedit_private el_action_t	ce_search_line(EditLine *, int);
+libedit_private el_action_t	cv_repeat_srch(EditLine *, wint_t);
+libedit_private el_action_t	cv_csearch(EditLine *, int, wint_t, int, int);
 
-#define	XK_CMD	0
-#define	XK_STR	1
-#define	XK_NOD	2
-
-libedit_private int keymacro_init(EditLine *);
-libedit_private void keymacro_end(EditLine *);
-libedit_private keymacro_value_t *keymacro_map_cmd(EditLine *, int);
-libedit_private keymacro_value_t *keymacro_map_str(EditLine *, wchar_t *);
-libedit_private void keymacro_reset(EditLine *);
-libedit_private int keymacro_get(EditLine *, wchar_t *, keymacro_value_t *);
-libedit_private void keymacro_add(EditLine *, const wchar_t *,
-    keymacro_value_t *, int);
-libedit_private void keymacro_clear(EditLine *, el_action_t *, const wchar_t *);
-libedit_private int keymacro_delete(EditLine *, const wchar_t *);
-libedit_private void keymacro_print(EditLine *, const wchar_t *);
-libedit_private void keymacro_kprint(EditLine *, const wchar_t *,
-    keymacro_value_t *, int);
-libedit_private size_t keymacro__decode_str(const wchar_t *, char *, size_t,
-    const char *);
-
-#endif /* _h_el_keymacro */
+#endif /* _h_edited_search */

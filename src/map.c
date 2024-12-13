@@ -48,14 +48,14 @@ __RCSID("$NetBSD: map.c,v 1.55 2022/10/30 19:11:31 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "common.h"
 #include "emacs.h"
 #include "vi.h"
 #include "fcns.h"
 #include "func.h"
 #include "help.h"
-#include "parse.h"
+#include "edited/parse.h"
 
 static void	map_print_key(EditLine *, el_action_t *, const wchar_t *);
 static void	map_print_some_keys(EditLine *, el_action_t *, wint_t, wint_t);

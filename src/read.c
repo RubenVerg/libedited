@@ -52,9 +52,9 @@ __RCSID("$NetBSD: read.c,v 1.108 2022/10/30 19:11:31 christos Exp $");
 #include <string.h>
 #include <unistd.h>
 
-#include "el.h"
+#include "edited/el.h"
 #include "fcns.h"
-#include "read.h"
+#include "edited/read.h"
 
 #define	EL_MAXMACRO	10
 

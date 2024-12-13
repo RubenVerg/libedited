@@ -57,9 +57,9 @@ __RCSID("$NetBSD: el.c,v 1.101 2022/10/30 19:11:31 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "el.h"
-#include "parse.h"
-#include "read.h"
+#include "edited/el.h"
+#include "edited/parse.h"
+#include "edited/read.h"
 
 #ifndef HAVE_SECURE_GETENV
 #	ifdef HAVE___SECURE_GETENV

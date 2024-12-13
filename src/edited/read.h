@@ -1,11 +1,11 @@
-/*	$NetBSD: filecomplete.h,v 1.15 2023/04/25 17:51:32 christos Exp $	*/
+/*	$NetBSD: read.h,v 1.13 2022/10/30 19:11:31 christos Exp $	*/
 
 /*-
- * Copyright (c) 1997 The NetBSD Foundation, Inc.
+ * Copyright (c) 2001 The NetBSD Foundation, Inc.
  * All rights reserved.
  *
  * This code is derived from software contributed to The NetBSD Foundation
- * by Jaromir Dolecek.
+ * by Anthony Mallet.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,27 +28,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _FILECOMPLETE_H_
-#define _FILECOMPLETE_H_
 
-int fn_complete(EditLine *,
-    char *(*)(const char *, int),
-    char **(*)(const char *, int, int),
-    const wchar_t *, const wchar_t *, const char *(*)(const char *), size_t,
-    int *, int *, int *, int *);
-int fn_complete2(EditLine *,
-    char *(*)(const char *, int),
-    char **(*)(const char *, int, int),
-    const wchar_t *, const wchar_t *, const char *(*)(const char *), size_t,
-    int *, int *, int *, int *, unsigned int);
-#define FN_QUOTE_MATCH 1U		/* Quote the returned match */
+/*
+ * el.read.h: Character reading functions
+ */
+#ifndef	_h_edited_read
+#define	_h_edited_read
 
-void fn_display_match_list(EditLine *, char **, size_t, size_t,
-	const char *(*)(const char *));
-char *fn_tilde_expand(const char *);
-char *fn_filename_completion_function(const char *, int);
+libedit_private int		read_init(EditLine *);
+libedit_private void		read_end(EditLine *);
+libedit_private void		read_prepare(EditLine *);
+libedit_private void		read_finish(EditLine *);
+libedit_private int		el_read_setfn(struct el_read_t *, el_rfunc_t);
+libedit_private el_rfunc_t	el_read_getfn(struct el_read_t *);
 
-/* XXX: readline */
-char **completion_matches(const char *, char *(*)(const char *, int));
-
-#endif
+#endif /* _h_edited_read */

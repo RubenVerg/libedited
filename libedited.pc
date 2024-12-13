@@ -9,5 +9,5 @@ Version: 3.1
 Requires:
 Libs: -L${libdir} -ledited
 Libs.private: -lncurses 
-Cflags: -I${includedir} -I${includedir}/editline
+Cflags: -I${includedir}/edited
 
