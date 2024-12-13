@@ -43,11 +43,11 @@ typedef struct edited_literal_t {
 	size_t		l_len;		/* max allocated */
 } edited_literal_t;
 
-libedited_private void edited_lit_init(EditLine *);
-libedited_private void edited_lit_end(EditLine *);
-libedited_private void edited_lit_clear(EditLine *);
-libedited_private wint_t edited_lit_add(EditLine *, const wchar_t *,
+libedited_private void edited_lit_init(Edited *);
+libedited_private void edited_lit_end(Edited *);
+libedited_private void edited_lit_clear(Edited *);
+libedited_private wint_t edited_lit_add(Edited *, const wchar_t *,
     const wchar_t *, int *);
-libedited_private const char *edited_lit_get(EditLine *, wint_t);
+libedited_private const char *edited_lit_get(Edited *, wint_t);
 
 #endif /* _h_literal */

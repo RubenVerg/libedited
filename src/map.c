@@ -57,11 +57,11 @@ __RCSID("$NetBSD: map.c,v 1.55 2022/10/30 19:11:31 christos Exp $");
 #include "edited/help.h"
 #include "edited/parse.h"
 
-static void	edited_map_print_key(EditLine *, edited_action_t *, const wchar_t *);
-static void	edited_map_print_some_keys(EditLine *, edited_action_t *, wint_t, wint_t);
-static void	edited_map_print_all_keys(EditLine *);
-static void	edited_map_init_nls(EditLine *);
-static void	edited_map_init_meta(EditLine *);
+static void	edited_map_print_key(Edited *, edited_action_t *, const wchar_t *);
+static void	edited_map_print_some_keys(Edited *, edited_action_t *, wint_t, wint_t);
+static void	edited_map_print_all_keys(Edited *);
+static void	edited_map_init_nls(Edited *);
+static void	edited_map_init_meta(Edited *);
 
 /* keymap tables ; should be N_KEYS*sizeof(KEYCMD) bytes long */
 
@@ -898,7 +898,7 @@ static const edited_action_t edited_map_vi_command[] = {
  *	Initialize and allocate the maps
  */
 libedited_private int
-edited_map_init(EditLine *el)
+edited_map_init(Edited *el)
 {
 
 	/*
@@ -950,7 +950,7 @@ out:
  *	Free the space taken by the editor maps
  */
 libedited_private void
-edited_map_end(EditLine *el)
+edited_map_end(Edited *el)
 {
 
 	edited_free(el->edited_map.alt);
@@ -971,7 +971,7 @@ edited_map_end(EditLine *el)
  *	Find all the printable keys and bind them to self insert
  */
 static void
-edited_map_init_nls(EditLine *el)
+edited_map_init_nls(Edited *el)
 {
 	int i;
 
@@ -987,7 +987,7 @@ edited_map_init_nls(EditLine *el)
  *	Bind all the meta keys to the appropriate ESC-<key> sequence
  */
 static void
-edited_map_init_meta(EditLine *el)
+edited_map_init_meta(Edited *el)
 {
 	wchar_t buf[3];
 	int i;
@@ -1028,7 +1028,7 @@ edited_map_init_meta(EditLine *el)
  *	Initialize the vi bindings
  */
 libedited_private void
-edited_map_init_vi(EditLine *el)
+edited_map_init_vi(Edited *el)
 {
 	int i;
 	edited_action_t *key = el->edited_map.key;
@@ -1058,7 +1058,7 @@ edited_map_init_vi(EditLine *el)
  *	Initialize the emacs bindings
  */
 libedited_private void
-edited_map_init_emacs(EditLine *el)
+edited_map_init_emacs(Edited *el)
 {
 	int i;
 	wchar_t buf[3];
@@ -1092,7 +1092,7 @@ edited_map_init_emacs(EditLine *el)
  *	Set the editor
  */
 libedited_private int
-edited_map_set_editor(EditLine *el, wchar_t *editor)
+edited_map_set_editor(Edited *el, wchar_t *editor)
 {
 
 	if (wcscmp(editor, L"emacs") == 0) {
@@ -1111,7 +1111,7 @@ edited_map_set_editor(EditLine *el, wchar_t *editor)
  *	Retrieve the editor
  */
 libedited_private int
-edited_map_get_editor(EditLine *el, const wchar_t **editor)
+edited_map_get_editor(Edited *el, const wchar_t **editor)
 {
 
 	if (editor == NULL)
@@ -1132,7 +1132,7 @@ edited_map_get_editor(EditLine *el, const wchar_t **editor)
  *	Print the function description for 1 key
  */
 static void
-edited_map_print_key(EditLine *el, edited_action_t *map, const wchar_t *in)
+edited_map_print_key(Edited *el, edited_action_t *map, const wchar_t *in)
 {
 	char outbuf[EL_BUFSIZ];
 	edited_bindings_t *bp, *ep;
@@ -1155,7 +1155,7 @@ edited_map_print_key(EditLine *el, edited_action_t *map, const wchar_t *in)
  *	Print keys from first to last
  */
 static void
-edited_map_print_some_keys(EditLine *el, edited_action_t *map, wint_t first, wint_t last)
+edited_map_print_some_keys(Edited *el, edited_action_t *map, wint_t first, wint_t last)
 {
 	edited_bindings_t *bp, *ep;
 	wchar_t firstbuf[2], lastbuf[2];
@@ -1219,7 +1219,7 @@ edited_map_print_some_keys(EditLine *el, edited_action_t *map, wint_t first, win
  *	Print the function description for all keys.
  */
 static void
-edited_map_print_all_keys(EditLine *el)
+edited_map_print_all_keys(Edited *el)
 {
 	int prev, i;
 
@@ -1254,7 +1254,7 @@ edited_map_print_all_keys(EditLine *el)
  *	Add/remove/change bindings
  */
 libedited_private int
-edited_map_bind(EditLine *el, int argc, const wchar_t **argv)
+edited_map_bind(Edited *el, int argc, const wchar_t **argv)
 {
 	edited_action_t *map;
 	int ntype, rem;
@@ -1400,7 +1400,7 @@ edited_map_bind(EditLine *el, int argc, const wchar_t **argv)
  *	add a user defined function
  */
 libedited_private int
-edited_map_addfunc(EditLine *el, const wchar_t *name, const wchar_t *help,
+edited_map_addfunc(Edited *el, const wchar_t *name, const wchar_t *help,
     edited_func_t func)
 {
 	void *p;

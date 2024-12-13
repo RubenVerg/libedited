@@ -193,7 +193,7 @@ unescape_string(const wchar_t *string, size_t length)
 }
 
 static char *
-escape_filename(EditLine * el, const char *filename, int single_match,
+escape_filename(Edited * el, const char *filename, int single_match,
 		const char *(*app_func)(const char *))
 {
 	size_t original_len = 0;
@@ -535,7 +535,7 @@ _fn_qsort_string_compare(const void *i1, const void *i2)
  * num, so the strings are matches[1] *through* matches[num-1].
  */
 void
-edited_fn_display_match_list(EditLine * el, char **matches, size_t num, size_t width,
+edited_fn_display_match_list(Edited * el, char **matches, size_t num, size_t width,
     const char *(*app_func) (const char *))
 {
 	size_t line, lines, col, cols, thisguy;
@@ -652,7 +652,7 @@ find_word_to_complete(const wchar_t * cursor, const wchar_t * buffer,
  *       '!' could never be invoked
  */
 int
-edited_fn_complete2(EditLine *el,
+edited_fn_complete2(Edited *el,
     char *(*complete_func)(const char *, int),
     char **(*attempted_completion_function)(const char *, int, int),
     const wchar_t *word_break, const wchar_t *special_prefixes,
@@ -822,7 +822,7 @@ out:
 }
 
 int
-edited_fn_complete(EditLine *el,
+edited_fn_complete(Edited *el,
     char *(*complete_func)(const char *, int),
     char **(*attempted_completion_function)(const char *, int, int),
     const wchar_t *word_break, const wchar_t *special_prefixes,
@@ -840,7 +840,7 @@ edited_fn_complete(EditLine *el,
  */
 /* ARGSUSED */
 unsigned char
-_fn_complete(EditLine *el, int ch __attribute__((__unused__)))
+_fn_complete(Edited *el, int ch __attribute__((__unused__)))
 {
 	return (unsigned char)edited_fn_complete(el, NULL, NULL,
 	    break_chars, NULL, NULL, (size_t)100,
@@ -852,7 +852,7 @@ _fn_complete(EditLine *el, int ch __attribute__((__unused__)))
  */
 /* ARGSUSED */
 unsigned char
-_fn_sh_complete(EditLine *el, int ch)
+_fn_sh_complete(Edited *el, int ch)
 {
 	return _fn_complete(el, ch);
 }

@@ -68,7 +68,7 @@ __RCSID("$NetBSD: search.c,v 1.52 2024/06/30 16:26:30 christos Exp $");
  *	Initialize the search stuff
  */
 libedited_private int
-search_init(EditLine *el)
+search_init(Edited *el)
 {
 
 	el->edited_search.patbuf = edited_calloc(EL_BUFSIZ,
@@ -89,7 +89,7 @@ search_init(EditLine *el)
  *	Initialize the search stuff
  */
 libedited_private void
-search_end(EditLine *el)
+search_end(Edited *el)
 {
 
 	edited_free(el->edited_search.patbuf);
@@ -160,7 +160,7 @@ edited_match(const wchar_t *str, const wchar_t *pat)
  *	 return True if the pattern matches the prefix
  */
 libedited_private int
-edited_c_hmatch(EditLine *el, const wchar_t *str)
+edited_c_hmatch(Edited *el, const wchar_t *str)
 {
 #ifdef SDEBUG
 	(void) fprintf(el->edited_errfile, "match `%ls' with `%ls'\n",
@@ -175,7 +175,7 @@ edited_c_hmatch(EditLine *el, const wchar_t *str)
  *	Set the history seatch pattern
  */
 libedited_private void
-edited_c_setpat(EditLine *el)
+edited_c_setpat(Edited *el)
 {
 	if (el->edited_state.lastcmd != EDITED_ED_SEARCH_PREV_HISTORY &&
 	    el->edited_state.lastcmd != EDITED_ED_SEARCH_NEXT_HISTORY) {
@@ -204,7 +204,7 @@ edited_c_setpat(EditLine *el)
  *	Emacs incremental search
  */
 libedited_private edited_action_t
-edited_ce_inc_search(EditLine *el, int dir)
+edited_ce_inc_search(Edited *el, int dir)
 {
 	static const wchar_t STRfwd[] = L"fwd", STRbck[] = L"bck";
 	static wchar_t pchar = L':';  /* ':' = normal, '?' = failed */
@@ -454,7 +454,7 @@ edited_ce_inc_search(EditLine *el, int dir)
  *	Vi search.
  */
 libedited_private edited_action_t
-edited_cv_search(EditLine *el, int dir)
+edited_cv_search(Edited *el, int dir)
 {
 	wchar_t ch;
 	wchar_t tmpbuf[EL_BUFSIZ];
@@ -528,7 +528,7 @@ edited_cv_search(EditLine *el, int dir)
  *	Look for a pattern inside a line
  */
 libedited_private edited_action_t
-edited_ce_search_line(EditLine *el, int dir)
+edited_ce_search_line(Edited *el, int dir)
 {
 	wchar_t *cp = el->edited_line.cursor;
 	wchar_t *pattern = el->edited_search.patbuf;
@@ -570,7 +570,7 @@ edited_ce_search_line(EditLine *el, int dir)
  *	Vi repeat search
  */
 libedited_private edited_action_t
-edited_cv_repeat_srch(EditLine *el, wint_t c)
+edited_cv_repeat_srch(Edited *el, wint_t c)
 {
 
 #ifdef SDEBUG
@@ -597,7 +597,7 @@ edited_cv_repeat_srch(EditLine *el, wint_t c)
  *	Vi character search
  */
 libedited_private edited_action_t
-edited_cv_csearch(EditLine *el, int direction, wint_t ch, int count, int tflag)
+edited_cv_csearch(Edited *el, int direction, wint_t ch, int count, int tflag)
 {
 	wchar_t *cp;
 

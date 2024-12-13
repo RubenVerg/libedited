@@ -82,18 +82,18 @@ struct edited_km_node_t {
 	struct edited_km_node_t *sibling;/* ptr to another key with same prefix*/
 };
 
-static int		 node_trav(EditLine *, edited_km_node_t *, wchar_t *,
+static int		 node_trav(Edited *, edited_km_node_t *, wchar_t *,
     edited_km_value_t *);
-static int		 node__try(EditLine *, edited_km_node_t *,
+static int		 node__try(Edited *, edited_km_node_t *,
     const wchar_t *, edited_km_value_t *, int);
 static edited_km_node_t	*node__get(wint_t);
 static void		 node__free(edited_km_node_t *);
-static void		 node__put(EditLine *, edited_km_node_t *);
-static int		 node__delete(EditLine *, edited_km_node_t **,
+static void		 node__put(Edited *, edited_km_node_t *);
+static int		 node__delete(Edited *, edited_km_node_t **,
     const wchar_t *);
-static int		 node_lookup(EditLine *, const wchar_t *,
+static int		 node_lookup(Edited *, const wchar_t *,
     edited_km_node_t *, size_t);
-static int		 node_enum(EditLine *, edited_km_node_t *, size_t);
+static int		 node_enum(Edited *, edited_km_node_t *, size_t);
 
 #define	KEY_BUFSIZ	EL_BUFSIZ
 
@@ -102,7 +102,7 @@ static int		 node_enum(EditLine *, edited_km_node_t *, size_t);
  *	Initialize the key maps
  */
 libedited_private int
-edited_km_init(EditLine *el)
+edited_km_init(Edited *el)
 {
 
 	el->edited_keymacro.buf = edited_calloc(KEY_BUFSIZ,
@@ -118,7 +118,7 @@ edited_km_init(EditLine *el)
  *	Free the key maps
  */
 libedited_private void
-edited_km_end(EditLine *el)
+edited_km_end(Edited *el)
 {
 
 	edited_free(el->edited_keymacro.buf);
@@ -131,7 +131,7 @@ edited_km_end(EditLine *el)
  *	Associate cmd with a key value
  */
 libedited_private edited_km_value_t *
-edited_km_map_cmd(EditLine *el, int cmd)
+edited_km_map_cmd(Edited *el, int cmd)
 {
 
 	el->edited_keymacro.val.cmd = (edited_action_t) cmd;
@@ -143,7 +143,7 @@ edited_km_map_cmd(EditLine *el, int cmd)
  *	Associate str with a key value
  */
 libedited_private edited_km_value_t *
-edited_km_map_str(EditLine *el, wchar_t *str)
+edited_km_map_str(Edited *el, wchar_t *str)
 {
 
 	el->edited_keymacro.val.str = str;
@@ -157,7 +157,7 @@ edited_km_map_str(EditLine *el, wchar_t *str)
  *	[Always bind the ansi arrow keys?]
  */
 libedited_private void
-edited_km_reset(EditLine *el)
+edited_km_reset(Edited *el)
 {
 
 	node__put(el, el->edited_keymacro.map);
@@ -176,7 +176,7 @@ edited_km_reset(EditLine *el)
  *      The last character read is returned in *ch.
  */
 libedited_private int
-edited_km_get(EditLine *el, wchar_t *ch, edited_km_value_t *val)
+edited_km_get(Edited *el, wchar_t *ch, edited_km_value_t *val)
 {
 
 	return node_trav(el, el->edited_keymacro.map, ch, val);
@@ -190,7 +190,7 @@ edited_km_get(EditLine *el, wchar_t *ch, edited_km_value_t *val)
  *	command, an out str or a unix command.
  */
 libedited_private void
-edited_km_add(EditLine *el, const wchar_t *key, edited_km_value_t *val,
+edited_km_add(Edited *el, const wchar_t *key, edited_km_value_t *val,
     int ntype)
 {
 
@@ -219,7 +219,7 @@ edited_km_add(EditLine *el, const wchar_t *key, edited_km_value_t *val,
  *
  */
 libedited_private void
-edited_km_clear(EditLine *el, edited_action_t *map, const wchar_t *in)
+edited_km_clear(Edited *el, edited_action_t *map, const wchar_t *in)
 {
         if (*in > N_KEYS) /* can't be in the map */
                 return;
@@ -237,7 +237,7 @@ edited_km_clear(EditLine *el, edited_action_t *map, const wchar_t *in)
  *      they exists.
  */
 libedited_private int
-edited_km_delete(EditLine *el, const wchar_t *key)
+edited_km_delete(Edited *el, const wchar_t *key)
 {
 
 	if (key[0] == '\0') {
@@ -258,7 +258,7 @@ edited_km_delete(EditLine *el, const wchar_t *key)
  *	Print entire el->edited_keymacro.map if null
  */
 libedited_private void
-edited_km_print(EditLine *el, const wchar_t *key)
+edited_km_print(Edited *el, const wchar_t *key)
 {
 
 	/* do nothing if el->edited_keymacro.map is empty and null key specified */
@@ -279,7 +279,7 @@ edited_km_print(EditLine *el, const wchar_t *key)
  *	found.  May read in more characters.
  */
 static int
-node_trav(EditLine *el, edited_km_node_t *ptr, wchar_t *ch,
+node_trav(Edited *el, edited_km_node_t *ptr, wchar_t *ch,
     edited_km_value_t *val)
 {
 
@@ -314,7 +314,7 @@ node_trav(EditLine *el, edited_km_node_t *ptr, wchar_t *ch,
  *	Find a node that matches *str or allocate a new one
  */
 static int
-node__try(EditLine *el, edited_km_node_t *ptr, const wchar_t *str,
+node__try(Edited *el, edited_km_node_t *ptr, const wchar_t *str,
     edited_km_value_t *val, int ntype)
 {
 
@@ -375,7 +375,7 @@ node__try(EditLine *el, edited_km_node_t *ptr, const wchar_t *str,
  *	Delete node that matches str
  */
 static int
-node__delete(EditLine *el, edited_km_node_t **inptr, const wchar_t *str)
+node__delete(Edited *el, edited_km_node_t **inptr, const wchar_t *str)
 {
 	edited_km_node_t *ptr;
 	edited_km_node_t *prev_ptr = NULL;
@@ -423,7 +423,7 @@ node__delete(EditLine *el, edited_km_node_t **inptr, const wchar_t *str)
  *	Puts a tree of nodes onto free list using free(3).
  */
 static void
-node__put(EditLine *el, edited_km_node_t *ptr)
+node__put(Edited *el, edited_km_node_t *ptr)
 {
 	if (ptr == NULL)
 		return;
@@ -484,7 +484,7 @@ node__free(edited_km_node_t *k)
  *	Print if last node
  */
 static int
-node_lookup(EditLine *el, const wchar_t *str, edited_km_node_t *ptr,
+node_lookup(Edited *el, const wchar_t *str, edited_km_node_t *ptr,
     size_t cnt)
 {
 	ssize_t used;
@@ -537,7 +537,7 @@ node_lookup(EditLine *el, const wchar_t *str, edited_km_node_t *ptr,
  *	Traverse the node printing the characters it is bound in buffer
  */
 static int
-node_enum(EditLine *el, edited_km_node_t *ptr, size_t cnt)
+node_enum(Edited *el, edited_km_node_t *ptr, size_t cnt)
 {
         ssize_t used;
 
@@ -580,7 +580,7 @@ node_enum(EditLine *el, edited_km_node_t *ptr, size_t cnt)
  *	function specified by val
  */
 libedited_private void
-edited_km_kprint(EditLine *el, const wchar_t *key, edited_km_value_t *val,
+edited_km_kprint(Edited *el, const wchar_t *key, edited_km_value_t *val,
     int ntype)
 {
 	edited_bindings_t *fp;

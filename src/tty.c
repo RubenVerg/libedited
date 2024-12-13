@@ -456,14 +456,14 @@ static const ttymodes_t ttymodes[] = {
 #define	edited_tty__geteightbit(td)	(((td)->c_cflag & CSIZE) == CS8)
 #define	edited_tty__cooked_mode(td)	((td)->c_lflag & ICANON)
 
-static int	edited_tty_getty(EditLine *, struct termios *);
-static int	edited_tty_setty(EditLine *, int, const struct termios *);
+static int	edited_tty_getty(Edited *, struct termios *);
+static int	edited_tty_setty(Edited *, int, const struct termios *);
 static int	edited_tty__getcharindex(int);
 static void	edited_tty__getchar(struct termios *, unsigned char *);
 static void	edited_tty__setchar(struct termios *, unsigned char *);
 static speed_t	edited_tty__getspeed(struct termios *);
-static int	edited_tty_setup(EditLine *);
-static void	edited_tty_setup_flags(EditLine *, struct termios *, int);
+static int	edited_tty_setup(Edited *);
+static void	edited_tty_setup_flags(Edited *, struct termios *, int);
 
 #define	t_qu	t_ts
 
@@ -471,7 +471,7 @@ static void	edited_tty_setup_flags(EditLine *, struct termios *, int);
  *	Wrapper for tcgetattr to handle EINTR
  */
 static int
-edited_tty_getty(EditLine *el, struct termios *t)
+edited_tty_getty(Edited *el, struct termios *t)
 {
 	int rv;
 	while ((rv = tcgetattr(el->edited_infd, t)) == -1 && errno == EINTR)
@@ -483,7 +483,7 @@ edited_tty_getty(EditLine *el, struct termios *t)
  *	Wrapper for tcsetattr to handle EINTR
  */
 static int
-edited_tty_setty(EditLine *el, int action, const struct termios *t)
+edited_tty_setty(Edited *el, int action, const struct termios *t)
 {
 	int rv;
 	while ((rv = tcsetattr(el->edited_infd, action, t)) == -1 && errno == EINTR)
@@ -495,7 +495,7 @@ edited_tty_setty(EditLine *el, int action, const struct termios *t)
  *	Get the tty parameters and initialize the editing state
  */
 static int
-edited_tty_setup(EditLine *el)
+edited_tty_setup(Edited *el)
 {
 	int rst = (el->edited_flags & NO_RESET) == 0;
 
@@ -569,7 +569,7 @@ edited_tty_setup(EditLine *el)
 }
 
 libedited_private int
-edited_tty_init(EditLine *el)
+edited_tty_init(Edited *el)
 {
 
 	el->edited_tty.t_mode = EX_IO;
@@ -586,7 +586,7 @@ edited_tty_init(EditLine *el)
  */
 libedited_private void
 /*ARGSUSED*/
-edited_tty_end(EditLine *el, int how)
+edited_tty_end(Edited *el, int how)
 {
 	if (el->edited_flags & EDIT_DISABLED)
 		return;
@@ -893,7 +893,7 @@ edited_tty__setchar(struct termios *td, unsigned char *s)
  *	Rebind the editline functions
  */
 libedited_private void
-edited_tty_bind_char(EditLine *el, int force)
+edited_tty_bind_char(Edited *el, int force)
 {
 
 	unsigned char *t_n = el->edited_tty.t_c[EDITED_ED_IO];
@@ -956,7 +956,7 @@ edited_tty__get_flag(struct termios *t, int kind) {
 
 
 static tcflag_t
-edited_tty_update_flag(EditLine *el, tcflag_t f, int mode, int kind)
+edited_tty_update_flag(Edited *el, tcflag_t f, int mode, int kind)
 {
 	f &= ~el->edited_tty.t_t[mode][kind].t_clrmask;
 	f |= el->edited_tty.t_t[mode][kind].t_setmask;
@@ -965,7 +965,7 @@ edited_tty_update_flag(EditLine *el, tcflag_t f, int mode, int kind)
 
 
 static void
-edited_tty_update_flags(EditLine *el, int kind)
+edited_tty_update_flags(Edited *el, int kind)
 {
 	tcflag_t *tt, *ed, *ex;
 	tt = edited_tty__get_flag(&el->edited_tty.t_ts, kind);
@@ -980,7 +980,7 @@ edited_tty_update_flags(EditLine *el, int kind)
 
 
 static void
-edited_tty_update_char(EditLine *el, int mode, int c) {
+edited_tty_update_char(Edited *el, int mode, int c) {
 	if (!((el->edited_tty.t_t[mode][MD_CHAR].t_setmask & C_SH(c)))
 	    && (el->edited_tty.t_c[TS_IO][c] != el->edited_tty.t_c[EX_IO][c]))
 		el->edited_tty.t_c[mode][c] = el->edited_tty.t_c[TS_IO][c];
@@ -993,7 +993,7 @@ edited_tty_update_char(EditLine *el, int mode, int c) {
  *	Set terminal into 1 character at a time mode.
  */
 libedited_private int
-edited_tty_rawmode(EditLine *el)
+edited_tty_rawmode(Edited *el)
 {
 
 	if (el->edited_tty.t_mode == EDITED_ED_IO || el->edited_tty.t_mode == QU_IO)
@@ -1078,7 +1078,7 @@ edited_tty_rawmode(EditLine *el)
  *	Set the tty back to normal mode
  */
 libedited_private int
-edited_tty_cookedmode(EditLine *el)
+edited_tty_cookedmode(Edited *el)
 {				/* set tty in normal setup */
 
 	if (el->edited_tty.t_mode == EX_IO)
@@ -1103,7 +1103,7 @@ edited_tty_cookedmode(EditLine *el)
  *	Turn on quote mode
  */
 libedited_private int
-edited_tty_quotemode(EditLine *el)
+edited_tty_quotemode(Edited *el)
 {
 	if (el->edited_tty.t_mode == QU_IO)
 		return 0;
@@ -1128,7 +1128,7 @@ edited_tty_quotemode(EditLine *el)
  *	Turn off quote mode
  */
 libedited_private int
-edited_tty_noquotemode(EditLine *el)
+edited_tty_noquotemode(Edited *el)
 {
 
 	if (el->edited_tty.t_mode != QU_IO)
@@ -1150,7 +1150,7 @@ edited_tty_noquotemode(EditLine *el)
  */
 libedited_private int
 /*ARGSUSED*/
-edited_tty_stty(EditLine *el, int argc __attribute__((__unused__)),
+edited_tty_stty(Edited *el, int argc __attribute__((__unused__)),
     const wchar_t **argv)
 {
 	const ttymodes_t *m;
@@ -1332,7 +1332,7 @@ edited_tty_printchar(EditLine *el, unsigned char *s)
 
 
 static void
-edited_tty_setup_flags(EditLine *el, struct termios *tios, int mode)
+edited_tty_setup_flags(Edited *el, struct termios *tios, int mode)
 {
 	int kind;
 	for (kind = MD_INP; kind <= MD_LIN; kind++) {
@@ -1342,7 +1342,7 @@ edited_tty_setup_flags(EditLine *el, struct termios *tios, int mode)
 }
 
 libedited_private int
-edited_tty_get_signal_character(EditLine *el, int sig)
+edited_tty_get_signal_character(Edited *el, int sig)
 {
 #ifdef ECHOCTL
 	tcflag_t *ed = edited_tty__get_flag(&el->edited_tty.t_ed, MD_INP);

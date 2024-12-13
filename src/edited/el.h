@@ -109,7 +109,7 @@ typedef struct edited_state_t {
 
 struct edited_read_t;
 
-struct editline {
+struct edited {
 	wchar_t		 *edited_prog;	/* the program name		*/
 	FILE		 *edited_infile;	/* Stdio stuff			*/
 	FILE		 *edited_outfile;	/* Stdio stuff			*/
@@ -143,8 +143,8 @@ struct editline {
 	LineInfo          edited_lgcylinfo; /* Legacy LineInfo buffer       */
 };
 
-libedited_private int	edited_editmode(EditLine *, int, const wchar_t **);
-libedited_private EditLine *edited_init_internal(const char *, FILE *, FILE *,
+libedited_private int	edited_editmode(Edited *, int, const wchar_t **);
+libedited_private Edited *edited_init_internal(const char *, FILE *, FILE *,
     FILE *, int, int, int, int);
 
 #ifdef DEBUG

@@ -54,7 +54,7 @@ __RCSID("$NetBSD: hist.c,v 1.34 2019/07/23 10:19:35 christos Exp $");
  *	Initialization function.
  */
 libedited_private int
-hist_init(EditLine *el)
+hist_init(Edited *el)
 {
 
 	el->edited_history.fun = NULL;
@@ -72,7 +72,7 @@ hist_init(EditLine *el)
  *	clean up history;
  */
 libedited_private void
-hist_end(EditLine *el)
+hist_end(Edited *el)
 {
 
 	edited_free(el->edited_history.buf);
@@ -84,7 +84,7 @@ hist_end(EditLine *el)
  *	Set new history interface
  */
 libedited_private int
-hist_set(EditLine *el, hist_fun_t fun, void *ptr)
+hist_set(Edited *el, hist_fun_t fun, void *ptr)
 {
 
 	el->edited_history.ref = ptr;
@@ -98,7 +98,7 @@ hist_set(EditLine *el, hist_fun_t fun, void *ptr)
  *	eventno tells us the event to get.
  */
 libedited_private edited_action_t
-hist_get(EditLine *el)
+hist_get(Edited *el)
 {
 	const wchar_t *hp;
 	int h;
@@ -164,7 +164,7 @@ out:
  *	process a history command
  */
 libedited_private int
-hist_command(EditLine *el, int argc, const wchar_t **argv)
+hist_command(Edited *el, int argc, const wchar_t **argv)
 {
 	const wchar_t *str;
 	int num;
@@ -223,7 +223,7 @@ hist_command(EditLine *el, int argc, const wchar_t **argv)
  */
 libedited_private int
 /*ARGSUSED*/
-hist_enlargebuf(EditLine *el, size_t oldsz, size_t newsz)
+hist_enlargebuf(Edited *el, size_t oldsz, size_t newsz)
 {
 	wchar_t *newbuf;
 
@@ -242,7 +242,7 @@ hist_enlargebuf(EditLine *el, size_t oldsz, size_t newsz)
 }
 
 libedited_private wchar_t *
-hist_convert(EditLine *el, int fn, void *arg)
+hist_convert(Edited *el, int fn, void *arg)
 {
 	HistEventW ev;
 	if ((*(el)->edited_history.fun)((el)->edited_history.ref, &ev, fn, arg) == -1)

@@ -18,7 +18,7 @@ volatile sig_atomic_t gotsig;
 static const char hfile[] = ".whistory";
 
 static wchar_t *
-prompt(EditLine __attribute__((unused)) *el)
+prompt(Edited __attribute__((unused)) *el)
 {
 	static wchar_t a[] = L"\1\033[7m\1Edit$\1\033[0m\1 ";
 	static wchar_t b[] = L"Edit> ";
@@ -54,7 +54,7 @@ my_wcstombs(const wchar_t *wstr)
 
 
 static unsigned char
-complete(EditLine *el, int __attribute__((unused)) ch)
+complete(Edited *el, int __attribute__((unused)) ch)
 {
 	DIR *dd = opendir(".");
 	struct dirent *dp;
@@ -111,7 +111,7 @@ complete(EditLine *el, int __attribute__((unused)) ch)
 int
 main(int  __attribute__((unused)) argc, char *argv[])
 {
-	EditLine *el = NULL;
+	Edited *el = NULL;
 	int numc, ncontinuation;
 	const wchar_t *line;
 	TokenizerW *tok;

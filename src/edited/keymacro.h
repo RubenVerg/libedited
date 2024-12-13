@@ -57,18 +57,18 @@ typedef struct edited_keymacro_t {
 #define	XK_STR	1
 #define	XK_NOD	2
 
-libedited_private int edited_km_init(EditLine *);
-libedited_private void edited_km_end(EditLine *);
-libedited_private edited_km_value_t *edited_km_map_cmd(EditLine *, int);
-libedited_private edited_km_value_t *edited_km_map_str(EditLine *, wchar_t *);
-libedited_private void edited_km_reset(EditLine *);
-libedited_private int edited_km_get(EditLine *, wchar_t *, edited_km_value_t *);
-libedited_private void edited_km_add(EditLine *, const wchar_t *,
+libedited_private int edited_km_init(Edited *);
+libedited_private void edited_km_end(Edited *);
+libedited_private edited_km_value_t *edited_km_map_cmd(Edited *, int);
+libedited_private edited_km_value_t *edited_km_map_str(Edited *, wchar_t *);
+libedited_private void edited_km_reset(Edited *);
+libedited_private int edited_km_get(Edited *, wchar_t *, edited_km_value_t *);
+libedited_private void edited_km_add(Edited *, const wchar_t *,
     edited_km_value_t *, int);
-libedited_private void edited_km_clear(EditLine *, edited_action_t *, const wchar_t *);
-libedited_private int edited_km_delete(EditLine *, const wchar_t *);
-libedited_private void edited_km_print(EditLine *, const wchar_t *);
-libedited_private void edited_km_kprint(EditLine *, const wchar_t *,
+libedited_private void edited_km_clear(Edited *, edited_action_t *, const wchar_t *);
+libedited_private int edited_km_delete(Edited *, const wchar_t *);
+libedited_private void edited_km_print(Edited *, const wchar_t *);
+libedited_private void edited_km_kprint(Edited *, const wchar_t *,
     edited_km_value_t *, int);
 libedited_private size_t edited_km__decode_str(const wchar_t *, char *, size_t,
     const char *);

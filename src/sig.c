@@ -52,7 +52,7 @@ __RCSID("$NetBSD: sig.c,v 1.27 2023/02/03 19:47:38 christos Exp $");
 #include "edited/el.h"
 #include "edited/common.h"
 
-static EditLine *sel = NULL;
+static Edited *sel = NULL;
 
 static const int sighdl[] = {
 #define	_DO(a)	(a),
@@ -116,7 +116,7 @@ edited_sig_handler(int signo)
  *	Initialize all signal stuff
  */
 libedited_private int
-edited_sig_init(EditLine *el)
+edited_sig_init(Edited *el)
 {
 	size_t i;
 	sigset_t *nset, oset;
@@ -148,7 +148,7 @@ edited_sig_init(EditLine *el)
  *	Clear all signal stuff
  */
 libedited_private void
-edited_sig_end(EditLine *el)
+edited_sig_end(Edited *el)
 {
 
 	edited_free(el->edited_signal);
@@ -160,7 +160,7 @@ edited_sig_end(EditLine *el)
  *	set all the signal handlers
  */
 libedited_private void
-edited_sig_set(EditLine *el)
+edited_sig_set(Edited *el)
 {
 	size_t i;
 	sigset_t oset;
@@ -187,7 +187,7 @@ edited_sig_set(EditLine *el)
  *	clear all the signal handlers
  */
 libedited_private void
-edited_sig_clr(EditLine *el)
+edited_sig_clr(Edited *el)
 {
 	size_t i;
 	sigset_t oset;

@@ -71,17 +71,17 @@ struct edited_read_t {
 };
 
 static int	edited_read__fixio(int, int);
-static int	edited_read_char(EditLine *, wchar_t *);
-static int	edited_read_getcmd(EditLine *, edited_action_t *, wchar_t *);
+static int	edited_read_char(Edited *, wchar_t *);
+static int	edited_read_getcmd(Edited *, edited_action_t *, wchar_t *);
 static void	edited_read_clearmacros(struct macros *);
 static void	edited_read_pop(struct macros *);
-static const wchar_t *noedit_wgets(EditLine *, int *);
+static const wchar_t *noedit_wgets(Edited *, int *);
 
 /* edited_read_init():
  *	Initialize the read stuff
  */
 libedited_private int
-edited_read_init(EditLine *el)
+edited_read_init(Edited *el)
 {
 	struct macros *ma;
 
@@ -106,7 +106,7 @@ out:
  *	Free the data structures used by the read stuff.
  */
 libedited_private void
-edited_read_end(EditLine *el)
+edited_read_end(Edited *el)
 {
 
 	edited_read_clearmacros(&el->edited_read->macros);
@@ -206,7 +206,7 @@ edited_read__fixio(int fd __attribute__((__unused__)), int e)
  *	Push a macro
  */
 void
-edited_wpush(EditLine *el, const wchar_t *str)
+edited_wpush(Edited *el, const wchar_t *str)
 {
 	struct macros *ma = &el->edited_read->macros;
 
@@ -227,7 +227,7 @@ edited_wpush(EditLine *el, const wchar_t *str)
  *	Character values > 255 are not looked up in the map, but inserted.
  */
 static int
-edited_read_getcmd(EditLine *el, edited_action_t *cmdnum, wchar_t *ch)
+edited_read_getcmd(Edited *el, edited_action_t *cmdnum, wchar_t *ch)
 {
 	static const wchar_t meta = (wchar_t)0x80;
 	edited_action_t cmd;
@@ -277,7 +277,7 @@ edited_read_getcmd(EditLine *el, edited_action_t *cmdnum, wchar_t *ch)
  *	Read a character from the tty.
  */
 static int
-edited_read_char(EditLine *el, wchar_t *cp)
+edited_read_char(Edited *el, wchar_t *cp)
 {
 	ssize_t num_read;
 	int tried = (el->edited_flags & FIXIO) == 0;
@@ -378,7 +378,7 @@ edited_read_clearmacros(struct macros *ma)
  *	Read a wide character
  */
 int
-edited_wgetc(EditLine *el, wchar_t *cp)
+edited_wgetc(Edited *el, wchar_t *cp)
 {
 	struct macros *ma = &el->edited_read->macros;
 	int num_read;
@@ -420,7 +420,7 @@ edited_wgetc(EditLine *el, wchar_t *cp)
 }
 
 libedited_private void
-edited_read_prepare(EditLine *el)
+edited_read_prepare(Edited *el)
 {
 	if (el->edited_flags & HANDLE_SIGNALS)
 		edited_sig_set(el);
@@ -441,7 +441,7 @@ edited_read_prepare(EditLine *el)
 }
 
 libedited_private void
-edited_read_finish(EditLine *el)
+edited_read_finish(Edited *el)
 {
 	if ((el->edited_flags & UNBUFFERED) == 0)
 		(void) edited_tty_cookedmode(el);
@@ -450,7 +450,7 @@ edited_read_finish(EditLine *el)
 }
 
 static const wchar_t *
-noedit_wgets(EditLine *el, int *nread)
+noedit_wgets(Edited *el, int *nread)
 {
 	edited_line_t	*lp = &el->edited_line;
 	int		 num;
@@ -474,7 +474,7 @@ noedit_wgets(EditLine *el, int *nread)
 }
 
 const wchar_t *
-edited_wgets(EditLine *el, int *nread)
+edited_wgets(Edited *el, int *nread)
 {
 	int retval;
 	edited_action_t cmdnum = 0;

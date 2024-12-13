@@ -69,13 +69,13 @@ __RCSID("$NetBSD: tc1.c,v 1.7 2016/02/17 19:47:49 christos Exp $");
 static int continuation = 0;
 volatile sig_atomic_t gotsig = 0;
 
-static	unsigned char	complete(EditLine *, int);
+static	unsigned char	complete(Edited *, int);
 	int	main(int, char **);
-static	char   *prompt(EditLine *);
+static	char   *prompt(Edited *);
 static	void	sig(int);
 
 static char *
-prompt(EditLine *el __attribute__((__unused__)))
+prompt(Edited *el __attribute__((__unused__)))
 {
 	static char a[] = "\1\033[7m\1Edit$\1\033[0m\1 ";
 	static char b[] = "Edit> ";
@@ -90,7 +90,7 @@ sig(int i)
 }
 
 static unsigned char
-complete(EditLine *el, int ch __attribute__((__unused__)))
+complete(Edited *el, int ch __attribute__((__unused__)))
 {
 	DIR *dd = opendir(".");
 	struct dirent *dp;
@@ -126,7 +126,7 @@ complete(EditLine *el, int ch __attribute__((__unused__)))
 int
 main(int argc __attribute__((__unused__)), char *argv[])
 {
-	EditLine *el = NULL;
+	Edited *el = NULL;
 	int num;
 	const char *buf;
 	Tokenizer *tok;

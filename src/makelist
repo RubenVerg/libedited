@@ -75,7 +75,7 @@ case $FLAG in
 # XXX:	need a space between name and prototype so that -fc and -fh
 #	parsing is much easier
 #
-		printf("libedited_private edited_action_t\t%s (EditLine *, wint_t);\n",
+		printf("libedited_private edited_action_t\t%s (Edited *, wint_t);\n",
 		    name);
 	    }
 	}
@@ -97,9 +97,9 @@ case $FLAG in
 		tr[substr(low, i, 1)] = substr(high, i, 1);
 	}
 	/\(\):/ {
-	    pr = substr($2, length("edited") + 1, 2);
+	    pr = substr($2, length("edited") + 2, 2);
 	    if (pr == "vi" || pr == "em" || pr == "ed") {
-		name = substr($2, length("edited") + 1, length($2) - 3);
+		name = substr($2, 1, length($2) - 3);
 		uname = "";
 		fname = "";
 		for (i = 1; i <= length(name); i++) {
@@ -110,7 +110,7 @@ case $FLAG in
 		    fname = fname s;
 		}
 
-		printf("    { %-50.50s %-50.50s\n","L\"" fname "\",", uname ",");
+		printf("    { %-50.50s %-50.50s\n","L\"" substr(fname, length("edited") + 2) "\",", uname ",");
 		ok = 1;
 	    }
 	}

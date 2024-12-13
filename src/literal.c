@@ -46,7 +46,7 @@ __RCSID("$NetBSD: literal.c,v 1.5 2019/07/23 13:10:11 christos Exp $");
 #include "edited/el.h"
 
 libedited_private void
-edited_lit_init(EditLine *el)
+edited_lit_init(Edited *el)
 {
 	edited_literal_t *l = &el->edited_literal;
 
@@ -54,13 +54,13 @@ edited_lit_init(EditLine *el)
 }
 
 libedited_private void
-edited_lit_end(EditLine *el)
+edited_lit_end(Edited *el)
 {
 	edited_lit_clear(el);
 }
 
 libedited_private void
-edited_lit_clear(EditLine *el)
+edited_lit_clear(Edited *el)
 {
 	edited_literal_t *l = &el->edited_literal;
 	size_t i;
@@ -77,7 +77,7 @@ edited_lit_clear(EditLine *el)
 }
 
 libedited_private wint_t
-edited_lit_add(EditLine *el, const wchar_t *buf, const wchar_t *end, int *wp)
+edited_lit_add(Edited *el, const wchar_t *buf, const wchar_t *end, int *wp)
 {
 	edited_literal_t *l = &el->edited_literal;
 	size_t i, len;
@@ -127,7 +127,7 @@ edited_lit_add(EditLine *el, const wchar_t *buf, const wchar_t *end, int *wp)
 }
 
 libedited_private const char *
-edited_lit_get(EditLine *el, wint_t idx)
+edited_lit_get(Edited *el, wint_t idx)
 {
 	edited_literal_t *l = &el->edited_literal;
 

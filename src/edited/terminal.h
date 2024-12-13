@@ -89,32 +89,32 @@ extern char* tgoto(const char*, int, int);
 extern char* tgetstr(char*, char**);
 #endif
 
-libedited_private void	edited_term_move_to_line(EditLine *, int);
-libedited_private void	edited_term_move_to_char(EditLine *, int);
-libedited_private void	edited_term_clear_EOL(EditLine *, int);
-libedited_private void	edited_term_overwrite(EditLine *, const wchar_t *, size_t);
-libedited_private void	edited_term_insertwrite(EditLine *, wchar_t *, int);
-libedited_private void	edited_term_deletechars(EditLine *, int);
-libedited_private void	edited_term_clear_screen(EditLine *);
-libedited_private void	edited_term_beep(EditLine *);
-libedited_private int	edited_term_change_size(EditLine *, int, int);
-libedited_private int	edited_term_get_size(EditLine *, int *, int *);
-libedited_private int	edited_term_init(EditLine *);
-libedited_private void	edited_term_bind_arrow(EditLine *);
-libedited_private void	edited_term_print_arrow(EditLine *, const wchar_t *);
-libedited_private int	edited_term_clear_arrow(EditLine *, const wchar_t *);
-libedited_private int	edited_term_set_arrow(EditLine *, const wchar_t *,
+libedited_private void	edited_term_move_to_line(Edited *, int);
+libedited_private void	edited_term_move_to_char(Edited *, int);
+libedited_private void	edited_term_clear_EOL(Edited *, int);
+libedited_private void	edited_term_overwrite(Edited *, const wchar_t *, size_t);
+libedited_private void	edited_term_insertwrite(Edited *, wchar_t *, int);
+libedited_private void	edited_term_deletechars(Edited *, int);
+libedited_private void	edited_term_clear_screen(Edited *);
+libedited_private void	edited_term_beep(Edited *);
+libedited_private int	edited_term_change_size(Edited *, int, int);
+libedited_private int	edited_term_get_size(Edited *, int *, int *);
+libedited_private int	edited_term_init(Edited *);
+libedited_private void	edited_term_bind_arrow(Edited *);
+libedited_private void	edited_term_print_arrow(Edited *, const wchar_t *);
+libedited_private int	edited_term_clear_arrow(Edited *, const wchar_t *);
+libedited_private int	edited_term_set_arrow(Edited *, const wchar_t *,
     edited_km_value_t *, int);
-libedited_private void	edited_term_end(EditLine *);
-libedited_private void	edited_term_get(EditLine *, const char **);
-libedited_private int	edited_term_set(EditLine *, const char *);
-libedited_private int	edited_term_settc(EditLine *, int, const wchar_t **);
-libedited_private int	edited_term_gettc(EditLine *, int, char **);
-libedited_private int	edited_term_telltc(EditLine *, int, const wchar_t **);
-libedited_private int	edited_term_echotc(EditLine *, int, const wchar_t **);
-libedited_private void	edited_term_writec(EditLine *, wint_t);
-libedited_private int	edited_term__putc(EditLine *, wint_t);
-libedited_private void	edited_term__flush(EditLine *);
+libedited_private void	edited_term_end(Edited *);
+libedited_private void	edited_term_get(Edited *, const char **);
+libedited_private int	edited_term_set(Edited *, const char *);
+libedited_private int	edited_term_settc(Edited *, int, const wchar_t **);
+libedited_private int	edited_term_gettc(Edited *, int, char **);
+libedited_private int	edited_term_telltc(Edited *, int, const wchar_t **);
+libedited_private int	edited_term_echotc(Edited *, int, const wchar_t **);
+libedited_private void	edited_term_writec(Edited *, wint_t);
+libedited_private int	edited_term__putc(Edited *, wint_t);
+libedited_private void	edited_term__flush(Edited *);
 
 /*
  * Easy access macros

@@ -47,15 +47,15 @@ __RCSID("$NetBSD: prompt.c,v 1.27 2017/06/27 23:25:13 christos Exp $");
 #include <stdio.h>
 #include "edited/el.h"
 
-static wchar_t	*edited_prompt_default(EditLine *);
-static wchar_t	*edited_prompt_default_r(EditLine *);
+static wchar_t	*edited_prompt_default(Edited *);
+static wchar_t	*edited_prompt_default_r(Edited *);
 
 /* edited_prompt_default():
  *	Just a default prompt, in case the user did not provide one
  */
 static wchar_t *
 /*ARGSUSED*/
-edited_prompt_default(EditLine *el __attribute__((__unused__)))
+edited_prompt_default(Edited *el __attribute__((__unused__)))
 {
 	static wchar_t a[3] = L"? ";
 
@@ -68,7 +68,7 @@ edited_prompt_default(EditLine *el __attribute__((__unused__)))
  */
 static wchar_t *
 /*ARGSUSED*/
-edited_prompt_default_r(EditLine *el __attribute__((__unused__)))
+edited_prompt_default_r(Edited *el __attribute__((__unused__)))
 {
 	static wchar_t a[1] = L"";
 
@@ -80,7 +80,7 @@ edited_prompt_default_r(EditLine *el __attribute__((__unused__)))
  *	Print the prompt and update the prompt position.
  */
 libedited_private void
-edited_prompt_print(EditLine *el, int op)
+edited_prompt_print(Edited *el, int op)
 {
 	edited_prompt_t *elp;
 	wchar_t *p;
@@ -120,7 +120,7 @@ edited_prompt_print(EditLine *el, int op)
  *	Initialize the prompt stuff
  */
 libedited_private int
-edited_prompt_init(EditLine *el)
+edited_prompt_init(Edited *el)
 {
 
 	el->edited_prompt.p_func = edited_prompt_default;
@@ -140,7 +140,7 @@ edited_prompt_init(EditLine *el)
  */
 libedited_private void
 /*ARGSUSED*/
-edited_prompt_end(EditLine *el __attribute__((__unused__)))
+edited_prompt_end(Edited *el __attribute__((__unused__)))
 {
 }
 
@@ -149,7 +149,7 @@ edited_prompt_end(EditLine *el __attribute__((__unused__)))
  *	Install a prompt printing function
  */
 libedited_private int
-edited_prompt_set(EditLine *el, edited_pfunc_t prf, wchar_t c, int op, int wide)
+edited_prompt_set(Edited *el, edited_pfunc_t prf, wchar_t c, int op, int wide)
 {
 	edited_prompt_t *p;
 
@@ -181,7 +181,7 @@ edited_prompt_set(EditLine *el, edited_pfunc_t prf, wchar_t c, int op, int wide)
  *	Retrieve the prompt printing function
  */
 libedited_private int
-edited_prompt_get(EditLine *el, edited_pfunc_t *prf, wchar_t *c, int op)
+edited_prompt_get(Edited *el, edited_pfunc_t *prf, wchar_t *c, int op)
 {
 	edited_prompt_t *p;
 

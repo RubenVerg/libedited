@@ -35,12 +35,12 @@
 #ifndef	_h_read
 #define	_h_read
 
-typedef int (*edited_rfunc_t)(EditLine *, wchar_t *);
+typedef int (*edited_rfunc_t)(Edited *, wchar_t *);
 
-libedited_private int		edited_read_init(EditLine *);
-libedited_private void		edited_read_end(EditLine *);
-libedited_private void		edited_read_prepare(EditLine *);
-libedited_private void		edited_read_finish(EditLine *);
+libedited_private int		edited_read_init(Edited *);
+libedited_private void		edited_read_end(Edited *);
+libedited_private void		edited_read_prepare(Edited *);
+libedited_private void		edited_read_finish(Edited *);
 libedited_private int		edited_read_setfn(struct edited_read_t *, edited_rfunc_t);
 libedited_private edited_rfunc_t	edited_read_getfn(struct edited_read_t *);
 

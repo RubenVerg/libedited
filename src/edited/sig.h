@@ -62,9 +62,9 @@ typedef struct {
 	volatile sig_atomic_t edited_sig_no;
 } *edited_signal_t;
 
-libedited_private void	edited_sig_end(EditLine*);
-libedited_private int	edited_sig_init(EditLine*);
-libedited_private void	edited_sig_set(EditLine*);
-libedited_private void	edited_sig_clr(EditLine*);
+libedited_private void	edited_sig_end(Edited*);
+libedited_private int	edited_sig_init(Edited*);
+libedited_private void	edited_sig_set(Edited*);
+libedited_private void	edited_sig_clr(Edited*);
 
 #endif /* _h_sig */

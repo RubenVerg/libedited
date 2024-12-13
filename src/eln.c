@@ -38,7 +38,7 @@ __RCSID("$NetBSD: eln.c,v 1.38 2024/05/17 02:59:08 christos Exp $");
 #include "edited/el.h"
 
 int
-edited_getc(EditLine *el, char *cp)
+edited_getc(Edited *el, char *cp)
 {
 	int num_read;
 	wchar_t wc = 0;
@@ -59,7 +59,7 @@ edited_getc(EditLine *el, char *cp)
 
 
 void
-edited_push(EditLine *el, const char *str)
+edited_push(Edited *el, const char *str)
 {
 	/* Using multibyte->wide string decoding works fine under single-byte
 	 * character sets too, and Does The Right Thing. */
@@ -68,7 +68,7 @@ edited_push(EditLine *el, const char *str)
 
 
 const char *
-edited_gets(EditLine *el, int *nread)
+edited_gets(Edited *el, int *nread)
 {
 	const wchar_t *tmp;
 
@@ -86,7 +86,7 @@ edited_gets(EditLine *el, int *nread)
 
 
 int
-edited_parse(EditLine *el, int argc, const char *argv[])
+edited_parse(Edited *el, int argc, const char *argv[])
 {
 	int ret;
 	const wchar_t **wargv;
@@ -102,7 +102,7 @@ edited_parse(EditLine *el, int argc, const char *argv[])
 
 
 int
-edited_set(EditLine *el, int op, ...)
+edited_set(Edited *el, int op, ...)
 {
 	va_list ap;
 	int ret;
@@ -272,7 +272,7 @@ out:
 
 
 int
-edited_get(EditLine *el, int op, ...)
+edited_get(Edited *el, int op, ...)
 {
 	va_list ap;
 	int ret;
@@ -358,7 +358,7 @@ edited_get(EditLine *el, int op, ...)
 
 
 const LineInfo *
-edited_line(EditLine *el)
+edited_line(Edited *el)
 {
 	const LineInfoW *winfo = edited_wline(el);
 	LineInfo *info = &el->edited_lgcylinfo;
@@ -390,13 +390,13 @@ edited_line(EditLine *el)
 
 
 int
-edited_insertstr(EditLine *el, const char *str)
+edited_insertstr(Edited *el, const char *str)
 {
 	return edited_winsertstr(el, edited_ct_decode_string(str, &el->edited_lgcyconv));
 }
 
 int
-edited_replacestr(EditLine *el, const char *str)
+edited_replacestr(Edited *el, const char *str)
 {
 	return edited_wreplacestr(el, edited_ct_decode_string(str, &el->edited_lgcyconv));
 }

@@ -46,14 +46,14 @@ typedef struct {
 	int	r_newcv;
 } edited_refresh_t;
 
-libedited_private void	edited_re_putc(EditLine *, wint_t, int);
-libedited_private void	edited_re_putliteral(EditLine *, const wchar_t *,
+libedited_private void	edited_re_putc(Edited *, wint_t, int);
+libedited_private void	edited_re_putliteral(Edited *, const wchar_t *,
     const wchar_t *);
-libedited_private void	edited_re_clear_lines(EditLine *);
-libedited_private void	edited_re_clear_display(EditLine *);
-libedited_private void	edited_re_refresh(EditLine *);
-libedited_private void	edited_re_refresh_cursor(EditLine *);
-libedited_private void	edited_re_fastaddc(EditLine *);
-libedited_private void	edited_re_goto_bottom(EditLine *);
+libedited_private void	edited_re_clear_lines(Edited *);
+libedited_private void	edited_re_clear_display(Edited *);
+libedited_private void	edited_re_refresh(Edited *);
+libedited_private void	edited_re_refresh_cursor(Edited *);
+libedited_private void	edited_re_fastaddc(Edited *);
+libedited_private void	edited_re_goto_bottom(Edited *);
 
 #endif /* _h_refresh */

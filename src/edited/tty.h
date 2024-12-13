@@ -456,15 +456,15 @@ typedef struct {
 
 typedef unsigned char ttychar_t[NN_IO][C_NCC];
 
-libedited_private int	edited_tty_init(EditLine *);
-libedited_private void	edited_tty_end(EditLine *, int);
-libedited_private int	edited_tty_stty(EditLine *, int, const wchar_t **);
-libedited_private int	edited_tty_rawmode(EditLine *);
-libedited_private int	edited_tty_cookedmode(EditLine *);
-libedited_private int	edited_tty_quotemode(EditLine *);
-libedited_private int	edited_tty_noquotemode(EditLine *);
-libedited_private void	edited_tty_bind_char(EditLine *, int);
-libedited_private int	edited_tty_get_signal_character(EditLine *, int);
+libedited_private int	edited_tty_init(Edited *);
+libedited_private void	edited_tty_end(Edited *, int);
+libedited_private int	edited_tty_stty(Edited *, int, const wchar_t **);
+libedited_private int	edited_tty_rawmode(Edited *);
+libedited_private int	edited_tty_cookedmode(Edited *);
+libedited_private int	edited_tty_quotemode(Edited *);
+libedited_private int	edited_tty_noquotemode(Edited *);
+libedited_private void	edited_tty_bind_char(Edited *, int);
+libedited_private int	edited_tty_get_signal_character(Edited *, int);
 
 typedef struct {
     ttyperm_t t_t;

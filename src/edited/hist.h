@@ -69,12 +69,12 @@ typedef struct edited_history_t {
 #define	HIST_SAVE_FP(el, fp)		HIST_FUN(el, H_SAVE_FP, fp)
 #define	HIST_NSAVE_FP(el, n, fp)	HIST_FUN(el, H_NSAVE_FP, n, fp)
 
-libedited_private int		hist_init(EditLine *);
-libedited_private void		hist_end(EditLine *);
-libedited_private edited_action_t	hist_get(EditLine *);
-libedited_private int		hist_set(EditLine *, hist_fun_t, void *);
-libedited_private int		hist_command(EditLine *, int, const wchar_t **);
-libedited_private int		hist_enlargebuf(EditLine *, size_t, size_t);
-libedited_private wchar_t	*hist_convert(EditLine *, int, void *);
+libedited_private int		hist_init(Edited *);
+libedited_private void		hist_end(Edited *);
+libedited_private edited_action_t	hist_get(Edited *);
+libedited_private int		hist_set(Edited *, hist_fun_t, void *);
+libedited_private int		hist_command(Edited *, int, const wchar_t **);
+libedited_private int		hist_enlargebuf(Edited *, size_t, size_t);
+libedited_private wchar_t	*hist_convert(Edited *, int, void *);
 
 #endif /* _h_hist */

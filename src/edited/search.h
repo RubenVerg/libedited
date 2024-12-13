@@ -51,14 +51,14 @@ typedef struct edited_search_t {
 
 
 libedited_private int		edited_match(const wchar_t *, const wchar_t *);
-libedited_private int		search_init(EditLine *);
-libedited_private void		search_end(EditLine *);
-libedited_private int		edited_c_hmatch(EditLine *, const wchar_t *);
-libedited_private void		edited_c_setpat(EditLine *);
-libedited_private edited_action_t	edited_ce_inc_search(EditLine *, int);
-libedited_private edited_action_t	edited_cv_search(EditLine *, int);
-libedited_private edited_action_t	edited_ce_search_line(EditLine *, int);
-libedited_private edited_action_t	edited_cv_repeat_srch(EditLine *, wint_t);
-libedited_private edited_action_t	edited_cv_csearch(EditLine *, int, wint_t, int, int);
+libedited_private int		search_init(Edited *);
+libedited_private void		search_end(Edited *);
+libedited_private int		edited_c_hmatch(Edited *, const wchar_t *);
+libedited_private void		edited_c_setpat(Edited *);
+libedited_private edited_action_t	edited_ce_inc_search(Edited *, int);
+libedited_private edited_action_t	edited_cv_search(Edited *, int);
+libedited_private edited_action_t	edited_ce_search_line(Edited *, int);
+libedited_private edited_action_t	edited_cv_repeat_srch(Edited *, wint_t);
+libedited_private edited_action_t	edited_cv_csearch(Edited *, int, wint_t, int, int);
 
 #endif /* _h_search */

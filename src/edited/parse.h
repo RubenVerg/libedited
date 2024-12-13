@@ -40,9 +40,9 @@
 #ifndef _h_parse
 #define	_h_parse
 
-libedited_private int	 edited_parse_line(EditLine *, const wchar_t *);
+libedited_private int	 edited_parse_line(Edited *, const wchar_t *);
 libedited_private int	 edited_parse__escape(const wchar_t **);
 libedited_private wchar_t *edited_parse__string(wchar_t *, const wchar_t *);
-libedited_private int	 edited_parse_cmd(EditLine *, const wchar_t *);
+libedited_private int	 edited_parse_cmd(Edited *, const wchar_t *);
 
 #endif /* _h_parse */

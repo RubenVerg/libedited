@@ -62,7 +62,7 @@ __RCSID("$NetBSD: parse.c,v 1.42 2019/07/23 10:18:52 christos Exp $");
 
 static const struct {
 	const wchar_t *name;
-	int (*func)(EditLine *, int, const wchar_t **);
+	int (*func)(Edited *, int, const wchar_t **);
 } cmds[] = {
 	{ L"bind",		edited_map_bind	},
 	{ L"echotc",		edited_term_echotc	},
@@ -79,7 +79,7 @@ static const struct {
  *	Parse a line and dispatch it
  */
 libedited_private int
-edited_parse_line(EditLine *el, const wchar_t *line)
+edited_parse_line(Edited *el, const wchar_t *line)
 {
 	const wchar_t **argv;
 	int argc;
@@ -97,7 +97,7 @@ edited_parse_line(EditLine *el, const wchar_t *line)
  *	Command dispatcher
  */
 int
-edited_wparse(EditLine *el, int argc, const wchar_t *argv[])
+edited_wparse(Edited *el, int argc, const wchar_t *argv[])
 {
 	const wchar_t *ptr;
 	int i;
@@ -277,7 +277,7 @@ edited_parse__string(wchar_t *out, const wchar_t *in)
  *	or -1 if one is not found
  */
 libedited_private int
-edited_parse_cmd(EditLine *el, const wchar_t *cmd)
+edited_parse_cmd(Edited *el, const wchar_t *cmd)
 {
 	edited_bindings_t *b = el->edited_map.help;
 	size_t i;

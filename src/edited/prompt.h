@@ -40,7 +40,7 @@
 #ifndef _h_prompt
 #define	_h_prompt
 
-typedef wchar_t    *(*edited_pfunc_t)(EditLine *);
+typedef wchar_t    *(*edited_pfunc_t)(Edited *);
 
 typedef struct edited_prompt_t {
 	edited_pfunc_t	p_func;		/* Function to return the prompt */
@@ -49,10 +49,10 @@ typedef struct edited_prompt_t {
 	int		p_wide;
 } edited_prompt_t;
 
-libedited_private void	edited_prompt_print(EditLine *, int);
-libedited_private int	edited_prompt_set(EditLine *, edited_pfunc_t, wchar_t, int, int);
-libedited_private int	edited_prompt_get(EditLine *, edited_pfunc_t *, wchar_t *, int);
-libedited_private int	edited_prompt_init(EditLine *);
-libedited_private void	edited_prompt_end(EditLine *);
+libedited_private void	edited_prompt_print(Edited *, int);
+libedited_private int	edited_prompt_set(Edited *, edited_pfunc_t, wchar_t, int, int);
+libedited_private int	edited_prompt_get(Edited *, edited_pfunc_t *, wchar_t *, int);
+libedited_private int	edited_prompt_init(Edited *);
+libedited_private void	edited_prompt_end(Edited *);
 
 #endif /* _h_prompt */

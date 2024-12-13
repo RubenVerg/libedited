@@ -87,18 +87,18 @@ char *secure_getenv(char const *name)
 /* edited_init():
  *	Initialize editline and set default parameters.
  */
-EditLine *
+Edited *
 edited_init(const char *prog, FILE *fin, FILE *fout, FILE *ferr)
 {
     return edited_init_fd(prog, fin, fout, ferr, fileno(fin), fileno(fout),
 	fileno(ferr));
 }
 
-libedited_private EditLine *
+libedited_private Edited *
 edited_init_internal(const char *prog, FILE *fin, FILE *fout, FILE *ferr,
     int fdin, int fdout, int fderr, int flags)
 {
-	EditLine *el = edited_calloc(1, sizeof(*el));
+	Edited *el = edited_calloc(1, sizeof(*el));
 
 	if (el == NULL)
 		return NULL;
@@ -144,7 +144,7 @@ edited_init_internal(const char *prog, FILE *fin, FILE *fout, FILE *ferr,
 	return el;
 }
 
-EditLine *
+Edited *
 edited_init_fd(const char *prog, FILE *fin, FILE *fout, FILE *ferr,
     int fdin, int fdout, int fderr)
 {
@@ -155,7 +155,7 @@ edited_init_fd(const char *prog, FILE *fin, FILE *fout, FILE *ferr,
  *	Clean up.
  */
 void
-edited_end(EditLine *el)
+edited_end(Edited *el)
 {
 
 	if (el == NULL)
@@ -191,7 +191,7 @@ edited_end(EditLine *el)
  *	Reset the tty and the parser
  */
 void
-edited_reset(EditLine *el)
+edited_reset(Edited *el)
 {
 
 	edited_tty_cookedmode(el);
@@ -203,7 +203,7 @@ edited_reset(EditLine *el)
  *	set the editline parameters
  */
 int
-edited_wset(EditLine *el, int op, ...)
+edited_wset(Edited *el, int op, ...)
 {
 	va_list ap;
 	int rv = 0;
@@ -424,7 +424,7 @@ edited_wset(EditLine *el, int op, ...)
  *	retrieve the editline parameters
  */
 int
-edited_wget(EditLine *el, int op, ...)
+edited_wget(Edited *el, int op, ...)
 {
 	va_list ap;
 	int rv;
@@ -538,7 +538,7 @@ edited_wget(EditLine *el, int op, ...)
  *	Return editing info
  */
 const LineInfoW *
-edited_wline(EditLine *el)
+edited_wline(Edited *el)
 {
 
 	return (const LineInfoW *)(void *)&el->edited_line;
@@ -549,7 +549,7 @@ edited_wline(EditLine *el)
  *	Source a file
  */
 int
-edited_source(EditLine *el, const char *fname)
+edited_source(Edited *el, const char *fname)
 {
 	FILE *fp;
 	size_t len;
@@ -621,7 +621,7 @@ edited_source(EditLine *el, const char *fname)
  *	Called from program when terminal is resized
  */
 void
-edited_resize(EditLine *el)
+edited_resize(Edited *el)
 {
 	int lins, cols;
 	sigset_t oset, nset;
@@ -642,7 +642,7 @@ edited_resize(EditLine *el)
  *	Called from the program to beep
  */
 void
-edited_beep(EditLine *el)
+edited_beep(Edited *el)
 {
 
 	edited_term_beep(el);
@@ -654,7 +654,7 @@ edited_beep(EditLine *el)
  */
 libedited_private int
 /*ARGSUSED*/
-edited_editmode(EditLine *el, int argc, const wchar_t **argv)
+edited_editmode(Edited *el, int argc, const wchar_t **argv)
 {
 	const wchar_t *how;
 

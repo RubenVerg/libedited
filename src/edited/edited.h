@@ -54,7 +54,7 @@ extern "C" {
  * ==== Editing ====
  */
 
-typedef struct editline EditLine;
+typedef struct edited Edited;
 
 /*
  * For user-defined function interface
@@ -83,37 +83,37 @@ typedef struct lineinfo {
 /*
  * Initialization, cleanup, and resetting
  */
-EditLine	*edited_init(const char *, FILE *, FILE *, FILE *);
-EditLine	*edited_init_fd(const char *, FILE *, FILE *, FILE *,
+Edited	*edited_init(const char *, FILE *, FILE *, FILE *);
+Edited	*edited_init_fd(const char *, FILE *, FILE *, FILE *,
     int, int, int);
-void		 edited_end(EditLine *);
-void		 edited_reset(EditLine *);
+void		 edited_end(Edited *);
+void		 edited_reset(Edited *);
 
 /*
  * Get a line, a character or push a string back in the input queue
  */
-const char	*edited_gets(EditLine *, int *);
-int		 edited_getc(EditLine *, char *);
-void		 edited_push(EditLine *, const char *);
+const char	*edited_gets(Edited *, int *);
+int		 edited_getc(Edited *, char *);
+void		 edited_push(Edited *, const char *);
 
 /*
  * Beep!
  */
-void		 edited_beep(EditLine *);
+void		 edited_beep(Edited *);
 
 /*
  * High level function internals control
  * Parses argc, argv array and executes builtin editline commands
  */
-int		 edited_parse(EditLine *, int, const char **);
+int		 edited_parse(Edited *, int, const char **);
 
 /*
  * Low level editline access functions
  */
-int		 edited_set(EditLine *, int, ...);
-int		 edited_get(EditLine *, int, ...);
-unsigned char	_fn_complete(EditLine *, int);
-unsigned char	_fn_sh_complete(EditLine *, int);
+int		 edited_set(Edited *, int, ...);
+int		 edited_get(Edited *, int, ...);
+unsigned char	_fn_complete(Edited *, int);
+unsigned char	_fn_sh_complete(Edited *, int);
 
 /*
  * edited_set/edited_get parameters
@@ -165,23 +165,23 @@ unsigned char	_fn_sh_complete(EditLine *, int);
 /*
  * Source named file or $PWD/.editrc or $HOME/.editrc
  */
-int		edited_source(EditLine *, const char *);
+int		edited_source(Edited *, const char *);
 
 /*
  * Must be called when the terminal changes size; If EL_SIGNAL
  * is set this is done automatically otherwise it is the responsibility
  * of the application
  */
-void		 edited_resize(EditLine *);
+void		 edited_resize(Edited *);
 
 /*
  * User-defined function interface.
  */
-const LineInfo	*edited_line(EditLine *);
-int		 edited_insertstr(EditLine *, const char *);
-void		 edited_deletestr(EditLine *, int);
-int		 edited_replacestr(EditLine *, const char *);
-int		 edited_deletestr1(EditLine *, int, int);
+const LineInfo	*edited_line(Edited *);
+int		 edited_insertstr(Edited *, const char *);
+void		 edited_deletestr(Edited *, int);
+int		 edited_replacestr(Edited *, const char *);
+int		 edited_deletestr1(Edited *, int, int);
 
 /*
  * ==== History ====
@@ -269,22 +269,22 @@ typedef struct lineinfow {
 	const wchar_t	*lastchar;
 } LineInfoW;
 
-typedef int	(*edited_rfunc_t)(EditLine *, wchar_t *);
+typedef int	(*edited_rfunc_t)(Edited *, wchar_t *);
 
-const wchar_t	*edited_wgets(EditLine *, int *);
-int		 edited_wgetc(EditLine *, wchar_t *);
-void		 edited_wpush(EditLine *, const wchar_t *);
+const wchar_t	*edited_wgets(Edited *, int *);
+int		 edited_wgetc(Edited *, wchar_t *);
+void		 edited_wpush(Edited *, const wchar_t *);
 
-int		 edited_wparse(EditLine *, int, const wchar_t **);
+int		 edited_wparse(Edited *, int, const wchar_t **);
 
-int		 edited_wset(EditLine *, int, ...);
-int		 edited_wget(EditLine *, int, ...);
+int		 edited_wset(Edited *, int, ...);
+int		 edited_wget(Edited *, int, ...);
 
-int		 edited_cursor(EditLine *, int);
-const LineInfoW	*edited_wline(EditLine *);
-int		 edited_winsertstr(EditLine *, const wchar_t *);
+int		 edited_cursor(Edited *, int);
+const LineInfoW	*edited_wline(Edited *);
+int		 edited_winsertstr(Edited *, const wchar_t *);
 #define          edited_wdeletestr  edited_deletestr
-int		 edited_wreplacestr(EditLine *, const wchar_t *);
+int		 edited_wreplacestr(Edited *, const wchar_t *);
 
 /*
  * ==== History ====

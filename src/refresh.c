@@ -51,13 +51,13 @@ __RCSID("$NetBSD: refresh.c,v 1.59 2024/06/30 17:11:27 christos Exp $");
 
 #include "edited/el.h"
 
-static void	edited_re_nextline(EditLine *);
-static void	edited_re_addc(EditLine *, wint_t);
-static void	edited_re_update_line(EditLine *, wchar_t *, wchar_t *, int);
-static void	edited_re_insert (EditLine *, wchar_t *, int, int, wchar_t *, int);
-static void	edited_re_delete(EditLine *, wchar_t *, int, int, int);
-static void	edited_re_fastputc(EditLine *, wint_t);
-static void	edited_re_clear_eol(EditLine *, int, int, int);
+static void	edited_re_nextline(Edited *);
+static void	edited_re_addc(Edited *, wint_t);
+static void	edited_re_update_line(Edited *, wchar_t *, wchar_t *, int);
+static void	edited_re_insert (Edited *, wchar_t *, int, int, wchar_t *, int);
+static void	edited_re_delete(Edited *, wchar_t *, int, int, int);
+static void	edited_re_fastputc(Edited *, wint_t);
+static void	edited_re_clear_eol(Edited *, int, int, int);
 static void	edited_re__strncopy(wchar_t *, wchar_t *, size_t);
 static void	edited_re__copy_and_pad(wchar_t *, const wchar_t *, size_t);
 
@@ -93,7 +93,7 @@ edited_re_printstr(EditLine *el, const char *str, wchar_t *f, wchar_t *t)
  *	Move to the next line or scroll
  */
 static void
-edited_re_nextline(EditLine *el)
+edited_re_nextline(Edited *el)
 {
 	el->edited_refresh.r_cursor.h = 0;	/* reset it. */
 
@@ -125,7 +125,7 @@ edited_re_nextline(EditLine *el)
  *	Draw c, expanding tabs, control chars etc.
  */
 static void
-edited_re_addc(EditLine *el, wint_t c)
+edited_re_addc(Edited *el, wint_t c)
 {
 	switch (edited_ct_chr_class(c)) {
 	case CHTYPE_TAB:        /* expand the tab */
@@ -160,7 +160,7 @@ edited_re_addc(EditLine *el, wint_t c)
  *	Place the literal string given
  */
 libedited_private void
-edited_re_putliteral(EditLine *el, const wchar_t *begin, const wchar_t *end)
+edited_re_putliteral(Edited *el, const wchar_t *begin, const wchar_t *end)
 {
 	coord_t *cur = &el->edited_refresh.r_cursor;
 	wint_t c;
@@ -190,7 +190,7 @@ edited_re_putliteral(EditLine *el, const wchar_t *begin, const wchar_t *end)
  *	Draw the character given
  */
 libedited_private void
-edited_re_putc(EditLine *el, wint_t c, int shift)
+edited_re_putc(Edited *el, wint_t c, int shift)
 {
 	coord_t *cur = &el->edited_refresh.r_cursor;
 	int i, w = wcwidth(c);
@@ -228,7 +228,7 @@ edited_re_putc(EditLine *el, wint_t c, int shift)
  *	easily in hopes of a smarter one being placed there.
  */
 libedited_private void
-edited_re_refresh(EditLine *el)
+edited_re_refresh(Edited *el)
 {
 	int i, rhdiff;
 	wchar_t *cp, *st;
@@ -379,7 +379,7 @@ edited_re_refresh(EditLine *el)
  *	 used to go to last used screen line
  */
 libedited_private void
-edited_re_goto_bottom(EditLine *el)
+edited_re_goto_bottom(Edited *el)
 {
 
 	edited_term_move_to_line(el, el->edited_refresh.r_oldcv);
@@ -395,7 +395,7 @@ edited_re_goto_bottom(EditLine *el)
  */
 static void
 /*ARGSUSED*/
-edited_re_insert(EditLine *el __attribute__((__unused__)),
+edited_re_insert(Edited *el __attribute__((__unused__)),
     wchar_t *d, int dat, int dlen, wchar_t *s, int num)
 {
 	wchar_t *a, *b;
@@ -446,7 +446,7 @@ edited_re_insert(EditLine *el __attribute__((__unused__)),
  */
 static void
 /*ARGSUSED*/
-edited_re_delete(EditLine *el __attribute__((__unused__)),
+edited_re_delete(Edited *el __attribute__((__unused__)),
     wchar_t *d, int dat, int dlen, int num)
 {
 	wchar_t *a, *b;
@@ -494,7 +494,7 @@ edited_re__strncopy(wchar_t *a, wchar_t *b, size_t n)
  *	number of characters between the new and old line.
  */
 static void
-edited_re_clear_eol(EditLine *el, int fx, int sx, int diff)
+edited_re_clear_eol(Edited *el, int fx, int sx, int diff)
 {
 
 	ELRE_DEBUG(1, (__F, "edited_re_clear_eol sx %d, fx %d, diff %d\n",
@@ -538,7 +538,7 @@ new:	eddie> Oh, my little buggy says to me, as lurgid as
 #define	MIN_END_KEEP	4
 
 static void
-edited_re_update_line(EditLine *el, wchar_t *old, wchar_t *new, int i)
+edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 {
 	wchar_t *o, *n, *p, c;
 	wchar_t *ofd, *ols, *oe, *nfd, *nls, *ne;
@@ -1029,7 +1029,7 @@ edited_re__copy_and_pad(wchar_t *dst, const wchar_t *src, size_t width)
  *	Move to the new cursor position
  */
 libedited_private void
-edited_re_refresh_cursor(EditLine *el)
+edited_re_refresh_cursor(Edited *el)
 {
 	wchar_t *cp;
 	int h, v, th, w;
@@ -1092,7 +1092,7 @@ edited_re_refresh_cursor(EditLine *el)
  *	Add a character fast.
  */
 static void
-edited_re_fastputc(EditLine *el, wint_t c)
+edited_re_fastputc(Edited *el, wint_t c)
 {
 	wint_t *lastline;
 	int w;
@@ -1150,7 +1150,7 @@ edited_re_fastputc(EditLine *el, wint_t c)
  *	Assumes that screen cursor == real cursor
  */
 libedited_private void
-edited_re_fastaddc(EditLine *el)
+edited_re_fastaddc(Edited *el)
 {
 	wchar_t c;
 	int rhdiff;
@@ -1196,7 +1196,7 @@ edited_re_fastaddc(EditLine *el)
  *	clear the screen buffers so that new new prompt starts fresh.
  */
 libedited_private void
-edited_re_clear_display(EditLine *el)
+edited_re_clear_display(Edited *el)
 {
 	int i;
 
@@ -1212,7 +1212,7 @@ edited_re_clear_display(EditLine *el)
  *	Make sure all lines are *really* blank
  */
 libedited_private void
-edited_re_clear_lines(EditLine *el)
+edited_re_clear_lines(Edited *el)
 {
 
 	if (EL_CAN_CEOL) {

@@ -40,7 +40,7 @@
 #ifndef _h_map
 #define	_h_map
 
-typedef edited_action_t (*edited_func_t)(EditLine *, wint_t);
+typedef edited_action_t (*edited_func_t)(Edited *, wint_t);
 
 typedef struct edited_bindings_t {	/* for the "bind" shell command */
 	const wchar_t	*name;		/* function name for bind command */
@@ -66,14 +66,14 @@ typedef struct edited_map_t {
 
 #define N_KEYS      256
 
-libedited_private int	edited_map_bind(EditLine *, int, const wchar_t **);
-libedited_private int	edited_map_init(EditLine *);
-libedited_private void	edited_map_end(EditLine *);
-libedited_private void	edited_map_init_vi(EditLine *);
-libedited_private void	edited_map_init_emacs(EditLine *);
-libedited_private int	edited_map_set_editor(EditLine *, wchar_t *);
-libedited_private int	edited_map_get_editor(EditLine *, const wchar_t **);
-libedited_private int	edited_map_addfunc(EditLine *, const wchar_t *, const wchar_t *,
+libedited_private int	edited_map_bind(Edited *, int, const wchar_t **);
+libedited_private int	edited_map_init(Edited *);
+libedited_private void	edited_map_end(Edited *);
+libedited_private void	edited_map_init_vi(Edited *);
+libedited_private void	edited_map_init_emacs(Edited *);
+libedited_private int	edited_map_set_editor(Edited *, wchar_t *);
+libedited_private int	edited_map_get_editor(Edited *, const wchar_t **);
+libedited_private int	edited_map_addfunc(Edited *, const wchar_t *, const wchar_t *,
     edited_func_t);
 
 #endif /* _h_map */

@@ -59,7 +59,7 @@ __RCSID("$NetBSD: common.c,v 1.50 2024/06/30 16:29:42 christos Exp $");
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_end_of_file(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_end_of_file(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_re_goto_bottom(el);
@@ -73,7 +73,7 @@ edited_ed_end_of_file(EditLine *el, wint_t c __attribute__((__unused__)))
  *	Insert a character [bound to all insert keys]
  */
 libedited_private edited_action_t
-edited_ed_insert(EditLine *el, wint_t c)
+edited_ed_insert(Edited *el, wint_t c)
 {
 	int count = el->edited_state.argument;
 
@@ -116,7 +116,7 @@ edited_ed_insert(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_delete_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_delete_prev_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *cp, *p, *kp;
 
@@ -144,7 +144,7 @@ edited_ed_delete_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_delete_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_delete_next_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 #ifdef DEBUG_EDIT
 #define	EL	el->edited_line
@@ -191,7 +191,7 @@ edited_ed_delete_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_kill_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_kill_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
@@ -212,7 +212,7 @@ edited_ed_kill_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_move_to_end(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_move_to_end(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_line.cursor = el->edited_line.lastchar;
@@ -236,7 +236,7 @@ edited_ed_move_to_end(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_move_to_beg(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_move_to_beg(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_line.cursor = el->edited_line.buffer;
@@ -259,7 +259,7 @@ edited_ed_move_to_beg(EditLine *el, wint_t c __attribute__((__unused__)))
  *	[^T] [^T]
  */
 libedited_private edited_action_t
-edited_ed_transpose_chars(EditLine *el, wint_t c)
+edited_ed_transpose_chars(Edited *el, wint_t c)
 {
 
 	if (el->edited_line.cursor < el->edited_line.lastchar) {
@@ -285,7 +285,7 @@ edited_ed_transpose_chars(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_next_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *lim = el->edited_line.lastchar;
 
@@ -314,7 +314,7 @@ edited_ed_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_prev_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor == el->edited_line.buffer)
@@ -340,7 +340,7 @@ edited_ed_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor > el->edited_line.buffer) {
@@ -365,7 +365,7 @@ edited_ed_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_quoted_insert(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_quoted_insert(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	int num;
 	wchar_t ch;
@@ -384,7 +384,7 @@ edited_ed_quoted_insert(EditLine *el, wint_t c __attribute__((__unused__)))
  *	Adds to argument or enters a digit
  */
 libedited_private edited_action_t
-edited_ed_digit(EditLine *el, wint_t c)
+edited_ed_digit(Edited *el, wint_t c)
 {
 
 	if (!iswdigit(c))
@@ -412,7 +412,7 @@ edited_ed_digit(EditLine *el, wint_t c)
  *	For ESC-n
  */
 libedited_private edited_action_t
-edited_ed_argument_digit(EditLine *el, wint_t c)
+edited_ed_argument_digit(Edited *el, wint_t c)
 {
 
 	if (!iswdigit(c))
@@ -437,7 +437,7 @@ edited_ed_argument_digit(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_unassigned(EditLine *el __attribute__((__unused__)),
+edited_ed_unassigned(Edited *el __attribute__((__unused__)),
     wint_t c __attribute__((__unused__)))
 {
 
@@ -451,7 +451,7 @@ edited_ed_unassigned(EditLine *el __attribute__((__unused__)),
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_ignore(EditLine *el __attribute__((__unused__)),
+edited_ed_ignore(Edited *el __attribute__((__unused__)),
 	      wint_t c __attribute__((__unused__)))
 {
 
@@ -465,7 +465,7 @@ edited_ed_ignore(EditLine *el __attribute__((__unused__)),
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_newline(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_newline(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_re_goto_bottom(el);
@@ -481,7 +481,7 @@ edited_ed_newline(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_delete_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor <= el->edited_line.buffer)
@@ -501,7 +501,7 @@ edited_ed_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_clear_screen(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_clear_screen(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_term_clear_screen(el);	/* clear the whole real screen */
@@ -516,7 +516,7 @@ edited_ed_clear_screen(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_redisplay(EditLine *el __attribute__((__unused__)),
+edited_ed_redisplay(Edited *el __attribute__((__unused__)),
 	     wint_t c __attribute__((__unused__)))
 {
 
@@ -530,7 +530,7 @@ edited_ed_redisplay(EditLine *el __attribute__((__unused__)),
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_start_over(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_start_over(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	ch_reset(el);
@@ -544,7 +544,7 @@ edited_ed_start_over(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_sequence_lead_in(EditLine *el __attribute__((__unused__)),
+edited_ed_sequence_lead_in(Edited *el __attribute__((__unused__)),
 		    wint_t c __attribute__((__unused__)))
 {
 
@@ -558,7 +558,7 @@ edited_ed_sequence_lead_in(EditLine *el __attribute__((__unused__)),
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_prev_history(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_prev_history(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	char beep = 0;
 	int sv_event = el->edited_history.eventno;
@@ -595,7 +595,7 @@ edited_ed_prev_history(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_next_history(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_next_history(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	edited_action_t beep = CC_REFRESH, rval;
 
@@ -622,7 +622,7 @@ edited_ed_next_history(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_search_prev_history(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_search_prev_history(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	const wchar_t *hp;
 	int h;
@@ -690,7 +690,7 @@ edited_ed_search_prev_history(EditLine *el, wint_t c __attribute__((__unused__))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_search_next_history(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_search_next_history(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	const wchar_t *hp;
 	int h;
@@ -744,7 +744,7 @@ edited_ed_search_next_history(EditLine *el, wint_t c __attribute__((__unused__))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_prev_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_prev_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *ptr;
 	int nchars = edited_c_hpos(el);
@@ -787,7 +787,7 @@ edited_ed_prev_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_next_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_next_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *ptr;
 	int nchars = edited_c_hpos(el);
@@ -821,7 +821,7 @@ edited_ed_next_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_ed_command(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_ed_command(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t tmpbuf[EL_BUFSIZ];
 	int tmplen;

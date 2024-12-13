@@ -1,14 +1,16 @@
 #include "edited/edited.h"
 
+#include <locale.h>
 #include <stdio.h>
 #include <wchar.h>
 
-wchar_t *prompt(EditLine *el __attribute__((__unused__))) {
+wchar_t *prompt(Edited *el __attribute__((__unused__))) {
 	return L"sample> ";
 }
 
 int main(int argc, char **argv) {
-	EditLine *el = edited_init("sample", stdin, stdout, stderr);
+	setlocale(LC_CTYPE, "");
+	Edited *el = edited_init("sample", stdin, stdout, stderr);
 	edited_wset(el, EL_PROMPT, prompt);
 	edited_set(el, EL_EDITOR, "emacs");
 	int len;

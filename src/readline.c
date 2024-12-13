@@ -179,27 +179,27 @@ int rl_completion_append_character = ' ';
 /* stuff below is used internally by libedit for readline emulation */
 
 static History *h = NULL;
-static EditLine *e = NULL;
+static Edited *e = NULL;
 static rl_command_func_t *map[256];
 static jmp_buf topbuf;
 
 /* internal functions */
-static unsigned char	 _rl_complete(EditLine *, int);
-static unsigned char	 _rl_tstp(EditLine *, int);
-static char		*_get_prompt(EditLine *);
-static int		 _getc_function(EditLine *, wchar_t *);
+static unsigned char	 _rl_complete(Edited *, int);
+static unsigned char	 _rl_tstp(Edited *, int);
+static char		*_get_prompt(Edited *);
+static int		 _getc_function(Edited *, wchar_t *);
 static int		 _history_expand_command(const char *, size_t, size_t,
     char **);
 static char		*_rl_compat_sub(const char *, const char *,
     const char *, int);
-static int		 _rl_event_read_char(EditLine *, wchar_t *);
+static int		 _rl_event_read_char(Edited *, wchar_t *);
 static void		 _rl_update_pos(void);
 
 static HIST_ENTRY rl_he;
 
 /* ARGSUSED */
 static char *
-_get_prompt(EditLine *el __attribute__((__unused__)))
+_get_prompt(Edited *el __attribute__((__unused__)))
 {
 	rl_already_prompted = 1;
 	return rl_prompt;
@@ -211,7 +211,7 @@ _get_prompt(EditLine *el __attribute__((__unused__)))
  */
 static int
 /*ARGSUSED*/
-_getc_function(EditLine *el __attribute__((__unused__)), wchar_t *c)
+_getc_function(Edited *el __attribute__((__unused__)), wchar_t *c)
 {
 	int i;
 
@@ -223,7 +223,7 @@ _getc_function(EditLine *el __attribute__((__unused__)), wchar_t *c)
 }
 
 static void
-_resize_fun(EditLine *el, void *a)
+_resize_fun(Edited *el, void *a)
 {
 	const LineInfo *li;
 	const char **ap = a;
@@ -1916,7 +1916,7 @@ username_completion_function(const char *text, int state)
  */
 /* ARGSUSED */
 static unsigned char
-_rl_tstp(EditLine *el __attribute__((__unused__)), int ch __attribute__((__unused__)))
+_rl_tstp(Edited *el __attribute__((__unused__)), int ch __attribute__((__unused__)))
 {
 	(void)kill(0, SIGTSTP);
 	return CC_NORM;
@@ -1992,7 +1992,7 @@ rl_complete(int ignore __attribute__((__unused__)), int invoking_key)
 
 /* ARGSUSED */
 static unsigned char
-_rl_complete(EditLine *el __attribute__((__unused__)), int ch)
+_rl_complete(Edited *el __attribute__((__unused__)), int ch)
 {
 	return (unsigned char)rl_complete(0, ch);
 }
@@ -2100,7 +2100,7 @@ rl_newline(int count __attribute__((__unused__)),
 
 /*ARGSUSED*/
 static unsigned char
-rl_bind_wrapper(EditLine *el __attribute__((__unused__)), unsigned char c)
+rl_bind_wrapper(Edited *el __attribute__((__unused__)), unsigned char c)
 {
 	if (map[c] == NULL)
 		return CC_ERROR;
@@ -2251,7 +2251,7 @@ rl_stuff_char(int c)
 }
 
 static int
-_rl_event_read_char(EditLine *el, wchar_t *wc)
+_rl_event_read_char(Edited *el, wchar_t *wc)
 {
 	char	ch;
 	int	n;

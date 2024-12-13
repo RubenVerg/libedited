@@ -57,14 +57,14 @@ __RCSID("$NetBSD: vi.c,v 1.64 2021/08/28 17:17:47 christos Exp $");
 #include "edited/fcns.h"
 #include "edited/vi.h"
 
-static edited_action_t	edited_cv_action(EditLine *, wint_t);
-static edited_action_t	edited_cv_paste(EditLine *, wint_t);
+static edited_action_t	edited_cv_action(Edited *, wint_t);
+static edited_action_t	edited_cv_paste(Edited *, wint_t);
 
 /* edited_cv_action():
  *	Handle vi actions.
  */
 static edited_action_t
-edited_cv_action(EditLine *el, wint_t c)
+edited_cv_action(Edited *el, wint_t c)
 {
 
 	if (el->edited_chared.edited_c_vcmd.action != NOP) {
@@ -96,7 +96,7 @@ edited_cv_action(EditLine *el, wint_t c)
  *	Paste previous deletion before or after the cursor
  */
 static edited_action_t
-edited_cv_paste(EditLine *el, wint_t c)
+edited_cv_paste(Edited *el, wint_t c)
 {
 	edited_c_kill_t *k = &el->edited_chared.edited_c_kill;
 	size_t len = (size_t)(k->last - k->buf);
@@ -129,7 +129,7 @@ edited_cv_paste(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_paste_next(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_paste_next(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_paste(el, 0);
@@ -142,7 +142,7 @@ edited_vi_paste_next(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_paste_prev(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_paste_prev(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_paste(el, 1);
@@ -155,7 +155,7 @@ edited_vi_paste_prev(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_prev_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_prev_big_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor == el->edited_line.buffer)
@@ -180,7 +180,7 @@ edited_vi_prev_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_prev_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor == el->edited_line.buffer)
@@ -205,7 +205,7 @@ edited_vi_prev_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_next_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_next_big_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor >= el->edited_line.lastchar - 1)
@@ -229,7 +229,7 @@ edited_vi_next_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_next_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor >= el->edited_line.lastchar - 1)
@@ -252,7 +252,7 @@ edited_vi_next_word(EditLine *el, wint_t c __attribute__((__unused__)))
  *	[~]
  */
 libedited_private edited_action_t
-edited_vi_change_case(EditLine *el, wint_t c)
+edited_vi_change_case(Edited *el, wint_t c)
 {
 	int i;
 
@@ -284,7 +284,7 @@ edited_vi_change_case(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_change_meta(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_change_meta(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	/*
@@ -301,7 +301,7 @@ edited_vi_change_meta(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_insert_at_bol(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_insert_at_bol(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_line.cursor = el->edited_line.buffer;
@@ -317,7 +317,7 @@ edited_vi_insert_at_bol(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_replace_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_replace_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor >= el->edited_line.lastchar)
@@ -336,7 +336,7 @@ edited_vi_replace_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_replace_mode(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_replace_mode(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_map.current = el->edited_map.key;
@@ -352,7 +352,7 @@ edited_vi_replace_mode(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_substitute_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_substitute_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_c_delafter(el, el->edited_state.argument);
@@ -367,7 +367,7 @@ edited_vi_substitute_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_substitute_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_substitute_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_cv_undo(el);
@@ -385,7 +385,7 @@ edited_vi_substitute_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_change_to_eol(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_change_to_eol(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_cv_undo(el);
@@ -403,7 +403,7 @@ edited_vi_change_to_eol(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_insert(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_insert(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_map.current = el->edited_map.key;
@@ -418,7 +418,7 @@ edited_vi_insert(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_add(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_add(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	int ret;
 
@@ -443,7 +443,7 @@ edited_vi_add(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_add_at_eol(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_add_at_eol(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_map.current = el->edited_map.key;
@@ -459,7 +459,7 @@ edited_vi_add_at_eol(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_delete_meta(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_delete_meta(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_action(el, DELETE);
@@ -472,7 +472,7 @@ edited_vi_delete_meta(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_end_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_end_big_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor == el->edited_line.lastchar)
@@ -496,7 +496,7 @@ edited_vi_end_big_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_end_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_end_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor == el->edited_line.lastchar)
@@ -520,7 +520,7 @@ edited_vi_end_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_undo(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_undo(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	edited_c_undo_t un = el->edited_chared.edited_c_undo;
 
@@ -547,7 +547,7 @@ edited_vi_undo(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_command_mode(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_command_mode(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	/* [Esc] cancels pending action */
@@ -571,7 +571,7 @@ edited_vi_command_mode(EditLine *el, wint_t c __attribute__((__unused__)))
  *	[0]
  */
 libedited_private edited_action_t
-edited_vi_zero(EditLine *el, wint_t c)
+edited_vi_zero(Edited *el, wint_t c)
 {
 
 	if (el->edited_state.doingarg)
@@ -592,7 +592,7 @@ edited_vi_zero(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_delete_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_line.cursor <= el->edited_line.buffer)
@@ -610,7 +610,7 @@ edited_vi_delete_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_list_or_eof(EditLine *el, wint_t c)
+edited_vi_list_or_eof(Edited *el, wint_t c)
 {
 
 	if (el->edited_line.cursor == el->edited_line.lastchar) {
@@ -647,7 +647,7 @@ edited_vi_list_or_eof(EditLine *el, wint_t c)
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_kill_line_prev(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_kill_line_prev(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	wchar_t *kp, *cp;
 
@@ -668,7 +668,7 @@ edited_vi_kill_line_prev(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_search_prev(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_search(el, EDITED_ED_SEARCH_PREV_HISTORY);
@@ -681,7 +681,7 @@ edited_vi_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_search_next(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_search(el, EDITED_ED_SEARCH_NEXT_HISTORY);
@@ -694,7 +694,7 @@ edited_vi_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_repeat_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_repeat_search_next(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_search.patlen == 0)
@@ -710,7 +710,7 @@ edited_vi_repeat_search_next(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 /*ARGSUSED*/
 libedited_private edited_action_t
-edited_vi_repeat_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_repeat_search_prev(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	if (el->edited_search.patlen == 0)
@@ -728,7 +728,7 @@ edited_vi_repeat_search_prev(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_next_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	return edited_cv_csearch(el, CHAR_FWD, -1, el->edited_state.argument, 0);
 }
@@ -740,7 +740,7 @@ edited_vi_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	return edited_cv_csearch(el, CHAR_BACK, -1, el->edited_state.argument, 0);
 }
@@ -752,7 +752,7 @@ edited_vi_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_to_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_to_next_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	return edited_cv_csearch(el, CHAR_FWD, -1, el->edited_state.argument, 1);
 }
@@ -764,7 +764,7 @@ edited_vi_to_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_to_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_to_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	return edited_cv_csearch(el, CHAR_BACK, -1, el->edited_state.argument, 1);
 }
@@ -776,7 +776,7 @@ edited_vi_to_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_repeat_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_repeat_next_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_csearch(el, el->edited_search.chadir, el->edited_search.chacha,
@@ -790,7 +790,7 @@ edited_vi_repeat_next_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_repeat_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_repeat_prev_char(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	edited_action_t r;
 	int dir = el->edited_search.chadir;
@@ -808,7 +808,7 @@ edited_vi_repeat_prev_char(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_match(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_match(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	const wchar_t match_chars[] = L"()[]{}";
 	wchar_t *cp;
@@ -855,7 +855,7 @@ edited_vi_match(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_undo_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_undo_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_cv_undo(el);
@@ -869,7 +869,7 @@ edited_vi_undo_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_to_column(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_to_column(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_line.cursor = el->edited_line.buffer;
@@ -883,7 +883,7 @@ edited_vi_to_column(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_yank_end(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_yank_end(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	edited_cv_yank(el, el->edited_line.cursor,
@@ -897,7 +897,7 @@ edited_vi_yank_end(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_yank(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_yank(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	return edited_cv_action(el, YANK);
@@ -909,7 +909,7 @@ edited_vi_yank(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_comment_out(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_comment_out(Edited *el, wint_t c __attribute__((__unused__)))
 {
 
 	el->edited_line.cursor = el->edited_line.buffer;
@@ -927,7 +927,7 @@ edited_vi_comment_out(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_alias(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_alias(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	char alias_name[3];
 	const char *alias_text;
@@ -953,7 +953,7 @@ edited_vi_alias(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_to_history_line(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_to_history_line(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	int sv_event_no = el->edited_history.eventno;
 	edited_action_t rval;
@@ -998,7 +998,7 @@ edited_vi_to_history_line(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_histedit(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_histedit(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	int fd;
 	pid_t pid;
@@ -1085,7 +1085,7 @@ error:
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_history_word(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_history_word(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	const wchar_t *wp = HIST_FIRST(el);
 	const wchar_t *wep, *wsp;
@@ -1135,7 +1135,7 @@ edited_vi_history_word(EditLine *el, wint_t c __attribute__((__unused__)))
  */
 libedited_private edited_action_t
 /*ARGSUSED*/
-edited_vi_redo(EditLine *el, wint_t c __attribute__((__unused__)))
+edited_vi_redo(Edited *el, wint_t c __attribute__((__unused__)))
 {
 	edited_c_redo_t *r = &el->edited_chared.edited_c_redo;
 

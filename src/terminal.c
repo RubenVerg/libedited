@@ -209,16 +209,16 @@ static const struct termcapval {
 };
 /* do two or more of the attributes use me */
 
-static void	edited_term_setflags(EditLine *);
-static int	edited_term_rebuffer_display(EditLine *);
-static void	edited_term_free_display(EditLine *);
-static int	edited_term_alloc_display(EditLine *);
-static void	edited_term_alloc(EditLine *, const struct termcapstr *,
+static void	edited_term_setflags(Edited *);
+static int	edited_term_rebuffer_display(Edited *);
+static void	edited_term_free_display(Edited *);
+static int	edited_term_alloc_display(Edited *);
+static void	edited_term_alloc(Edited *, const struct termcapstr *,
     const char *);
-static void	edited_term_init_arrow(EditLine *);
-static void	edited_term_reset_arrow(EditLine *);
+static void	edited_term_init_arrow(Edited *);
+static void	edited_term_reset_arrow(Edited *);
 static int	edited_term_putc(int);
-static void	edited_term_tputs(EditLine *, const char *, int);
+static void	edited_term_tputs(Edited *, const char *, int);
 
 #ifdef _REENTRANT
 static pthread_mutex_t edited_term_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -230,7 +230,7 @@ static FILE *edited_term_outfile = NULL;
  *	Set the terminal capability flags
  */
 static void
-edited_term_setflags(EditLine *el)
+edited_term_setflags(Edited *el)
 {
 	EL_FLAGS = 0;
 	if (el->edited_tty.t_tabs)
@@ -275,7 +275,7 @@ edited_term_setflags(EditLine *el)
  *	Initialize the terminal stuff
  */
 libedited_private int
-edited_term_init(EditLine *el)
+edited_term_init(Edited *el)
 {
 
 	el->edited_terminal.t_buf = edited_calloc(TC_BUFSIZE,
@@ -311,7 +311,7 @@ out:
  *	Clean up the terminal stuff
  */
 libedited_private void
-edited_term_end(EditLine *el)
+edited_term_end(Edited *el)
 {
 
 	edited_free(el->edited_terminal.t_buf);
@@ -333,7 +333,7 @@ edited_term_end(EditLine *el)
  *	Maintain a string pool for termcap strings
  */
 static void
-edited_term_alloc(EditLine *el, const struct termcapstr *t, const char *cap)
+edited_term_alloc(Edited *el, const struct termcapstr *t, const char *cap)
 {
 	char termbuf[TC_BUFSIZE];
 	size_t tlen, clen;
@@ -399,7 +399,7 @@ edited_term_alloc(EditLine *el, const struct termcapstr *t, const char *cap)
  *	Rebuffer the display after the screen changed size
  */
 static int
-edited_term_rebuffer_display(EditLine *el)
+edited_term_rebuffer_display(Edited *el)
 {
 	coord_t *c = &el->edited_terminal.t_size;
 
@@ -414,7 +414,7 @@ edited_term_rebuffer_display(EditLine *el)
 }
 
 static wint_t **
-edited_term_alloc_buffer(EditLine *el)
+edited_term_alloc_buffer(Edited *el)
 {
 	wint_t **b;
 	coord_t *c = &el->edited_terminal.t_size;
@@ -457,7 +457,7 @@ edited_term_free_buffer(wint_t ***bp)
  *	Allocate a new display.
  */
 static int
-edited_term_alloc_display(EditLine *el)
+edited_term_alloc_display(Edited *el)
 {
 	el->edited_display = edited_term_alloc_buffer(el);
 	if (el->edited_display == NULL)
@@ -476,7 +476,7 @@ done:
  *	Free the display buffers
  */
 static void
-edited_term_free_display(EditLine *el)
+edited_term_free_display(Edited *el)
 {
 	edited_term_free_buffer(&el->edited_display);
 	edited_term_free_buffer(&el->edited_vdisplay);
@@ -488,7 +488,7 @@ edited_term_free_display(EditLine *el)
  *	as efficiently as possible
  */
 libedited_private void
-edited_term_move_to_line(EditLine *el, int where)
+edited_term_move_to_line(Edited *el, int where)
 {
 	int del;
 
@@ -528,7 +528,7 @@ edited_term_move_to_line(EditLine *el, int where)
  *	Move to the character position specified
  */
 libedited_private void
-edited_term_move_to_char(EditLine *el, int where)
+edited_term_move_to_char(Edited *el, int where)
 {
 	int del, i;
 
@@ -624,7 +624,7 @@ mc_again:
  *	Assumes MB_FILL_CHARs are present to keep the column count correct
  */
 libedited_private void
-edited_term_overwrite(EditLine *el, const wchar_t *cp, size_t n)
+edited_term_overwrite(Edited *el, const wchar_t *cp, size_t n)
 {
 	if (n == 0)
 		return;
@@ -673,7 +673,7 @@ edited_term_overwrite(EditLine *el, const wchar_t *cp, size_t n)
  *	Delete num characters
  */
 libedited_private void
-edited_term_deletechars(EditLine *el, int num)
+edited_term_deletechars(Edited *el, int num)
 {
 	if (num <= 0)
 		return;
@@ -715,7 +715,7 @@ edited_term_deletechars(EditLine *el, int num)
  *      Assumes MB_FILL_CHARs are present to keep column count correct
  */
 libedited_private void
-edited_term_insertwrite(EditLine *el, wchar_t *cp, int num)
+edited_term_insertwrite(Edited *el, wchar_t *cp, int num)
 {
 	if (num <= 0)
 		return;
@@ -774,7 +774,7 @@ edited_term_insertwrite(EditLine *el, wchar_t *cp, int num)
  *	clear to end of line.  There are num characters to clear
  */
 libedited_private void
-edited_term_clear_EOL(EditLine *el, int num)
+edited_term_clear_EOL(Edited *el, int num)
 {
 	int i;
 
@@ -792,7 +792,7 @@ edited_term_clear_EOL(EditLine *el, int num)
  *	Clear the screen
  */
 libedited_private void
-edited_term_clear_screen(EditLine *el)
+edited_term_clear_screen(Edited *el)
 {				/* clear the whole screen and home */
 
 	if (GoodStr(T_cl))
@@ -813,7 +813,7 @@ edited_term_clear_screen(EditLine *el)
  *	Beep the way the terminal wants us
  */
 libedited_private void
-edited_term_beep(EditLine *el)
+edited_term_beep(Edited *el)
 {
 	if (GoodStr(T_bl))
 		/* what termcap says we should use */
@@ -824,7 +824,7 @@ edited_term_beep(EditLine *el)
 
 
 libedited_private void
-edited_term_get(EditLine *el, const char **term)
+edited_term_get(Edited *el, const char **term)
 {
 	*term = el->edited_terminal.t_name;
 }
@@ -834,7 +834,7 @@ edited_term_get(EditLine *el, const char **term)
  *	Read in the terminal capabilities from the requested terminal
  */
 libedited_private int
-edited_term_set(EditLine *el, const char *term)
+edited_term_set(Edited *el, const char *term)
 {
 	int i;
 	char buf[TC_BUFSIZE];
@@ -923,7 +923,7 @@ edited_term_set(EditLine *el, const char *term)
  *	true if the size was changed.
  */
 libedited_private int
-edited_term_get_size(EditLine *el, int *lins, int *cols)
+edited_term_get_size(Edited *el, int *lins, int *cols)
 {
 
 	*cols = Val(T_co);
@@ -959,7 +959,7 @@ edited_term_get_size(EditLine *el, int *lins, int *cols)
  *	Change the size of the terminal
  */
 libedited_private int
-edited_term_change_size(EditLine *el, int lins, int cols)
+edited_term_change_size(Edited *el, int lins, int cols)
 {
 	coord_t cur = el->edited_cursor;
 	/*
@@ -981,7 +981,7 @@ edited_term_change_size(EditLine *el, int lins, int cols)
  *	Initialize the arrow key bindings from termcap
  */
 static void
-edited_term_init_arrow(EditLine *el)
+edited_term_init_arrow(Edited *el)
 {
 	funckey_t *arrow = el->edited_terminal.t_fkey;
 
@@ -1026,7 +1026,7 @@ edited_term_init_arrow(EditLine *el)
  *	Reset arrow key bindings
  */
 static void
-edited_term_reset_arrow(EditLine *el)
+edited_term_reset_arrow(Edited *el)
 {
 	funckey_t *arrow = el->edited_terminal.t_fkey;
 	static const wchar_t strA[] = L"\033[A";
@@ -1076,7 +1076,7 @@ edited_term_reset_arrow(EditLine *el)
  *	Set an arrow key binding
  */
 libedited_private int
-edited_term_set_arrow(EditLine *el, const wchar_t *name, edited_km_value_t *fun,
+edited_term_set_arrow(Edited *el, const wchar_t *name, edited_km_value_t *fun,
     int type)
 {
 	funckey_t *arrow = el->edited_terminal.t_fkey;
@@ -1096,7 +1096,7 @@ edited_term_set_arrow(EditLine *el, const wchar_t *name, edited_km_value_t *fun,
  *	Clear an arrow key binding
  */
 libedited_private int
-edited_term_clear_arrow(EditLine *el, const wchar_t *name)
+edited_term_clear_arrow(Edited *el, const wchar_t *name)
 {
 	funckey_t *arrow = el->edited_terminal.t_fkey;
 	int i;
@@ -1114,7 +1114,7 @@ edited_term_clear_arrow(EditLine *el, const wchar_t *name)
  *	Print the arrow key bindings
  */
 libedited_private void
-edited_term_print_arrow(EditLine *el, const wchar_t *name)
+edited_term_print_arrow(Edited *el, const wchar_t *name)
 {
 	int i;
 	funckey_t *arrow = el->edited_terminal.t_fkey;
@@ -1131,7 +1131,7 @@ edited_term_print_arrow(EditLine *el, const wchar_t *name)
  *	Bind the arrow keys
  */
 libedited_private void
-edited_term_bind_arrow(EditLine *el)
+edited_term_bind_arrow(Edited *el)
 {
 	edited_action_t *map;
 	const edited_action_t *dmap;
@@ -1204,7 +1204,7 @@ edited_term_putc(int c)
 }
 
 static void
-edited_term_tputs(EditLine *el, const char *cap, int affcnt)
+edited_term_tputs(Edited *el, const char *cap, int affcnt)
 {
 #ifdef _REENTRANT
 	pthread_mutex_lock(&edited_term_mutex);
@@ -1220,7 +1220,7 @@ edited_term_tputs(EditLine *el, const char *cap, int affcnt)
  *	Add a character
  */
 libedited_private int
-edited_term__putc(EditLine *el, wint_t c)
+edited_term__putc(Edited *el, wint_t c)
 {
 	char buf[MB_LEN_MAX +1];
 	ssize_t i;
@@ -1239,7 +1239,7 @@ edited_term__putc(EditLine *el, wint_t c)
  *	Flush output
  */
 libedited_private void
-edited_term__flush(EditLine *el)
+edited_term__flush(Edited *el)
 {
 
 	(void) fflush(el->edited_outfile);
@@ -1249,7 +1249,7 @@ edited_term__flush(EditLine *el)
  *	Write the given character out, in a human readable form
  */
 libedited_private void
-edited_term_writec(EditLine *el, wint_t c)
+edited_term_writec(Edited *el, wint_t c)
 {
 	wchar_t visbuf[VISUAL_WIDTH_MAX +1];
 	ssize_t vcnt = edited_ct_visual_char(visbuf, VISUAL_WIDTH_MAX, c);
@@ -1266,7 +1266,7 @@ edited_term_writec(EditLine *el, wint_t c)
  */
 libedited_private int
 /*ARGSUSED*/
-edited_term_telltc(EditLine *el, int argc __attribute__((__unused__)),
+edited_term_telltc(Edited *el, int argc __attribute__((__unused__)),
     const wchar_t **argv __attribute__((__unused__)))
 {
 	const struct termcapstr *t;
@@ -1308,7 +1308,7 @@ edited_term_telltc(EditLine *el, int argc __attribute__((__unused__)),
  */
 libedited_private int
 /*ARGSUSED*/
-edited_term_settc(EditLine *el, int argc __attribute__((__unused__)),
+edited_term_settc(Edited *el, int argc __attribute__((__unused__)),
     const wchar_t **argv)
 {
 	const struct termcapstr *ts;
@@ -1395,7 +1395,7 @@ edited_term_settc(EditLine *el, int argc __attribute__((__unused__)),
  */
 libedited_private int
 /*ARGSUSED*/
-edited_term_gettc(EditLine *el, int argc __attribute__((__unused__)), char **argv)
+edited_term_gettc(Edited *el, int argc __attribute__((__unused__)), char **argv)
 {
 	const struct termcapstr *ts;
 	const struct termcapval *tv;
@@ -1449,7 +1449,7 @@ edited_term_gettc(EditLine *el, int argc __attribute__((__unused__)), char **arg
  */
 libedited_private int
 /*ARGSUSED*/
-edited_term_echotc(EditLine *el, int argc __attribute__((__unused__)),
+edited_term_echotc(Edited *el, int argc __attribute__((__unused__)),
     const wchar_t **argv)
 {
 	char *cap, *scap;

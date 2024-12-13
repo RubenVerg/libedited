@@ -59,7 +59,7 @@ __RCSID("$NetBSD: chared.c,v 1.64 2024/06/29 14:13:14 christos Exp $");
  *	Handle state for the vi undo command
  */
 libedited_private void
-edited_cv_undo(EditLine *el)
+edited_cv_undo(Edited *el)
 {
 	edited_c_undo_t *vu = &el->edited_chared.edited_c_undo;
 	edited_c_redo_t *r = &el->edited_chared.edited_c_redo;
@@ -83,7 +83,7 @@ edited_cv_undo(EditLine *el)
  *	Save yank/delete data for paste
  */
 libedited_private void
-edited_cv_yank(EditLine *el, const wchar_t *ptr, int size)
+edited_cv_yank(Edited *el, const wchar_t *ptr, int size)
 {
 	edited_c_kill_t *k = &el->edited_chared.edited_c_kill;
 
@@ -96,7 +96,7 @@ edited_cv_yank(EditLine *el, const wchar_t *ptr, int size)
  *	Insert num characters
  */
 libedited_private void
-edited_c_insert(EditLine *el, int num)
+edited_c_insert(Edited *el, int num)
 {
 	wchar_t *cp;
 
@@ -118,7 +118,7 @@ edited_c_insert(EditLine *el, int num)
  *	Delete num characters after the cursor
  */
 libedited_private void
-edited_c_delafter(EditLine *el, int num)
+edited_c_delafter(Edited *el, int num)
 {
 
 	if (el->edited_line.cursor + num > el->edited_line.lastchar)
@@ -144,7 +144,7 @@ edited_c_delafter(EditLine *el, int num)
  *	Delete the character after the cursor, do not yank
  */
 libedited_private void
-edited_c_delafter1(EditLine *el)
+edited_c_delafter1(Edited *el)
 {
 	wchar_t *cp;
 
@@ -159,7 +159,7 @@ edited_c_delafter1(EditLine *el)
  *	Delete num characters before the cursor
  */
 libedited_private void
-edited_c_delbefore(EditLine *el, int num)
+edited_c_delbefore(Edited *el, int num)
 {
 
 	if (el->edited_line.cursor - num < el->edited_line.buffer)
@@ -187,7 +187,7 @@ edited_c_delbefore(EditLine *el, int num)
  *	Delete the character before the cursor, do not yank
  */
 libedited_private void
-edited_c_delbefore1(EditLine *el)
+edited_c_delbefore1(Edited *el)
 {
 	wchar_t *cp;
 
@@ -278,7 +278,7 @@ edited_c__next_word(wchar_t *p, wchar_t *high, int n, int (*wtest)(wint_t))
  *	Find the next word vi style
  */
 libedited_private wchar_t *
-edited_cv_next_word(EditLine *el, wchar_t *p, wchar_t *high, int n,
+edited_cv_next_word(Edited *el, wchar_t *p, wchar_t *high, int n,
     int (*wtest)(wint_t))
 {
 	int test;
@@ -336,7 +336,7 @@ edited_cv_prev_word(wchar_t *p, wchar_t *low, int n, int (*wtest)(wint_t))
  *	Finish vi delete action
  */
 libedited_private void
-edited_cv_delfini(EditLine *el)
+edited_cv_delfini(Edited *el)
 {
 	int size;
 	int action = el->edited_chared.edited_c_vcmd.action;
@@ -396,7 +396,7 @@ edited_cv__endword(wchar_t *p, wchar_t *high, int n, int (*wtest)(wint_t))
  *	Initialize the character editor
  */
 libedited_private int
-ch_init(EditLine *el)
+ch_init(Edited *el)
 {
 	el->edited_line.buffer		= edited_calloc(EL_BUFSIZ,
 	    sizeof(*el->edited_line.buffer));
@@ -453,7 +453,7 @@ out:
  *	Reset the character editor
  */
 libedited_private void
-ch_reset(EditLine *el)
+ch_reset(Edited *el)
 {
 	el->edited_line.cursor		= el->edited_line.buffer;
 	el->edited_line.lastchar		= el->edited_line.buffer;
@@ -482,7 +482,7 @@ ch_reset(EditLine *el)
  *	Returns 1 if successful, 0 if not.
  */
 libedited_private int
-ch_enlargebufs(EditLine *el, size_t addlen)
+ch_enlargebufs(Edited *el, size_t addlen)
 {
 	size_t sz, newsz;
 	wchar_t *newbuffer, *oldbuf, *oldkbuf;
@@ -571,7 +571,7 @@ ch_enlargebufs(EditLine *el, size_t addlen)
  *	Free the data structures used by the editor
  */
 libedited_private void
-ch_end(EditLine *el)
+ch_end(Edited *el)
 {
 	edited_free(el->edited_line.buffer);
 	el->edited_line.buffer = NULL;
@@ -593,7 +593,7 @@ ch_end(EditLine *el)
  *	Insert string at cursor
  */
 int
-edited_winsertstr(EditLine *el, const wchar_t *s)
+edited_winsertstr(Edited *el, const wchar_t *s)
 {
 	size_t len;
 
@@ -615,7 +615,7 @@ edited_winsertstr(EditLine *el, const wchar_t *s)
  *	Delete num characters before the cursor
  */
 void
-edited_deletestr(EditLine *el, int n)
+edited_deletestr(Edited *el, int n)
 {
 	if (n <= 0)
 		return;
@@ -633,7 +633,7 @@ edited_deletestr(EditLine *el, int n)
  *	Delete characters between start and end
  */
 int
-edited_deletestr1(EditLine *el, int start, int end)
+edited_deletestr1(Edited *el, int start, int end)
 {
 	size_t line_length, len;
 	wchar_t *p1, *p2;
@@ -667,7 +667,7 @@ edited_deletestr1(EditLine *el, int start, int end)
  *	Replace the contents of the line with the provided string
  */
 int
-edited_wreplacestr(EditLine *el, const wchar_t *s)
+edited_wreplacestr(Edited *el, const wchar_t *s)
 {
 	size_t len;
 	wchar_t * p;
@@ -696,7 +696,7 @@ edited_wreplacestr(EditLine *el, const wchar_t *s)
  *	Move the cursor to the left or the right of the current position
  */
 int
-edited_cursor(EditLine *el, int n)
+edited_cursor(Edited *el, int n)
 {
 	if (n == 0)
 		goto out;
@@ -715,7 +715,7 @@ out:
  *	Get a string
  */
 libedited_private int
-edited_c_gets(EditLine *el, wchar_t *buf, const wchar_t *prompt)
+edited_c_gets(Edited *el, wchar_t *buf, const wchar_t *prompt)
 {
 	ssize_t len;
 	wchar_t *cp = el->edited_line.buffer, ch;
@@ -780,7 +780,7 @@ edited_c_gets(EditLine *el, wchar_t *buf, const wchar_t *prompt)
  *	Return the current horizontal position of the cursor
  */
 libedited_private int
-edited_c_hpos(EditLine *el)
+edited_c_hpos(Edited *el)
 {
 	wchar_t *ptr;
 
@@ -799,7 +799,7 @@ edited_c_hpos(EditLine *el)
 }
 
 libedited_private int
-ch_resizefun(EditLine *el, edited_zfunc_t f, void *a)
+ch_resizefun(Edited *el, edited_zfunc_t f, void *a)
 {
 	el->edited_chared.edited_c_resizefun = f;
 	el->edited_chared.edited_c_resizearg = a;
@@ -807,7 +807,7 @@ ch_resizefun(EditLine *el, edited_zfunc_t f, void *a)
 }
 
 libedited_private int
-ch_aliasfun(EditLine *el, edited_afunc_t f, void *a)
+ch_aliasfun(Edited *el, edited_afunc_t f, void *a)
 {
 	el->edited_chared.edited_c_aliasfun = f;
 	el->edited_chared.edited_c_aliasarg = a;

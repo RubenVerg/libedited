@@ -89,7 +89,7 @@ typedef struct edited_c_kill_t {
 	wchar_t	*mark;
 } edited_c_kill_t;
 
-typedef void (*edited_zfunc_t)(EditLine *, void *);
+typedef void (*edited_zfunc_t)(Edited *, void *);
 typedef const char *(*edited_afunc_t)(void *, const char *);
 
 /*
@@ -127,29 +127,29 @@ typedef struct edited_chared_t {
 
 libedited_private int	 edited_cv__isword(wint_t);
 libedited_private int	 edited_cv__isWord(wint_t);
-libedited_private void	 edited_cv_delfini(EditLine *);
+libedited_private void	 edited_cv_delfini(Edited *);
 libedited_private wchar_t *edited_cv__endword(wchar_t *, wchar_t *, int, int (*)(wint_t));
 libedited_private int	 edited_ce__isword(wint_t);
-libedited_private void	 edited_cv_undo(EditLine *);
-libedited_private void	 edited_cv_yank(EditLine *, const wchar_t *, int);
-libedited_private wchar_t *edited_cv_next_word(EditLine*, wchar_t *, wchar_t *, int,
+libedited_private void	 edited_cv_undo(Edited *);
+libedited_private void	 edited_cv_yank(Edited *, const wchar_t *, int);
+libedited_private wchar_t *edited_cv_next_word(Edited*, wchar_t *, wchar_t *, int,
 			int (*)(wint_t));
 libedited_private wchar_t *edited_cv_prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
 libedited_private wchar_t *edited_c__next_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
 libedited_private wchar_t *edited_c__prev_word(wchar_t *, wchar_t *, int, int (*)(wint_t));
-libedited_private void	 edited_c_insert(EditLine *, int);
-libedited_private void	 edited_c_delbefore(EditLine *, int);
-libedited_private void	 edited_c_delbefore1(EditLine *);
-libedited_private void	 edited_c_delafter(EditLine *, int);
-libedited_private void	 edited_c_delafter1(EditLine *);
-libedited_private int	 edited_c_gets(EditLine *, wchar_t *, const wchar_t *);
-libedited_private int	 edited_c_hpos(EditLine *);
+libedited_private void	 edited_c_insert(Edited *, int);
+libedited_private void	 edited_c_delbefore(Edited *, int);
+libedited_private void	 edited_c_delbefore1(Edited *);
+libedited_private void	 edited_c_delafter(Edited *, int);
+libedited_private void	 edited_c_delafter1(Edited *);
+libedited_private int	 edited_c_gets(Edited *, wchar_t *, const wchar_t *);
+libedited_private int	 edited_c_hpos(Edited *);
 
-libedited_private int	 ch_init(EditLine *);
-libedited_private void	 ch_reset(EditLine *);
-libedited_private int	 ch_resizefun(EditLine *, edited_zfunc_t, void *);
-libedited_private int	 ch_aliasfun(EditLine *, edited_afunc_t, void *);
-libedited_private int	 ch_enlargebufs(EditLine *, size_t);
-libedited_private void	 ch_end(EditLine *);
+libedited_private int	 ch_init(Edited *);
+libedited_private void	 ch_reset(Edited *);
+libedited_private int	 ch_resizefun(Edited *, edited_zfunc_t, void *);
+libedited_private int	 ch_aliasfun(Edited *, edited_afunc_t, void *);
+libedited_private int	 ch_enlargebufs(Edited *, size_t);
+libedited_private void	 ch_end(Edited *);
 
 #endif /* _h_chared */
