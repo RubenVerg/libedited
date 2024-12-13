@@ -3,11 +3,11 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libedit
-Description: command line editor library provides generic line editing, history, and tokenization functions.
+Name: libedited
+Description: extension of libedit, providing command line input.
 Version: @VERSION@
 Requires:
-Libs: -L${libdir} -ledit
+Libs: -L${libdir} -ledited
 Libs.private: @LIBS@
 Cflags: -I${includedir} -I${includedir}/editline
 

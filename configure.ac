@@ -23,7 +23,7 @@
 #    "./configure --disable-silent-rules" or "make V=1"
 #
 
-AC_INIT([libedit],[EL_RELEASE],[],[libedit-EL_TIMESTAMP])
+AC_INIT([libedited],[EL_RELEASE],[],[libedited-EL_TIMESTAMP])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/strlcat.c])
 AC_CONFIG_HEADERS([config.h])
@@ -154,7 +154,7 @@ AH_BOTTOM([
 ])
 
 AC_CONFIG_FILES([Makefile
-                 libedit.pc
+                 libedited.pc
                  src/Makefile
                  doc/Makefile
                  examples/Makefile])

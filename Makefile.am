@@ -8,6 +8,6 @@ endif
 
 SUBDIRS = src $(EXAMPLES_DIR) doc
 
-EXTRA_DIST = libedit.pc.in
+EXTRA_DIST = libedited.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libedit.pc
+pkgconfig_DATA = libedited.pc

@@ -7,3 +7,12 @@ libedit.pc
 libtool
 Makefile
 stamp-h1
+*.o
+*.lo
+.libs
+*~
+*.la
+examples/fileman
+examples/tc1
+examples/wtc1
+examples/sample

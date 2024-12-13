@@ -24,8 +24,8 @@ func.h: Makefile $(AHDR)
 
 CLEANFILES = $(BUILT_SOURCES)
 
-lib_LTLIBRARIES    = libedit.la
-libedit_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.c chartype.c parse.c \
+lib_LTLIBRARIES    = libedited.la
+libedited_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.c chartype.c parse.c \
 							prompt.c read.c refresh.c search.c sig.c terminal.c tty.c vi.c \
 							reallocarr.c wcsdup.c \
 							tokenizer.c tokenizern.c \
@@ -36,25 +36,25 @@ libedit_la_SOURCES = chared.c common.c el.c eln.c emacs.c hist.c keymacro.c map.
 							editline/readline.h literal.h
 
 if !HAVE_STRLCPY
-libedit_la_SOURCES += strlcpy.c
+libedited_la_SOURCES += strlcpy.c
 endif
 if !HAVE_STRLCAT
-libedit_la_SOURCES += strlcat.c
+libedited_la_SOURCES += strlcat.c
 endif
 if !HAVE_GETLINE
-libedit_la_SOURCES += getline.c
+libedited_la_SOURCES += getline.c
 endif
 if !HAVE_VIS
-libedit_la_SOURCES += vis.c
+libedited_la_SOURCES += vis.c
 endif
 if !HAVE_UNVIS
-libedit_la_SOURCES += unvis.c
+libedited_la_SOURCES += unvis.c
 endif
 
 EXTRA_DIST = makelist shlib_version
 nobase_include_HEADERS = histedit.h editline/readline.h
 
-nodist_libedit_la_SOURCES = $(BUILT_SOURCES)
+nodist_libedited_la_SOURCES = $(BUILT_SOURCES)
 
-libedit_la_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
+libedited_la_LDFLAGS = -no-undefined -version-info $(LT_VERSION)
 

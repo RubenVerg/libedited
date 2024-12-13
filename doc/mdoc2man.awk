@@ -360,7 +360,7 @@ function add(str) {
       w++
     } else if(match(words[w],"^Lb$")) {
       wtail()
-      add("Command Line Editor Library (libedit, -ledit)")
+      add("Command Line Editor Library (libedited, -ledited)")
     } else if(match(words[w],"^In$")) {
       add(".PP\n")
       add("\\fB#include <" wtail() ">\\fP")

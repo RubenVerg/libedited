@@ -40,8 +40,8 @@
 #ifndef _HISTEDIT_H_
 #define	_HISTEDIT_H_
 
-#define	LIBEDIT_MAJOR 2
-#define	LIBEDIT_MINOR 11
+#define	LIBEDIT_MAJOR 3
+#define	LIBEDIT_MINOR 0
 
 #include <sys/types.h>
 #include <stdio.h>

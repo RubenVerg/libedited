@@ -1,0 +1,13 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libedited
+Description: extension of libedit, providing command line input.
+Version: 3.1
+Requires:
+Libs: -L${libdir} -ledited
+Libs.private: -lncurses 
+Cflags: -I${includedir} -I${includedir}/editline
+
