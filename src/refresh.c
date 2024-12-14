@@ -592,6 +592,15 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 	int fx, sx;
 	size_t len;
 
+	if (el->edited_use_style) {
+		edited_term_move_to_char(el, 0);
+		edited_term_clear_EOL(el, el->edited_terminal.t_size.h - 1);
+#define _le_min(a, b) ((a) < (b) ? (a) : (b))
+		edited_term_overwrite_styled(el, new, _le_min(wcslen(new), el->edited_terminal.t_size.h - 1), el->edited_vstyle[el->edited_refresh.r_cursor.v]);
+#undef _le_min
+		return;
+	}
+
 	/*
          * find first diff
          */
@@ -867,8 +876,7 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 			if (fx > 0) {
 				ELRE_DEBUG(!EL_CAN_INSERT, (__F,
 				"ERROR: cannot insert in early first diff\n"));
-				if (el->edited_use_style) edited_term_insertwrite_styled(el, nfd, fx, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-				else edited_term_insertwrite(el, nfd, fx);
+				edited_term_insertwrite(el, nfd, fx);
 				edited_re_insert(el, old, (int)(ofd - old),
 				    el->edited_terminal.t_size.h, nfd, fx);
 			}
@@ -877,14 +885,12 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 		         * (nfd + fx)
 			 */
 			len = (size_t) ((nsb - nfd) - fx);
-			if (el->edited_use_style) edited_term_overwrite_styled(el, (nfd + fx), len, el->edited_vstyle[el->edited_refresh.r_cursor.v] + ((nfd + fx) - new));
-			else edited_term_overwrite(el, (nfd + fx), len);
+			edited_term_overwrite(el, (nfd + fx), len);
 			edited_re__strncopy(ofd + fx, nfd + fx, len);
 		} else {
 			ELRE_DEBUG(1, (__F, "without anything to save\r\n"));
 			len = (size_t)(nsb - nfd);
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nfd, len, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-			else edited_term_overwrite(el, nfd, len);
+			edited_term_overwrite(el, nfd, len);
 			edited_re__strncopy(ofd, nfd, len);
 			/*
 		         * Done
@@ -918,8 +924,7 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 		         * write (nsb-nfd) chars of new starting at nfd
 		         */
 			len = (size_t) (nsb - nfd);
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nfd, len, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-			else edited_term_overwrite(el, nfd, len);
+			edited_term_overwrite(el, nfd, len);
 			edited_re__strncopy(ofd, nfd, len);
 
 		} else {
@@ -928,8 +933,7 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 			/*
 		         * write (nsb-nfd) chars of new starting at nfd
 		         */
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nfd, (size_t)(nsb - nfd), el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-			else edited_term_overwrite(el, nfd, (size_t)(nsb - nfd));
+			edited_term_overwrite(el, nfd, (size_t)(nsb - nfd));
 			edited_re_clear_eol(el, fx, sx,
 			    (int)((oe - old) - (ne - new)));
 			/*
@@ -967,13 +971,11 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 			/*
 		         * write (nls-nse) chars of new starting at nse
 		         */
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nse, (size_t)(nls - nse), el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nse - new));
-			else edited_term_overwrite(el, nse, (size_t)(nls - nse));
+			edited_term_overwrite(el, nse, (size_t)(nls - nse));
 		} else {
 			ELRE_DEBUG(1, (__F,
 			    "but with nothing left to save\r\n"));
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nse, (size_t)(nls - nse), el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nse - new));
-			else edited_term_overwrite(el, nse, (size_t)(nls - nse));
+			edited_term_overwrite(el, nse, (size_t)(nls - nse));
 			edited_re_clear_eol(el, fx, sx,
 			    (int)((oe - old) - (ne - new)));
 		}
@@ -1003,8 +1005,7 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 				 */
 				ELRE_DEBUG(!EL_CAN_INSERT, (__F,
 				 "ERROR: cannot insert in late first diff\n"));
-				if (el->edited_use_style) edited_term_insertwrite_styled(el, nfd, fx, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-				else edited_term_insertwrite(el, nfd, fx);
+				edited_term_insertwrite(el, nfd, fx);
 				edited_re_insert(el, old, (int)(ofd - old),
 				    el->edited_terminal.t_size.h, nfd, fx);
 			}
@@ -1013,14 +1014,12 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 		         * (nfd + fx)
 			 */
 			len = (size_t) ((nsb - nfd) - fx);
-			if (el->edited_use_style) edited_term_overwrite_styled(el, (nfd + fx), len, el->edited_vstyle[el->edited_refresh.r_cursor.v] + ((nfd + fx) - new));
-			else edited_term_overwrite(el, (nfd + fx), len);
+			edited_term_overwrite(el, (nfd + fx), len);
 			edited_re__strncopy(ofd + fx, nfd + fx, len);
 		} else {
 			ELRE_DEBUG(1, (__F, "without anything to save\r\n"));
 			len = (size_t) (nsb - nfd);
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nfd, len, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nfd - new));
-			else edited_term_overwrite(el, nfd, len);
+			edited_term_overwrite(el, nfd, len);
 			edited_re__strncopy(ofd, nfd, len);
 		}
 	}
@@ -1037,19 +1036,16 @@ edited_re_update_line(Edited *el, wchar_t *old, wchar_t *new, int i)
 				/* insert sx chars of new starting at nse */
 				ELRE_DEBUG(!EL_CAN_INSERT, (__F,
 				    "ERROR: cannot insert in second diff\n"));
-				if (el->edited_use_style) edited_term_insertwrite_styled(el, nse, sx, el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nse - new));
-				else edited_term_insertwrite(el, nse, sx);
+				edited_term_insertwrite(el, nse, sx);
 			}
 			/*
 		         * write (nls-nse) - sx chars of new starting at
 			 * (nse + sx)
 		         */
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nse, (size_t)(nls - nse), el->edited_vstyle[el->edited_refresh.r_cursor.v] + ((nse + sx) - new));
-			else edited_term_overwrite(el, (nse + sx), (size_t)((nls - nse) - sx));
+			edited_term_overwrite(el, (nse + sx), (size_t)((nls - nse) - sx));
 		} else {
 			ELRE_DEBUG(1, (__F, "without anything to save\r\n"));
-			if (el->edited_use_style) edited_term_overwrite_styled(el, nse, (size_t)(nls - nse), el->edited_vstyle[el->edited_refresh.r_cursor.v] + (nse - new));
-			else edited_term_overwrite(el, nse, (size_t)(nls - nse));
+			edited_term_overwrite(el, nse, (size_t)(nls - nse));
 
 			/*
 	                 * No need to do a clear-to-end here because we were
