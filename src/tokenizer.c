@@ -51,7 +51,7 @@ __RCSID("$NetBSD: tokenizer.c,v 1.29 2023/05/30 11:53:40 christos Exp $");
 #include <stdlib.h>
 #include <string.h>
 
-#include "histedit.h"
+#include "edited/edited.h"
 
 typedef enum {
 	Q_none, Q_single, Q_double, Q_one, Q_doubleone
