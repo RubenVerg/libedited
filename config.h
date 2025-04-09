@@ -83,7 +83,7 @@
 #define HAVE_RE_COMP 1
 
 /* Define to 1 if you have the `secure_getenv' function. */
-#define HAVE_SECURE_GETENV 1
+/* #define HAVE_SECURE_GETENV 1 */
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */

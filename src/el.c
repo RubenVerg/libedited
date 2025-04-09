@@ -75,14 +75,12 @@ __RCSID("$NetBSD: el.c,v 1.101 2022/10/30 19:11:31 christos Exp $");
 #	endif
 #endif
 
-#ifndef HAVE_SECURE_GETENV
-char *secure_getenv(char const *name)
+char *edited_secure_getenv(char const *name)
 {
 	if (issetugid())
 		return 0;
 	return getenv(name);
 }
-#endif
 
 /* edited_init():
  *	Initialize editline and set default parameters.
@@ -585,11 +583,11 @@ edited_source(Edited *el, const char *fname)
 		/* secure_getenv is guaranteed to be defined and do the right thing here */
 		/* because of the defines above which take into account issetugid, */
 		/* secure_getenv and __secure_getenv availability. */
-		if ((fname = secure_getenv("EDITRC")) == NULL) {
+		if ((fname = edited_secure_getenv("EDITRC")) == NULL) {
 			static const char elpath[] = "/.editrc";
 			size_t plen = sizeof(elpath);
 
-			if ((ptr = secure_getenv("HOME")) == NULL)
+			if ((ptr = edited_secure_getenv("HOME")) == NULL)
 				return -1;
 			plen += strlen(ptr);
 			if ((path = edited_calloc(plen, sizeof(*path))) == NULL)
